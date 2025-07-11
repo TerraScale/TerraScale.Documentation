@@ -4,7 +4,6 @@ import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator'
 import starlightBlog from 'starlight-blog'
 import starlightOpenAPI, { openAPISidebarGroups } from 'starlight-openapi'
-import starlightVersions from 'starlight-versions'
 import starlightHeadingBadges from 'starlight-heading-badges'
 import starlightAutoSidebar from 'starlight-auto-sidebar'
 
@@ -18,7 +17,7 @@ export default defineConfig({
 		starlight({
 			title: 'TerraScale Documentation',
 			plugins: [
-				starlightLinksValidator(),
+				// starlightLinksValidator(),
 				starlightBlog(),
 				// starlightOpenAPI([
 				// 	{
@@ -26,11 +25,8 @@ export default defineConfig({
 				// 		schema: '../schemas/api-schema.yaml',
 				// 	},
 				// ]),
-				// starlightVersions({
-				// 	versions: [{ slug: '1.0' }],
-				// }),
 				starlightHeadingBadges(),
-				// starlightAutoSidebar()
+				starlightAutoSidebar()
 			],
 			social: [
 				{
@@ -42,10 +38,7 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
+					autogenerate: { directory: 'guides' },
 				},
 				{
 					label: 'Reference',
