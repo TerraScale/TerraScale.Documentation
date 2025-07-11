@@ -6,6 +6,7 @@ import starlightBlog from 'starlight-blog'
 import starlightOpenAPI, { openAPISidebarGroups } from 'starlight-openapi'
 import starlightHeadingBadges from 'starlight-heading-badges'
 import starlightAutoSidebar from 'starlight-auto-sidebar'
+import starlightThemeObsidian from 'starlight-theme-obsidian'
 
 import tailwindcss from '@tailwindcss/vite';
 
@@ -26,7 +27,13 @@ export default defineConfig({
 				// 	},
 				// ]),
 				starlightHeadingBadges(),
-				starlightAutoSidebar()
+				starlightAutoSidebar(),
+				starlightThemeObsidian(
+					{
+						graph: false,
+						backlinks: false,
+					}
+				)
 			],
 			social: [
 				{
