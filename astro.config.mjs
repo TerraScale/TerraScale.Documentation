@@ -6,14 +6,12 @@ import starlightBlog from 'starlight-blog'
 import starlightOpenAPI, { openAPISidebarGroups } from 'starlight-openapi'
 import starlightHeadingBadges from 'starlight-heading-badges'
 import starlightAutoSidebar from 'starlight-auto-sidebar'
-import starlightThemeObsidian from 'starlight-theme-obsidian'
 
 import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://docs.terrascale.tech',
-
 	integrations: [
 		starlight({
 			title: 'TerraScale Documentation',
@@ -28,18 +26,12 @@ export default defineConfig({
 				// ]),
 				starlightHeadingBadges(),
 				starlightAutoSidebar(),
-				starlightThemeObsidian(
-					{
-						graph: false,
-						backlinks: false,
-					}
-				)
 			],
 			social: [
 				{
 					icon: 'github',
 					label: 'GitHub',
-					href: 'https://github.com/withastro/starlight'
+					href: 'https://github.com/TerraScale'
 				}
 			],
 			sidebar: [
