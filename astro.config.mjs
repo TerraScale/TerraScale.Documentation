@@ -5,7 +5,6 @@ import starlightLinksValidator from 'starlight-links-validator'
 import starlightBlog from 'starlight-blog'
 import starlightOpenAPI, { openAPISidebarGroups } from 'starlight-openapi'
 import starlightHeadingBadges from 'starlight-heading-badges'
-import starlightAutoSidebar from 'starlight-auto-sidebar'
 
 import tailwindcss from '@tailwindcss/vite';
 
@@ -25,7 +24,6 @@ export default defineConfig({
 				// 	},
 				// ]),
 				starlightHeadingBadges(),
-				starlightAutoSidebar(),
 			],
 			social: [
 				{
@@ -43,6 +41,14 @@ export default defineConfig({
 					label: 'Reference',
 					autogenerate: { directory: 'reference' },
 				},
+				{
+					label: 'Dashboard',
+					autogenerate: { directory: 'dashboard' },
+				},
+				{
+					label: 'About',
+					autogenerate: { directory: 'about' },
+				}
 				// ...openAPISidebarGroups,
 			],
 			customCss: [
