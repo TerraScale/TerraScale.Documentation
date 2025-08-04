@@ -46,6 +46,10 @@ export default defineConfig({
 					autogenerate: { directory: 'dashboard' },
 				},
 				{
+					label: 'Roadmap',
+					autogenerate: { directory: 'roadmap' },
+				},
+				{
 					label: 'About',
 					autogenerate: { directory: 'about' },
 				}
