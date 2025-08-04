@@ -1,9 +1,9 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
+title: Welcome to TerraScale Documentation
+description: Documentation for TerraScale.Internals, a distributed database orchestration platform.
 template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
+  tagline: TerraScale.Internals Distributed Database Orchestration for Modern Cloud Applications
   image:
     file: ../../assets/houston.webp
   actions:
@@ -16,21 +16,28 @@ hero:
       variant: minimal
 ---
 
+
 import { Card, CardGrid } from '@astrojs/starlight/components';
+
+---
+
+# Welcome to TerraScale Documentation
+
+**TerraScale.Internals** is a distributed database orchestration platform built on .NET 10, focused on CouchDB management, multi-region replication, document CRUD, and payment processing. The architecture is modular, cloud-native, and optimized for automation and developer productivity.
 
 ## Next steps
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
+	<Card title="Getting Started" icon="right-arrow">
+		Begin with the [Getting Started guide](/guides/getting-started/) to set up and use TerraScale.Internals.
 	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
+	<Card title="Explore Features" icon="add-document">
+		Learn about CouchDB management, multi-region replication, document CRUD, and payment processing in the [Reference](/reference/) section.
 	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
+	<Card title="Configuration" icon="setting">
+		See how to configure your deployment in `astro.config.mjs` and other config files.
 	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
+	<Card title="Project Roadmap" icon="open-book">
+		Check the [Roadmap](/roadmap/summary/) for upcoming features and releases.
 	</Card>
 </CardGrid>
