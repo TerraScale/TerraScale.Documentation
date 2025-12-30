@@ -1,54 +1,46 @@
-# Starlight Starter Kit: Basics
+# TerraScale Documentation
 
 [![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
 
-```
-npm create astro@latest -- --template starlight
-```
+Official documentation for TerraScale, available at [docs.terrascale.tech](https://docs.terrascale.tech).
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/starlight/tree/main/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/starlight/tree/main/examples/basics)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/withastro/starlight&create_from_path=examples/basics)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fwithastro%2Fstarlight%2Ftree%2Fmain%2Fexamples%2Fbasics&project-name=my-starlight-docs&repository-name=my-starlight-docs)
+## Getting Started
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro + Starlight project, you'll see the following folders and files:
-
-```
-.
-├── public/
-├── src/
-│   ├── assets/
-│   ├── content/
-│   │   ├── docs/
-│   └── content.config.ts
-├── astro.config.mjs
-├── package.json
-└── tsconfig.json
+```bash
+bun install      # Install dependencies
+bun run dev      # Start dev server at localhost:4321
 ```
 
-Starlight looks for `.md` or `.mdx` files in the `src/content/docs/` directory. Each file is exposed as a route based on its file name.
+## Commands
 
-Images can be added to `src/assets/` and embedded in Markdown with a relative link.
+| Command         | Action                                      |
+| :-------------- | :------------------------------------------ |
+| `bun install`   | Install dependencies                        |
+| `bun run dev`   | Start local dev server at `localhost:4321`  |
+| `bun run build` | Build production site to `./dist/`          |
+| `bun run preview` | Preview production build locally          |
 
-Static assets, like favicons, can be placed in the `public/` directory.
+## Project Structure
 
-## 🧞 Commands
+```
+src/content/docs/
+├── guides/      # Getting started, SDKs, querying
+├── reference/   # API, pricing, regions, comparisons
+├── dashboard/   # Dashboard documentation
+├── roadmap/     # Product roadmap
+├── about/       # About section
+└── blog/        # Blog posts
+```
 
-All commands are run from the root of the project, from a terminal:
+Documentation is written in `.md` or `.mdx` files in `src/content/docs/`. Each file becomes a route based on its filename.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Configuration
 
-## 👀 Want to learn more?
+- `astro.config.mjs` - Starlight config and sidebar structure
+- `src/content.config.ts` - Content collections schema
+- `src/styles/global.css` - Tailwind CSS customizations
 
-Check out [Starlight’s docs](https://starlight.astro.build/), read [the Astro documentation](https://docs.astro.build), or jump into the [Astro Discord server](https://astro.build/chat).
+## Resources
+
+- [Starlight Documentation](https://starlight.astro.build/)
+- [Astro Documentation](https://docs.astro.build)
