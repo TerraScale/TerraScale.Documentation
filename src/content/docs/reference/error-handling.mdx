@@ -1,0 +1,257 @@
+---
+title: Error Handling
+description: Handle errors gracefully in TerraScale applications.
+sidebar:
+  order: 9
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+All client operations return `Result<T>` or `Result` objects for safe error handling.
+
+---
+
+## HTTP Status Codes
+
+| Status | Description |
+|--------|-------------|
+| 200 | OK - Request succeeded |
+| 201 | Created - Resource created |
+| 204 | No Content - Success, no body |
+| 400 | Bad Request - Invalid parameters |
+| 401 | Unauthorized - Invalid or missing authentication |
+| 403 | Forbidden - Insufficient permissions |
+| 404 | Not Found - Resource doesn't exist |
+| 409 | Conflict - Condition check failed |
+| 429 | Too Many Requests - Rate limit exceeded |
+| 500 | Internal Server Error |
+
+---
+
+## Error Response Format
+
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Item not found",
+  "instance": "/api/v1/databases/my-db/items/user%23123"
+}
+```
+
+---
+
+## Result Pattern (C# SDK)
+
+### Checking Results
+
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsSuccess)
+{
+    var item = result.Value;
+    // Process item
+}
+else if (result.IsFailed)
+{
+    foreach (var error in result.Errors)
+    {
+        Console.WriteLine($"Error: {error.Message}");
+    }
+}
+```
+
+### Common Patterns
+
+<Tabs>
+  <TabItem label="Try-Get Pattern">
+    ```csharp
+    var result = await client.GetItemAsync("user#123");
+
+    if (result.IsFailed)
+    {
+        // Handle error
+        logger.LogError("Failed to get item: {Error}", result.Errors.First().Message);
+        return null;
+    }
+
+    return result.Value;
+    ```
+  </TabItem>
+  <TabItem label="Throw on Failure">
+    ```csharp
+    // Throws if result is failed
+    var item = result.ValueOrThrow();
+    ```
+  </TabItem>
+  <TabItem label="Default Value">
+    ```csharp
+    // Returns default if failed
+    var item = result.ValueOr(defaultItem);
+    ```
+  </TabItem>
+  <TabItem label="Match Pattern">
+    ```csharp
+    result.Match(
+        onSuccess: item => Console.WriteLine($"Found: {item.PartitionKey}"),
+        onFailure: errors => Console.WriteLine($"Error: {errors.First().Message}")
+    );
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Common Error Scenarios
+
+### Item Not Found
+
+```csharp
+var result = await client.GetItemAsync("nonexistent");
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("not found")))
+{
+    Console.WriteLine("Item does not exist");
+}
+```
+
+### Authentication Error
+
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("unauthorized")))
+{
+    // Refresh token or redirect to login
+}
+```
+
+### Rate Limiting
+
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("rate limit")))
+{
+    // Wait and retry
+    await Task.Delay(TimeSpan.FromSeconds(5));
+    result = await client.GetItemAsync("user#123");
+}
+```
+
+### Condition Check Failed
+
+```csharp
+var result = await client.TransactWriteAsync(items);
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("condition")))
+{
+    // Another process modified the data - refresh and retry
+}
+```
+
+---
+
+## Transaction Errors
+
+```json
+{
+  "successCount": 0,
+  "errors": [
+    {
+      "itemIndex": 2,
+      "pk": "user#123",
+      "sk": "settings",
+      "error": "Condition check failed",
+      "errorType": "ConditionalCheckFailed"
+    }
+  ]
+}
+```
+
+### Transaction Error Types
+
+| Error Type | Description |
+|------------|-------------|
+| `ConditionalCheckFailed` | Condition expression evaluated to false |
+| `ItemCollectionSizeLimitExceeded` | Item collection too large |
+| `TransactionCanceled` | Transaction was canceled |
+| `ValidationError` | Invalid request parameters |
+| `InternalServerError` | Server error |
+
+---
+
+## Retry Strategy
+
+The SDK automatically retries transient failures:
+
+### Retryable Errors
+
+- 429 (Rate Limited)
+- 500, 502, 503, 504 (Server Errors)
+- Network timeouts
+
+### Non-Retryable Errors
+
+- 400 (Bad Request)
+- 401 (Unauthorized)
+- 403 (Forbidden)
+- 404 (Not Found)
+- 409 (Conflict)
+
+### Configure Retry Policy
+
+```csharp
+var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+{
+    ApiKey = "ts_live_your_api_key",
+    Endpoint = "https://api.terrascale.io",
+    Retry = new RetryPolicyOptions
+    {
+        MaxRetries = 3,
+        BaseDelay = TimeSpan.FromMilliseconds(500),
+        MaxDelay = TimeSpan.FromSeconds(10),
+        UseJitter = true
+    }
+});
+```
+
+---
+
+## Logging Errors
+
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsFailed)
+{
+    foreach (var error in result.Errors)
+    {
+        logger.LogError(
+            "Operation failed: {ErrorType} - {Message}",
+            error.GetType().Name,
+            error.Message
+        );
+    }
+}
+```
+
+---
+
+## Best Practices
+
+1. **Always check results** - Never assume success
+2. **Log with context** - Include operation details in logs
+3. **Use specific error handling** - Handle known errors differently
+4. **Implement retry logic** - For transient failures
+5. **Fail gracefully** - Show user-friendly messages
+
+---
+
+## Next Steps
+
+- [Rate Limits](/reference/rate-limits/) - Handle rate limiting
+- [Transactions](/reference/api/transactions/) - Transaction error handling
+- [Best Practices](/reference/best-practices/) - Error prevention

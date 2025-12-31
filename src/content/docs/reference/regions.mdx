@@ -1,27 +1,159 @@
 ---
 title: Regions
-description: Information about TerraScale's supported regions.
+description: TerraScale is available in 19 regions worldwide for low-latency global data access.
+sidebar:
+  order: 4
 ---
 
-# List of the current supported regions:
+import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-- gru
+TerraScale is available in 19 regions worldwide, allowing you to deploy databases close to your users for optimal performance.
 
-# More information about each region
+---
 
-- GRU
-Located at Brazil in the city guarulhos
+## North America
 
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `ord` | us-ord | Chicago, IL, USA |
+| `ewr` | us-east | Newark, NJ, USA |
+| `sfo` | us-west | Fremont, CA, USA |
+| `lax` | us-lax | Los Angeles, CA, USA |
+| `sea` | us-sea | Seattle, WA, USA |
+| `mia` | us-mia | Miami, FL, USA |
 
-# Why all regions have the same price as the others even though some are more expansive than others?
-Well we tried to simplify the pricing plans and make your life easier to calculate how much you are going to
-use and be easier to predict.
+---
 
-What we do is we calculate the median of all the regions prices so the cheaper regions compesates for the higher regions
-we expected our users to use at average of 6 regions so this can work long term if it does not we can create a pricing per
-region if needed before we have our stable release.
+## South America
 
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `gru` | br-gru | Sao Paulo, Brazil |
 
-# Why do we use airport letter codes?
-Well Linode and Fly.io uses airport codes and we thought that it worked great for them
-and airport codes works(kinda works but works) and it is already an global standard
+---
+
+## Europe
+
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `lhr` | eu-west | London, UK |
+| `fra` | eu-central | Frankfurt, Germany |
+| `cdg` | fr-par | Paris, France |
+| `ams` | nl-ams | Amsterdam, Netherlands |
+| `mil` | it-mil | Milan, Italy |
+| `mad` | es-mad | Madrid, Spain |
+| `sto` | se-sto | Stockholm, Sweden |
+
+---
+
+## Asia Pacific
+
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `sin` | ap-south | Singapore |
+| `syd` | ap-southeast | Sydney, Australia |
+| `nrt` | ap-northeast | Tokyo, Japan |
+| `maa` | in-maa | Chennai, India |
+| `cgk` | id-cgk | Jakarta, Indonesia |
+
+---
+
+## Choosing a Region
+
+When selecting a region for your database, consider:
+
+### Latency
+Choose the region closest to your users for the lowest latency. If your users are spread globally, consider [multi-region replication](/reference/replication/).
+
+### Data Residency
+Some regulations require data to be stored in specific geographic locations. Choose a region that meets your compliance requirements.
+
+### Disaster Recovery
+For high availability, deploy in multiple regions and use automatic failover.
+
+---
+
+## Setting the Default Region
+
+<Tabs>
+  <TabItem label="Dashboard">
+    1. Go to **Settings > Preferences**
+    2. Select your **Default Region** from the dropdown
+    3. Click **Save**
+
+    New databases will use this region by default.
+  </TabItem>
+  <TabItem label="C# SDK">
+    ```csharp
+    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+    {
+        ApiKey = "ts_live_your_api_key",
+        Endpoint = "https://api.terrascale.io",
+        Region = "us-east",  // Default region
+        DefaultDatabase = "my-database"
+    });
+    ```
+  </TabItem>
+  <TabItem label="API">
+    When creating a database, specify the region:
+
+    ```json
+    POST /api/v1/management/databases
+    {
+      "name": "my-production-db",
+      "region": "eu-west"
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Regional Endpoints
+
+TerraScale uses intelligent routing to automatically direct requests to the optimal region. You can use the global endpoint:
+
+```
+https://api.terrascale.io
+```
+
+Requests are automatically routed based on:
+- The database's primary region
+- Multi-region replication configuration
+- Current region health and availability
+
+---
+
+## Why Airport Codes?
+
+TerraScale uses airport codes (IATA codes) as region identifiers because:
+- They are a globally recognized standard
+- They clearly indicate geographic location
+- They are concise and memorable
+- They follow industry conventions used by other cloud providers
+
+---
+
+## Uniform Pricing
+
+All regions have the same pricing. We calculate the median cost across all regions so that less expensive regions compensate for more costly ones. This simplifies billing and makes costs predictable for multi-region deployments.
+
+---
+
+## Multi-Region Deployment
+
+For global applications, TerraScale supports multi-region replication:
+
+- **Automatic synchronization** across regions
+- **Intelligent routing** based on user location
+- **Failover protection** for high availability
+
+See [Multi-Region Replication](/reference/replication/) for configuration details.
+
+---
+
+## Next Steps
+
+- [Multi-Region Replication](/reference/replication/) - Configure cross-region sync
+- [Getting Started](/guides/getting-started/) - Create your first database
+- [Best Practices](/reference/best-practices/) - Optimization tips

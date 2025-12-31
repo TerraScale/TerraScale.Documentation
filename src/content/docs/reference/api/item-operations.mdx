@@ -1,0 +1,237 @@
+---
+title: Item Operations
+description: CRUD operations for individual database items - Put, Get, and Delete.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+All item operations require `database:read` or `database:write` scope depending on the operation.
+
+---
+
+## Put Item
+
+### PUT /api/v1/databases/\{databaseId\}/items
+
+Stores an item in the database. Creates a new item or replaces an existing one.
+
+**Request:**
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "data": {
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "conditionExpression": null
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `pk` | string | Yes | Partition key |
+| `sk` | string | No | Sort key |
+| `data` | object | Yes | Item attributes |
+| `conditionExpression` | string | No | Conditional write expression |
+
+**Response (200 OK):**
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Conditional Writes
+
+Use `conditionExpression` to prevent overwrites:
+
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "data": { "name": "John" },
+  "conditionExpression": "attribute_not_exists(pk)"
+}
+```
+
+This only writes if the item doesn't already exist.
+
+---
+
+## Get Item
+
+### GET /api/v1/databases/\{databaseId\}/items/\{pk\}
+
+Gets an item by partition key only.
+
+**Response (200 OK):**
+```json
+{
+  "pk": "user#123",
+  "sk": null,
+  "data": {
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### GET /api/v1/databases/\{databaseId\}/items/\{pk\}/\{sk\}
+
+Gets an item by partition key and sort key.
+
+**Response:** Same format as above.
+
+### Not Found Response
+
+**Response (404 Not Found):**
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Item not found"
+}
+```
+
+---
+
+## Delete Item
+
+### DELETE /api/v1/databases/\{databaseId\}/items/\{pk\}
+
+Deletes an item by partition key only.
+
+**Response (204 No Content):** Empty body on success.
+
+### DELETE /api/v1/databases/\{databaseId\}/items/\{pk\}/\{sk\}
+
+Deletes an item by partition key and sort key.
+
+**Response (204 No Content):** Empty body on success.
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // Put Item
+    var item = new DatabaseItem
+    {
+        PartitionKey = "user#123",
+        SortKey = "profile",
+        Attributes = new Dictionary<string, object?>
+        {
+            ["name"] = "John Doe",
+            ["email"] = "john@example.com",
+            ["age"] = 30,
+            ["tags"] = new[] { "premium", "verified" }
+        }
+    };
+
+    var putResult = await client.PutItemAsync(item);
+    if (putResult.IsSuccess)
+    {
+        Console.WriteLine("Item saved!");
+    }
+
+    // Get Item
+    var getResult = await client.GetItemAsync("user#123", "profile");
+    if (getResult.IsSuccess)
+    {
+        var user = getResult.Value;
+        var name = user.GetAttribute<string>("name");
+        var age = user.GetAttribute<int>("age", defaultValue: 0);
+        Console.WriteLine($"User: \{name\}, Age: {age}");
+    }
+
+    // Delete Item
+    var deleteResult = await client.DeleteItemAsync("user#123", "profile");
+    if (deleteResult.IsSuccess)
+    {
+        Console.WriteLine("Item deleted!");
+    }
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    # Put Item
+    curl -X PUT "https://api.terrascale.io/api/v1/databases/my-db/items" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "pk": "user#123",
+        "sk": "profile",
+        "data": {
+          "name": "John Doe",
+          "email": "john@example.com"
+        }
+      }'
+
+    # Get Item
+    curl "https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile" \
+      -H "Authorization: Bearer ts_live_your_api_key"
+
+    # Delete Item
+    curl -X DELETE "https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile" \
+      -H "Authorization: Bearer ts_live_your_api_key"
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Data Types
+
+Items support the following data types:
+
+| Type | Example |
+|------|---------|
+| String | `"Hello World"` |
+| Number | `42`, `3.14` |
+| Boolean | `true`, `false` |
+| Null | `null` |
+| Array | `["a", "b", "c"]` |
+| Object | `{"key": "value"}` |
+
+---
+
+## Key Design Patterns
+
+### Single-Table Design
+
+Store related items with the same partition key:
+
+```json
+// User profile
+{ "pk": "user#123", "sk": "profile", "data": { "name": "John" } }
+
+// User orders
+{ "pk": "user#123", "sk": "order#001", "data": { "total": 99.99 } }
+{ "pk": "user#123", "sk": "order#002", "data": { "total": 149.99 } }
+```
+
+### Hierarchical Keys
+
+Use delimiters for hierarchical data:
+
+```json
+{ "pk": "org#acme", "sk": "dept#engineering#team#backend" }
+```
+
+---
+
+## Next Steps
+
+- [Query Operations](/reference/api/query-operations/) - Query multiple items
+- [Batch Operations](/reference/api/batch-operations/) - Bulk read/write
+- [Transactions](/reference/api/transactions/) - Atomic operations

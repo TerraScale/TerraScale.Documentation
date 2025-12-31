@@ -1,0 +1,298 @@
+---
+title: Repository Operations
+description: Repository API for typed entity storage with schema validation.
+sidebar:
+  order: 6
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Repositories provide typed entity storage with schema validation.
+
+---
+
+## Create Entity
+
+### POST /api/v1/repositories/\{repositoryId\}
+
+Creates a new entity in the repository.
+
+**Request:**
+```json
+{
+  "data": {
+    "name": "Acme Corp",
+    "industry": "Technology",
+    "employeeCount": 500
+  }
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": "ent_abc123",
+  "data": {
+    "name": "Acme Corp",
+    "industry": "Technology",
+    "employeeCount": 500
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}
+```
+
+---
+
+## List Entities
+
+### GET /api/v1/repositories/\{repositoryId\}
+
+Lists all entities with pagination.
+
+**Query Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | integer | 20 | Max items to return |
+| `cursor` | string | null | Pagination cursor |
+
+**Response (200 OK):**
+```json
+{
+  "entities": [
+    {
+      "id": "ent_abc123",
+      "data": { "name": "Acme Corp" },
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "totalCount": 150
+}
+```
+
+---
+
+## Get Entity
+
+### GET /api/v1/repositories/\{repositoryId\}/\{entityId\}
+
+Gets an entity by ID.
+
+**Response (200 OK):**
+```json
+{
+  "id": "ent_abc123",
+  "data": {
+    "name": "Acme Corp",
+    "industry": "Technology"
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+---
+
+## Update Entity
+
+### PUT /api/v1/repositories/\{repositoryId\}/\{entityId\}
+
+Updates an existing entity.
+
+**Request:**
+```json
+{
+  "data": {
+    "name": "Acme Corporation",
+    "industry": "Technology",
+    "employeeCount": 600
+  }
+}
+```
+
+**Response (200 OK):** Returns updated entity.
+
+---
+
+## Delete Entity
+
+### DELETE /api/v1/repositories/\{repositoryId\}/\{entityId\}
+
+Deletes an entity.
+
+**Response (204 No Content):** Empty body on success.
+
+---
+
+## Query Entities
+
+### POST /api/v1/repositories/\{repositoryId\}/query
+
+Queries entities with optional filtering.
+
+**Request:**
+```json
+{
+  "filter": "industry = :industry",
+  "filterValues": {
+    ":industry": "Technology"
+  },
+  "limit": 20,
+  "cursor": null,
+  "sortBy": "createdAt",
+  "sortOrder": "desc"
+}
+```
+
+**Response (200 OK):** Same as list entities response.
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // Define entity
+    public record Customer : EntityBase
+    {
+        public required string Name { get; init; }
+        public required string Email { get; init; }
+        public string? Phone { get; init; }
+        public CustomerTier Tier { get; init; } = CustomerTier.Standard;
+    }
+
+    public enum CustomerTier
+    {
+        Standard,
+        Premium,
+        Enterprise
+    }
+
+    // Get repository reference
+    var customers = client.GetRepository<Customer>("repo_customers");
+
+    // Create entity
+    var customer = new Customer
+    {
+        Id = Guid.NewGuid().ToString(),
+        Name = "Acme Corp",
+        Email = "contact@acme.com",
+        Tier = CustomerTier.Premium
+    };
+
+    var createResult = await customers.CreateAsync(customer);
+
+    // Get entity
+    var getResult = await customers.GetAsync(customer.Id);
+
+    // Update entity
+    var updatedCustomer = customer with { Tier = CustomerTier.Enterprise };
+    var updateResult = await customers.UpdateAsync(updatedCustomer);
+
+    // Delete entity
+    var deleteResult = await customers.DeleteAsync(customer.Id);
+
+    // List entities
+    var listResult = await customers.ListAsync(new PaginationOptions { Limit = 50 });
+
+    // Query entities
+    var filter = new QueryFilter { PartitionKey = customer.Id };
+    var queryResult = await customers.QueryAsync(filter);
+
+    // Check existence
+    var existsResult = await customers.ExistsAsync(customer.Id);
+    if (existsResult.IsSuccess && existsResult.Value)
+    {
+        Console.WriteLine("Customer exists");
+    }
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    # Create entity
+    curl -X POST "https://api.terrascale.io/api/v1/repositories/repo_customers" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "data": {
+          "name": "Acme Corp",
+          "email": "contact@acme.com",
+          "tier": "Premium"
+        }
+      }'
+
+    # Get entity
+    curl "https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123" \
+      -H "Authorization: Bearer ts_live_your_api_key"
+
+    # Update entity
+    curl -X PUT "https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "data": {
+          "name": "Acme Corporation",
+          "email": "contact@acme.com",
+          "tier": "Enterprise"
+        }
+      }'
+
+    # Delete entity
+    curl -X DELETE "https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123" \
+      -H "Authorization: Bearer ts_live_your_api_key"
+
+    # Query entities
+    curl -X POST "https://api.terrascale.io/api/v1/repositories/repo_customers/query" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "filter": "tier = :tier",
+        "filterValues": { ":tier": "Enterprise" }
+      }'
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Entity Base Class
+
+When using the C# SDK, entities should extend `EntityBase`:
+
+```csharp
+public abstract record EntityBase : IEntity
+{
+    public required string Id { get; init; }
+    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? UpdatedAt { get; init; }
+    public long Version { get; init; } = 1;
+
+    public virtual string GetPartitionKey() => Id;
+    public virtual string? GetSortKey() => null;
+}
+```
+
+---
+
+## Repository vs Raw Items
+
+| Feature | Repository | Raw Items |
+|---------|------------|-----------|
+| Type safety | Yes | No |
+| Schema validation | Yes | No |
+| Auto-generated IDs | Yes | No |
+| Timestamps | Automatic | Manual |
+| Versioning | Built-in | Manual |
+| Best for | Domain entities | Flexible data |
+
+---
+
+## Next Steps
+
+- [Repository Management](/reference/management/repositories/) - Create and configure repositories
+- [Data Models](/reference/data-models/) - Entity interfaces and types
+- [C# SDK](/guides/SDKs/csharp/) - Full SDK documentation

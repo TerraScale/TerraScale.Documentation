@@ -1,0 +1,172 @@
+---
+title: API Overview
+description: TerraScale API reference - Base URL, authentication, and common patterns.
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+Complete API reference for TerraScale database operations.
+
+---
+
+## Base URL
+
+```
+https://api.terrascale.io
+```
+
+All endpoints return JSON responses and use standard HTTP status codes.
+
+---
+
+## Authentication
+
+All API requests require authentication. Use one of:
+
+### API Key (for database operations)
+```http
+Authorization: Bearer ts_live_your_api_key
+```
+
+### JWT Token (for management operations)
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+See [Authentication](/reference/authentication/) for details.
+
+---
+
+## API Sections
+
+<CardGrid>
+  <Card title="Item Operations" icon="pencil">
+    [CRUD operations](/reference/api/item-operations/) for individual database items.
+  </Card>
+  <Card title="Query Operations" icon="magnifier">
+    [Query and Scan](/reference/api/query-operations/) for retrieving multiple items.
+  </Card>
+  <Card title="Batch Operations" icon="list-format">
+    [Batch read/write](/reference/api/batch-operations/) for bulk operations.
+  </Card>
+  <Card title="Transactions" icon="approve-check">
+    [Transactional operations](/reference/api/transactions/) for atomic multi-item updates.
+  </Card>
+  <Card title="Repositories" icon="document">
+    [Repository operations](/reference/api/repositories/) for typed entities.
+  </Card>
+  <Card title="SQL API" icon="seti:db">
+    [SQL interface](/reference/api/sql-api/) for SQL-style queries.
+  </Card>
+  <Card title="Health" icon="heart">
+    [Health endpoints](/reference/api/health/) for monitoring.
+  </Card>
+</CardGrid>
+
+---
+
+## Common Response Patterns
+
+### Success Response
+
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "data": {
+    "name": "John Doe"
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Error Response
+
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Item not found"
+}
+```
+
+---
+
+## HTTP Status Codes
+
+| Status | Description |
+|--------|-------------|
+| 200 | OK - Request succeeded |
+| 201 | Created - Resource created |
+| 204 | No Content - Success, no body |
+| 400 | Bad Request - Invalid parameters |
+| 401 | Unauthorized - Invalid or missing authentication |
+| 403 | Forbidden - Insufficient permissions |
+| 404 | Not Found - Resource doesn't exist |
+| 409 | Conflict - Condition check failed |
+| 429 | Too Many Requests - Rate limit exceeded |
+| 500 | Internal Server Error |
+
+---
+
+## Pagination
+
+Paginated endpoints use cursor-based pagination:
+
+**Request:**
+```json
+{
+  "limit": 20,
+  "cursor": null
+}
+```
+
+**Response:**
+```json
+{
+  "items": [...],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "count": 20
+}
+```
+
+To get the next page, pass the `nextCursor` value as `cursor` in the next request.
+
+---
+
+## Rate Limits
+
+Rate limits depend on your plan tier:
+
+| Plan | Limit |
+|------|-------|
+| Free | 100 requests/second |
+| Pro | 1,000 requests/second |
+| Enterprise | Custom |
+
+When rate limited, the API returns HTTP 429 with a `Retry-After` header.
+
+See [Rate Limits](/reference/rate-limits/) for details.
+
+---
+
+## Required Scopes
+
+| Operation | Required Scope |
+|-----------|----------------|
+| Read items | `database:read` or `database:*` |
+| Write items | `database:write` or `database:*` |
+| Read repositories | `repository:read` or `repository:*` |
+| Write repositories | `repository:write` or `repository:*` |
+
+---
+
+## Next Steps
+
+- [Item Operations](/reference/api/item-operations/) - Start with basic CRUD
+- [Query Operations](/reference/api/query-operations/) - Learn to query data
+- [C# SDK](/guides/SDKs/csharp/) - Use the SDK for easier development

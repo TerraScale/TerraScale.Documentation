@@ -1,0 +1,423 @@
+---
+title: C# Management Client
+description: Guide to using the TerraScale Management Client for user accounts, organizations, and billing.
+sidebar:
+  order: 2
+  badge:
+    text: New
+    variant: tip
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The TerraScale Management Client provides access to user accounts, organizations, billing, and administrative operations.
+
+---
+
+## Installation
+
+```bash
+dotnet add package TerraScale.Management.Client
+```
+
+---
+
+## Configuration
+
+```csharp
+using TerraScale.Management.Client;
+
+// Create the management client
+var client = new ManagementClient(new ManagementClientOptions
+{
+    ApiBaseUrl = "https://api.terrascale.io"
+});
+
+// Set access token after login
+client.SetAccessToken("eyJhbGci...");
+```
+
+---
+
+## Available Sub-Clients
+
+| Sub-Client | Interface | Purpose |
+|------------|-----------|---------|
+| `Auth` | `IAuthClient` | Login, signup, token refresh, MFA |
+| `Users` | `IUserClient` | User profile management |
+| `Organizations` | `IOrganizationClient` | Organization and team management |
+| `Databases` | `IDatabaseClient` | Database provisioning |
+| `ApiKeys` | `IApiKeyClient` | API key management |
+| `Payment` | `IPaymentClient` | Subscriptions and billing |
+| `Plans` | `IPlanClient` | Available plans |
+| `Items` | `IItemClient` | Database item operations |
+| `Repositories` | `IRepositoryClient` | Repository operations |
+
+---
+
+## Authentication
+
+### Login with Password
+
+```csharp
+var loginResult = await client.Auth.LoginWithPasswordAsync(new PasswordLoginRequest(
+    Email: "john@example.com",
+    Password: "SecurePassword123!"
+));
+
+if (loginResult.IsSuccess && loginResult.Value.Status == PasswordLoginStatus.Success)
+{
+    client.SetAccessToken(loginResult.Value.AuthResponse!.AccessToken);
+    Console.WriteLine($"Logged in as {loginResult.Value.AuthResponse.Email}");
+}
+```
+
+### Handle MFA
+
+```csharp
+if (loginResult.Value.Status == PasswordLoginStatus.MfaRequired)
+{
+    var pendingInfo = loginResult.Value.PendingInfo!;
+
+    // Get code from user
+    Console.Write("Enter MFA code: ");
+    var code = Console.ReadLine();
+
+    // Verify MFA
+    var mfaResult = await client.Auth.VerifyMfaAsync(new MfaVerifyRequest(
+        PendingAuthenticationToken: pendingInfo.PendingAuthenticationToken,
+        ChallengeId: pendingInfo.Challenge!.Id,
+        Code: code!
+    ));
+
+    if (mfaResult.IsSuccess)
+    {
+        client.SetAccessToken(mfaResult.Value.AccessToken);
+    }
+}
+```
+
+### Refresh Token
+
+```csharp
+var refreshResult = await client.Auth.RefreshTokenAsync(new RefreshTokenRequest(
+    RefreshToken: "rt_abc123..."
+));
+
+if (refreshResult.IsSuccess)
+{
+    client.SetAccessToken(refreshResult.Value.AccessToken);
+}
+```
+
+### Switch Organization
+
+```csharp
+var switchResult = await client.Auth.SwitchOrganizationAsync(new SwitchOrganizationRequest(
+    OrganizationId: "org_def456"
+));
+```
+
+---
+
+## User Operations
+
+### Get Profile
+
+```csharp
+var userResult = await client.Users.GetCurrentUserAsync();
+
+if (userResult.IsSuccess)
+{
+    Console.WriteLine($"Hello, {userResult.Value.Name}!");
+    Console.WriteLine($"Email: {userResult.Value.Email}");
+    Console.WriteLine($"Theme: {userResult.Value.Preferences.Theme}");
+}
+```
+
+### Update Profile
+
+```csharp
+var updateResult = await client.Users.UpdateCurrentUserAsync(new UpdateUserRequest(
+    Name: "John D. Doe",
+    AvatarUrl: "https://example.com/avatar.jpg"
+));
+```
+
+### Update Preferences
+
+```csharp
+var prefsResult = await client.Users.UpdatePreferencesAsync(new UpdateUserPreferencesRequest(
+    Theme: "dark",
+    Timezone: "America/New_York",
+    DefaultRegion: "us-east-1"
+));
+```
+
+---
+
+## Organization Operations
+
+### Create Organization
+
+```csharp
+var createOrgResult = await client.Organizations.CreateAsync(new CreateOrganizationRequest(
+    Name: "Acme Corporation",
+    Slug: "acme-corp",
+    BillingEmail: "billing@acme.com"
+));
+```
+
+### List Organizations
+
+```csharp
+var listResult = await client.Organizations.ListAsync();
+
+foreach (var org in listResult.Value.Organizations)
+{
+    Console.WriteLine($"{org.OrganizationName} ({org.Role})");
+}
+```
+
+### Manage Members
+
+```csharp
+// List members
+var membersResult = await client.Organizations.ListMembersAsync("org_abc123");
+
+// Invite member
+var inviteResult = await client.Organizations.AddMemberAsync("org_abc123", new AddMemberRequest(
+    Email: "newmember@example.com",
+    Role: "member"
+));
+
+// Update role
+var roleResult = await client.Organizations.UpdateMemberAsync("org_abc123", "usr_def456",
+    new UpdateMemberRequest(Role: "admin"));
+
+// Remove member
+var removeResult = await client.Organizations.RemoveMemberAsync("org_abc123", "usr_def456");
+```
+
+---
+
+## Database Operations
+
+### Create Database
+
+```csharp
+var createResult = await client.Databases.CreateAsync(new CreateDatabaseRequest(
+    Name: "my-production-db",
+    Region: "us-east-1"
+));
+
+if (createResult.IsSuccess)
+{
+    Console.WriteLine($"Database created: {createResult.Value.DatabaseId}");
+}
+```
+
+### List Databases
+
+```csharp
+var listResult = await client.Databases.ListAsync();
+
+foreach (var db in listResult.Value.Databases)
+{
+    Console.WriteLine($"{db.Name} - {db.Status} ({db.Region})");
+}
+```
+
+### Delete Database
+
+```csharp
+var deleteResult = await client.Databases.DeleteAsync("db_abc123");
+```
+
+---
+
+## API Key Operations
+
+### Create API Key
+
+```csharp
+var createResult = await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(
+    Name: "Production API Key",
+    Scopes: new[] { "database:read", "database:write" },
+    ExpiresAt: DateTime.UtcNow.AddYears(1)
+));
+
+if (createResult.IsSuccess)
+{
+    // Important: Save this key - it's only shown once!
+    Console.WriteLine($"API Key: {createResult.Value.ApiKey}");
+}
+```
+
+### List API Keys
+
+```csharp
+var listResult = await client.ApiKeys.ListAsync();
+
+foreach (var key in listResult.Value.Keys)
+{
+    Console.WriteLine($"{key.Name} ({key.KeyPrefix}...)");
+}
+```
+
+### Revoke API Key
+
+```csharp
+var revokeResult = await client.ApiKeys.RevokeAsync("key_abc123");
+```
+
+---
+
+## Payment Operations
+
+### Get Subscription Info
+
+```csharp
+var paymentInfo = await client.Payment.GetPaymentInfoAsync();
+
+if (paymentInfo.IsSuccess)
+{
+    Console.WriteLine($"Plan: {paymentInfo.Value.PlanName}");
+    Console.WriteLine($"Status: {paymentInfo.Value.Status}");
+}
+```
+
+### Get Usage
+
+```csharp
+var usageResult = await client.Payment.GetUsageAsync();
+
+if (usageResult.IsSuccess)
+{
+    Console.WriteLine($"Databases: {usageResult.Value.DatabaseCount}");
+    Console.WriteLine($"Storage: {usageResult.Value.TotalStorageGb} GB");
+    Console.WriteLine($"Requests: {usageResult.Value.TotalRequests}");
+}
+```
+
+### Create Checkout
+
+```csharp
+var checkoutResult = await client.Payment.CreateCheckoutAsync(new CreateCheckoutRequest("pro"));
+
+if (checkoutResult.IsSuccess)
+{
+    // Redirect user to checkout URL
+    Console.WriteLine($"Checkout: {checkoutResult.Value.CheckoutUrl}");
+}
+```
+
+### Get Billing Portal
+
+```csharp
+var portalResult = await client.Payment.GetPortalUrlAsync();
+
+if (portalResult.IsSuccess)
+{
+    Console.WriteLine($"Portal: {portalResult.Value.PortalUrl}");
+}
+```
+
+---
+
+## Plans Operations
+
+### List Plans
+
+```csharp
+var plansResult = await client.Plans.ListAsync();
+
+if (plansResult.IsSuccess)
+{
+    foreach (var plan in plansResult.Value)
+    {
+        Console.WriteLine($"{plan.Name}: ${plan.MonthlyPriceCents / 100}/month");
+        foreach (var feature in plan.Features)
+        {
+            Console.WriteLine($"  - {feature.Name}");
+        }
+    }
+}
+```
+
+### Get Plan Details
+
+```csharp
+var planResult = await client.Plans.GetAsync("plan_pro");
+```
+
+---
+
+## Complete Login Example
+
+```csharp
+using TerraScale.Management.Client;
+
+var client = new ManagementClient(new ManagementClientOptions
+{
+    ApiBaseUrl = "https://api.terrascale.io"
+});
+
+// Login
+var loginResult = await client.Auth.LoginWithPasswordAsync(new PasswordLoginRequest(
+    Email: "john@example.com",
+    Password: "SecurePassword123!"
+));
+
+if (!loginResult.IsSuccess)
+{
+    Console.WriteLine("Login failed");
+    return;
+}
+
+switch (loginResult.Value.Status)
+{
+    case PasswordLoginStatus.Success:
+        client.SetAccessToken(loginResult.Value.AuthResponse!.AccessToken);
+        break;
+
+    case PasswordLoginStatus.MfaRequired:
+        Console.Write("Enter MFA code: ");
+        var code = Console.ReadLine();
+
+        var mfaResult = await client.Auth.VerifyMfaAsync(new MfaVerifyRequest(
+            PendingAuthenticationToken: loginResult.Value.PendingInfo!.PendingAuthenticationToken,
+            ChallengeId: loginResult.Value.PendingInfo.Challenge!.Id,
+            Code: code!
+        ));
+
+        if (mfaResult.IsSuccess)
+        {
+            client.SetAccessToken(mfaResult.Value.AccessToken);
+        }
+        break;
+
+    case PasswordLoginStatus.EmailVerificationRequired:
+        Console.WriteLine("Please verify your email first");
+        return;
+
+    default:
+        Console.WriteLine("Login failed");
+        return;
+}
+
+// Now use the client
+var userResult = await client.Users.GetCurrentUserAsync();
+Console.WriteLine($"Welcome, {userResult.Value.Name}!");
+
+// Cleanup
+await client.DisposeAsync();
+```
+
+---
+
+## Next Steps
+
+- [C# Database Client](/guides/SDKs/csharp/) - Database operations
+- [Organizations](/reference/organizations/) - Organization management
+- [Billing](/reference/billing/) - Subscription details

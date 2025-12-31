@@ -1,0 +1,220 @@
+---
+title: Rate Limits
+description: Rate limits and quotas for TerraScale API operations.
+sidebar:
+  order: 8
+---
+
+Rate limits protect the platform and ensure fair usage across all customers.
+
+---
+
+## Operation Limits
+
+| Operation | Limit |
+|-----------|-------|
+| Batch Write | 25 items per request |
+| Batch Get | 100 keys per request |
+| Transactional Get | 100 items per request |
+| Transactional Write | 25 items per request |
+| Query/Scan | 1 MB per response |
+| Item Size | 400 KB maximum |
+| Total Request Size | 4 MB maximum |
+
+---
+
+## Request Rate Limits
+
+Rate limits depend on your plan tier:
+
+| Plan | Limit |
+|------|-------|
+| Free | 100 requests/second |
+| Pro | 1,000 requests/second |
+| Enterprise | Custom (contact sales) |
+
+---
+
+## Rate Limit Response
+
+When rate limited, the API returns HTTP 429:
+
+```http
+HTTP/1.1 429 Too Many Requests
+Retry-After: 5
+Content-Type: application/json
+
+{
+  "type": "https://tools.ietf.org/html/rfc6585#section-4",
+  "title": "Too Many Requests",
+  "status": 429,
+  "detail": "Rate limit exceeded. Retry after 5 seconds.",
+  "retryAfter": 5
+}
+```
+
+### Headers
+
+| Header | Description |
+|--------|-------------|
+| `Retry-After` | Seconds to wait before retrying |
+| `X-RateLimit-Limit` | Maximum requests per window |
+| `X-RateLimit-Remaining` | Requests remaining in window |
+| `X-RateLimit-Reset` | Unix timestamp when limit resets |
+
+---
+
+## Plan Quotas
+
+### Free Plan
+
+| Resource | Limit |
+|----------|-------|
+| Databases | 3 |
+| Storage | 100 MB |
+| Requests/month | 10,000 |
+| Team Members | 1 |
+
+### Pro Plan
+
+| Resource | Limit |
+|----------|-------|
+| Databases | 10 |
+| Storage | 10 GB |
+| Requests/month | 1,000,000 |
+| Team Members | 10 |
+
+### Enterprise Plan
+
+| Resource | Limit |
+|----------|-------|
+| Databases | Unlimited |
+| Storage | Unlimited |
+| Requests/month | Unlimited |
+| Team Members | Unlimited |
+
+---
+
+## Handling Rate Limits
+
+### Retry with Exponential Backoff
+
+```csharp
+async Task<Result<T>> ExecuteWithRetry<T>(Func<Task<Result<T>>> operation)
+{
+    var maxRetries = 5;
+    var baseDelay = TimeSpan.FromMilliseconds(100);
+
+    for (int i = 0; i < maxRetries; i++)
+    {
+        var result = await operation();
+
+        if (result.IsSuccess)
+            return result;
+
+        if (!IsRateLimited(result))
+            return result;
+
+        var delay = baseDelay * Math.Pow(2, i);
+        var jitter = TimeSpan.FromMilliseconds(Random.Shared.Next(0, 100));
+        await Task.Delay(delay + jitter);
+    }
+
+    return Result.Fail("Max retries exceeded");
+}
+```
+
+### Client SDK Automatic Retry
+
+The TerraScale SDK handles rate limits automatically:
+
+```csharp
+var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+{
+    ApiKey = "ts_live_your_api_key",
+    Endpoint = "https://api.terrascale.io",
+    Retry = new RetryPolicyOptions
+    {
+        MaxRetries = 5,
+        BaseDelay = TimeSpan.FromMilliseconds(100),
+        MaxDelay = TimeSpan.FromSeconds(10),
+        UseJitter = true
+    }
+});
+```
+
+---
+
+## Best Practices
+
+### Batch Operations
+
+Instead of many small requests, use batch operations:
+
+```csharp
+// Bad: Many individual requests
+foreach (var key in keys)
+{
+    await client.GetItemAsync(key.Pk, key.Sk);
+}
+
+// Good: Single batch request
+await client.BatchGetAsync(keys);
+```
+
+### Request Queuing
+
+For high-volume applications, implement a request queue:
+
+```csharp
+var semaphore = new SemaphoreSlim(100); // Max concurrent requests
+
+async Task<T> ExecuteWithThrottle<T>(Func<Task<T>> operation)
+{
+    await semaphore.WaitAsync();
+    try
+    {
+        return await operation();
+    }
+    finally
+    {
+        semaphore.Release();
+    }
+}
+```
+
+### Monitor Usage
+
+Track your usage to stay within limits:
+
+```csharp
+var usage = await client.Payment.GetUsageAsync();
+
+Console.WriteLine($"Requests this month: {usage.Value.TotalRequests}");
+Console.WriteLine($"Storage used: {usage.Value.TotalStorageGb} GB");
+```
+
+---
+
+## Increasing Limits
+
+### Upgrade Plan
+
+Higher plans have higher limits. See [Plans](/reference/plans/) for details.
+
+### Enterprise Custom Limits
+
+Contact sales@terrascale.io for:
+
+- Custom rate limits
+- Dedicated capacity
+- SLA guarantees
+- Volume discounts
+
+---
+
+## Next Steps
+
+- [Plans](/reference/plans/) - Compare plan limits
+- [Error Handling](/reference/error-handling/) - Handle errors gracefully
+- [Best Practices](/reference/best-practices/) - Optimize your usage

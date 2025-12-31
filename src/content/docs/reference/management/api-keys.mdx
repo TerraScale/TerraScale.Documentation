@@ -1,0 +1,245 @@
+---
+title: API Key Management
+description: API reference for creating, listing, and revoking API keys.
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Manage API keys through the Management API. Requires JWT authentication.
+
+---
+
+## Create API Key
+
+### POST /api/v1/management/apikeys
+
+Creates a new API key.
+
+:::caution[Save Your Key]
+The API key is only returned once. Store it securely immediately.
+:::
+
+**Request:**
+```json
+{
+  "name": "Production API Key",
+  "scopes": ["database:read", "database:write"],
+  "expiresAt": "2025-01-15T00:00:00Z"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Descriptive name for the key |
+| `scopes` | array | Yes | Permission scopes |
+| `expiresAt` | datetime | No | Expiration date (optional) |
+
+**Response (201 Created):**
+```json
+{
+  "keyId": "key_abc123",
+  "apiKey": "ts_live_abc123xyz789...",
+  "name": "Production API Key",
+  "scopes": ["database:read", "database:write"],
+  "createdAt": "2024-01-15T10:00:00Z",
+  "expiresAt": "2025-01-15T00:00:00Z"
+}
+```
+
+---
+
+## List API Keys
+
+### GET /api/v1/management/apikeys
+
+Lists all API keys (without the actual key values).
+
+**Response (200 OK):**
+```json
+{
+  "keys": [
+    {
+      "keyId": "key_abc123",
+      "keyPrefix": "ts_live_abc...",
+      "name": "Production API Key",
+      "scopes": ["database:read", "database:write"],
+      "createdAt": "2024-01-15T10:00:00Z",
+      "expiresAt": "2025-01-15T00:00:00Z",
+      "lastUsedAt": "2024-01-15T12:00:00Z",
+      "revoked": false
+    }
+  ],
+  "nextCursor": null
+}
+```
+
+---
+
+## Revoke API Key
+
+### DELETE /api/v1/management/apikeys/\{keyId\}
+
+Revokes an API key. The key will immediately stop working.
+
+**Response (204 No Content):** Empty body on success.
+
+---
+
+## Available Scopes
+
+| Scope | Description |
+|-------|-------------|
+| `database:read` | Read items from databases |
+| `database:write` | Write/delete items in databases |
+| `database:*` | Full database access |
+| `repository:read` | Read entities from repositories |
+| `repository:write` | Write/delete entities in repositories |
+| `repository:*` | Full repository access |
+| `*` | Full access to all operations |
+
+### Scope Combinations
+
+```json
+// Read-only access
+{ "scopes": ["database:read", "repository:read"] }
+
+// Full database access
+{ "scopes": ["database:*"] }
+
+// Full access
+{ "scopes": ["*"] }
+```
+
+---
+
+## API Key Prefixes
+
+| Prefix | Environment |
+|--------|-------------|
+| `ts_live_` | Production |
+| `ts_test_` | Testing/Development |
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // Create API key
+    var createResult = await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(
+        Name: "Production API Key",
+        Scopes: new[] { "database:read", "database:write" },
+        ExpiresAt: DateTime.UtcNow.AddYears(1)
+    ));
+
+    if (createResult.IsSuccess)
+    {
+        // Important: Save this key - it's only shown once!
+        Console.WriteLine($"API Key: {createResult.Value.ApiKey}");
+        Console.WriteLine($"Key ID: {createResult.Value.KeyId}");
+    }
+
+    // List API keys
+    var listResult = await client.ApiKeys.ListAsync();
+
+    foreach (var key in listResult.Value.Keys)
+    {
+        var status = key.Revoked ? "Revoked" :
+                     key.ExpiresAt < DateTime.UtcNow ? "Expired" : "Active";
+        Console.WriteLine($"{key.Name} ({key.KeyPrefix}...) - \{status\}");
+    }
+
+    // Revoke API key
+    var revokeResult = await client.ApiKeys.RevokeAsync("key_abc123");
+
+    if (revokeResult.IsSuccess)
+    {
+        Console.WriteLine("API key revoked");
+    }
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    # Create API key
+    curl -X POST "https://api.terrascale.io/api/v1/management/apikeys" \
+      -H "Authorization: Bearer eyJhbGci..." \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "Production API Key",
+        "scopes": ["database:read", "database:write"],
+        "expiresAt": "2025-01-15T00:00:00Z"
+      }'
+
+    # List API keys
+    curl "https://api.terrascale.io/api/v1/management/apikeys" \
+      -H "Authorization: Bearer eyJhbGci..."
+
+    # Revoke API key
+    curl -X DELETE "https://api.terrascale.io/api/v1/management/apikeys/key_abc123" \
+      -H "Authorization: Bearer eyJhbGci..."
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Best Practices
+
+### Use Specific Scopes
+
+Only grant permissions your application needs:
+
+```json
+// Good: Specific scopes
+{ "scopes": ["database:read"] }
+
+// Avoid: Overly broad access
+{ "scopes": ["*"] }
+```
+
+### Set Expiration Dates
+
+Set reasonable expiration for security:
+
+```json
+{
+  "name": "Temporary Key",
+  "scopes": ["database:read"],
+  "expiresAt": "2024-03-01T00:00:00Z"
+}
+```
+
+### Separate Keys Per Environment
+
+Use different keys for development and production:
+
+- `dev-backend-key` - Development access
+- `staging-backend-key` - Staging access
+- `prod-backend-key` - Production access
+
+### Rotate Keys Regularly
+
+- Create a new key before the old one expires
+- Update your application with the new key
+- Revoke the old key
+
+---
+
+## Key Status
+
+| Status | Description |
+|--------|-------------|
+| Active | Key is valid and working |
+| Expired | Key has passed its expiration date |
+| Revoked | Key has been manually revoked |
+
+---
+
+## Next Steps
+
+- [Authentication](/reference/authentication/) - Using API keys
+- [Database Management](/reference/management/databases/) - Manage databases
+- [Dashboard API Keys](/dashboard/api-keys/) - Manage from UI

@@ -7,6 +7,7 @@
       "dependencies": {
         "@astrojs/starlight": "^0.37.1",
         "@astrojs/starlight-tailwind": "^4.0.2",
+        "@fontsource/quantico": "^5.2.7",
         "@tailwindcss/vite": "^4.1.18",
         "astro": "^5.16.6",
         "sharp": "^0.34.5",
@@ -118,6 +119,8 @@
     "@expressive-code/plugin-shiki": ["@expressive-code/plugin-shiki@0.41.3", "", { "dependencies": { "@expressive-code/core": "^0.41.3", "shiki": "^3.2.2" } }, "sha512-RlTARoopzhFJIOVHLGvuXJ8DCEme/hjV+ZnRJBIxzxsKVpGPW4Oshqg9xGhWTYdHstTsxO663s0cdBLzZj9TQA=="],
 
     "@expressive-code/plugin-text-markers": ["@expressive-code/plugin-text-markers@0.41.3", "", { "dependencies": { "@expressive-code/core": "^0.41.3" } }, "sha512-SN8tkIzDpA0HLAscEYD2IVrfLiid6qEdE9QLlGVSxO1KEw7qYvjpbNBQjUjMr5/jvTJ7ys6zysU2vLPHE0sb2g=="],
+
+    "@fontsource/quantico": ["@fontsource/quantico@5.2.7", "", {}, "sha512-V8mZGguOmc7CtECQyGnBZ+GWElARkQmgTqrwlRYAWwE66m31QiktFu6vYHH0G1U0aJ1QziYMXNZxMDNfF9Z2Bw=="],
 
     "@humanwhocodes/momoa": ["@humanwhocodes/momoa@2.0.4", "", {}, "sha512-RE815I4arJFtt+FVeU1Tgp9/Xvecacji8w/V6XtXsWWH/wz/eNkNbhb+ny/+PlVZjV0rxQpRSQKNKE3lcktHEA=="],
 

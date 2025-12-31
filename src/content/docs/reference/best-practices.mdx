@@ -1,0 +1,376 @@
+---
+title: Best Practices
+description: Best practices for building applications with TerraScale.
+sidebar:
+  order: 11
+---
+
+Best practices for building performant, reliable applications with TerraScale.
+
+---
+
+## Key Design
+
+### Use Meaningful Partition Keys
+
+Design partition keys that distribute data evenly and support your access patterns:
+
+```csharp
+// Good: Distributes data by user
+{ "pk": "user#123", "sk": "profile" }
+{ "pk": "user#123", "sk": "order#001" }
+
+// Avoid: All data in one partition
+{ "pk": "all_users", "sk": "user#123" }
+```
+
+### Leverage Sort Keys for Related Items
+
+Group related items under the same partition key:
+
+```csharp
+// User and their orders in same partition
+{ "pk": "user#123", "sk": "profile" }
+{ "pk": "user#123", "sk": "order#2024-001" }
+{ "pk": "user#123", "sk": "order#2024-002" }
+
+// Query all orders efficiently
+var filter = new QueryFilter
+{
+    PartitionKey = "user#123",
+    SortKeyCondition = SortKeyCondition.BeginsWith("order#")
+};
+```
+
+### Avoid Hot Partitions
+
+Distribute writes across partition keys:
+
+```csharp
+// Bad: All writes to one partition
+{ "pk": "orders", "sk": "order#12345" }
+
+// Good: Partition by date or user
+{ "pk": "orders#2024-01-15", "sk": "order#12345" }
+{ "pk": "user#456#orders", "sk": "order#12345" }
+```
+
+---
+
+## Query Optimization
+
+### Use Query Instead of Scan
+
+Queries are efficient; scans read everything:
+
+```csharp
+// Good: Query by partition key
+var result = await client.QueryAsync(new QueryFilter
+{
+    PartitionKey = "user#123"
+});
+
+// Avoid: Scan the entire database
+var result = await client.ScanAsync(new PaginationOptions());
+```
+
+### Limit Result Sizes
+
+Always specify reasonable limits:
+
+```csharp
+var result = await client.QueryAsync(filter, new QueryOptions
+{
+    Limit = 50  // Don't fetch more than needed
+});
+```
+
+### Use Projection Expressions
+
+Return only needed attributes:
+
+```csharp
+var options = new QueryOptions
+{
+    ProjectionAttributes = new[] { "name", "email" }  // Skip large attributes
+};
+```
+
+### Design for Access Patterns
+
+Structure keys to support your queries:
+
+```csharp
+// Access pattern: Get user's orders by date
+{ "pk": "user#123", "sk": "order#2024-01-15#001" }
+
+// Now you can query by date range
+SortKeyCondition.Between("order#2024-01-01", "order#2024-01-31")
+```
+
+---
+
+## Error Handling
+
+### Always Check Results
+
+Never assume operations succeed:
+
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsFailed)
+{
+    logger.LogError("Get failed: {Error}", result.Errors.First().Message);
+    return null;
+}
+
+return result.Value;
+```
+
+### Implement Retry Logic
+
+Handle transient failures gracefully:
+
+```csharp
+var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+{
+    Retry = new RetryPolicyOptions
+    {
+        MaxRetries = 3,
+        BaseDelay = TimeSpan.FromMilliseconds(500),
+        UseJitter = true
+    }
+});
+```
+
+### Log Errors with Context
+
+Include operation details for debugging:
+
+```csharp
+if (result.IsFailed)
+{
+    logger.LogError(
+        "Failed to get item PK={Pk} SK={Sk}: {Error}",
+        pk, sk, result.Errors.First().Message
+    );
+}
+```
+
+---
+
+## Transactions
+
+### Use Transactions Only When Needed
+
+Transactions have higher latency than batch operations:
+
+```csharp
+// Use batch for independent writes
+await client.BatchWriteAsync(items);
+
+// Use transactions only for atomic operations
+await client.TransactWriteAsync(items);
+```
+
+### Keep Transactions Small
+
+Fewer items = faster execution:
+
+```csharp
+// Good: Small, focused transaction
+var items = new List<TransactWriteItem>
+{
+    new() { Action = TransactAction.Put, ... },
+    new() { Action = TransactAction.Update, ... }
+};
+
+// Avoid: Large transactions with many items
+```
+
+### Use Idempotency Tokens
+
+Prevent duplicate operations on retry:
+
+```csharp
+var result = await client.TransactWriteAsync(
+    items,
+    clientRequestToken: "order-12345-payment"
+);
+```
+
+---
+
+## Performance
+
+### Use Batch Operations
+
+Reduce network round trips:
+
+```csharp
+// Bad: Many individual requests
+foreach (var key in keys)
+{
+    await client.GetItemAsync(key.Pk, key.Sk);
+}
+
+// Good: Single batch request
+await client.BatchGetAsync(keys);
+```
+
+### Parallel Processing
+
+Process independent operations concurrently:
+
+```csharp
+var tasks = partitions.Select(pk =>
+    client.QueryAsync(new QueryFilter { PartitionKey = pk })
+);
+
+var results = await Task.WhenAll(tasks);
+```
+
+### Connection Pooling
+
+Reuse client instances:
+
+```csharp
+// Good: Create once, reuse
+public class MyService
+{
+    private readonly TerraScaleDatabase _client;
+
+    public MyService(TerraScaleDatabase client)
+    {
+        _client = client;
+    }
+}
+
+// Avoid: Creating new clients per request
+```
+
+---
+
+## Security
+
+### Use Specific Scopes
+
+Grant minimum necessary permissions:
+
+```csharp
+// Good: Specific permissions
+{ "scopes": ["database:read", "repository:read"] }
+
+// Avoid: Overly broad permissions
+{ "scopes": ["*"] }
+```
+
+### Rotate API Keys
+
+Set expiration and rotate regularly:
+
+```csharp
+await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(
+    Name: "Production Key",
+    Scopes: new[] { "database:read", "database:write" },
+    ExpiresAt: DateTime.UtcNow.AddMonths(3)
+));
+```
+
+### Enable MFA
+
+Protect accounts with two-factor authentication.
+
+### Store Secrets Securely
+
+Never commit API keys to source control:
+
+```csharp
+// Good: Environment variable
+var apiKey = Environment.GetEnvironmentVariable("TERRASCALE_API_KEY");
+
+// Good: Secret manager
+var apiKey = await secretManager.GetSecretAsync("terrascale-api-key");
+
+// Bad: Hardcoded
+var apiKey = "ts_live_abc123...";
+```
+
+---
+
+## Data Modeling
+
+### Use Repositories for Domain Entities
+
+Typed entities with schema validation:
+
+```csharp
+public record Customer : EntityBase
+{
+    public required string Name { get; init; }
+    public required string Email { get; init; }
+}
+
+var customers = client.GetRepository<Customer>("customers");
+```
+
+### Use Raw Items for Flexible Data
+
+Dynamic attributes without schema:
+
+```csharp
+var item = new DatabaseItem
+{
+    PartitionKey = "config#app",
+    Attributes = configData
+};
+```
+
+### Denormalize for Read Performance
+
+Store data in the shape you read it:
+
+```csharp
+// Instead of joining user and address
+{ "pk": "user#123", "sk": "profile", "data": {
+    "name": "John",
+    "address": {  // Embedded, not referenced
+        "street": "123 Main St",
+        "city": "NYC"
+    }
+}}
+```
+
+---
+
+## Monitoring
+
+### Track Usage
+
+Monitor your usage against plan limits:
+
+```csharp
+var usage = await client.Payment.GetUsageAsync();
+
+if (usage.Value.TotalRequests > warningThreshold)
+{
+    logger.LogWarning("Approaching request limit");
+}
+```
+
+### Use Health Endpoints
+
+Monitor API availability:
+
+```bash
+curl https://api.terrascale.io/health
+```
+
+---
+
+## Next Steps
+
+- [Error Handling](/reference/error-handling/) - Handle errors gracefully
+- [Rate Limits](/reference/rate-limits/) - Stay within limits
+- [API Reference](/reference/api/) - Complete API documentation

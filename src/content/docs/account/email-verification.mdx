@@ -1,0 +1,142 @@
+---
+title: Email Verification
+description: Verify your email address to activate your TerraScale account.
+sidebar:
+  order: 2
+---
+
+After signup, you must verify your email address to activate your account.
+
+---
+
+## Verify Your Email
+
+### POST /auth/verify-email
+
+Verifies the user's email with a code sent to their inbox.
+
+**Request:**
+```json
+{
+  "pendingAuthenticationToken": "pat_abc123...",
+  "code": "123456"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `pendingAuthenticationToken` | string | Yes | Token from signup or login response |
+| `code` | string | Yes | 6-digit verification code from email |
+
+**Response (200 OK):**
+```json
+{
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "rt_abc123...",
+  "expiresIn": 3600,
+  "userId": "usr_abc123",
+  "email": "john@example.com",
+  "name": "John Doe",
+  "avatarUrl": null,
+  "personalOrgId": "org_abc123",
+  "permissions": ["database:read", "database:write"],
+  "roles": ["member"]
+}
+```
+
+Upon successful verification:
+- Your account is activated
+- You receive access and refresh tokens
+- A personal organization is created for you
+- You can start creating databases immediately
+
+---
+
+## Resend Verification Email
+
+If you didn't receive the code or it expired, you can request a new one.
+
+### POST /auth/resend-verification
+
+Resends the verification email if the code expired or was not received.
+
+**Request:**
+```json
+{
+  "pendingAuthenticationToken": "pat_abc123..."
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Verification email sent"
+}
+```
+
+:::note
+Verification codes expire after 10 minutes. Request a new code if yours has expired.
+:::
+
+---
+
+## Troubleshooting
+
+### Code Not Received
+
+1. Check your spam/junk folder
+2. Verify you entered the correct email during signup
+3. Wait a few minutes - email delivery can be delayed
+4. Use the resend verification endpoint to get a new code
+
+### Code Expired
+
+Verification codes are valid for 10 minutes. If expired:
+1. Use the resend verification endpoint
+2. Check your email for the new code
+3. Enter the new code within 10 minutes
+
+### Invalid Code
+
+If you receive an "invalid code" error:
+1. Ensure you're entering the most recent code
+2. Check that you're using the correct `pendingAuthenticationToken`
+3. Request a new code if needed
+
+---
+
+## C# SDK Example
+
+```csharp
+// After signup, verify the email
+var verifyResult = await client.Auth.VerifyEmailAsync(new VerifyEmailRequest(
+    PendingAuthenticationToken: pendingToken,
+    Code: "123456"
+));
+
+if (verifyResult.IsSuccess)
+{
+    // Set the access token for future requests
+    client.SetAccessToken(verifyResult.Value.AccessToken);
+    Console.WriteLine($"Welcome, {verifyResult.Value.Name}!");
+}
+
+// If code expired, resend it
+var resendResult = await client.Auth.ResendVerificationAsync(
+    new ResendVerificationRequest(PendingAuthenticationToken: pendingToken)
+);
+
+if (resendResult.IsSuccess)
+{
+    Console.WriteLine("New verification code sent!");
+}
+```
+
+---
+
+## Next Steps
+
+- [Login](/account/login/) - Sign in to your account
+- [Profile](/account/profile/) - Manage your profile settings
+- [Getting Started](/guides/getting-started/) - Create your first database

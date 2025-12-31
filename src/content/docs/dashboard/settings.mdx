@@ -1,0 +1,292 @@
+---
+title: Profile & Preferences
+description: Manage your profile settings and customize your TerraScale Dashboard experience.
+sidebar:
+  order: 7
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Customize your TerraScale account with profile information and personal preferences.
+
+---
+
+## Accessing Settings
+
+Navigate to **Settings** in the sidebar to access profile and preference options.
+
+---
+
+## Profile Settings
+
+Access profile settings from **Settings > Profile**.
+
+### Profile Information
+
+| Field | Description | Editable |
+|-------|-------------|----------|
+| **Display Name** | How your name appears | Yes |
+| **Avatar URL** | Profile picture URL | Yes |
+| **Email** | Account email address | Contact support |
+| **User ID** | Unique identifier | No |
+| **Created** | Account creation date | No |
+
+### Updating Your Display Name
+
+1. Navigate to **Settings > Profile**
+2. Click the **Edit** icon next to Display Name
+3. Enter your new name
+4. Click **Save**
+
+Your display name appears in:
+- Organization member lists
+- Activity logs
+- Team notifications
+
+### Setting an Avatar
+
+1. Navigate to **Settings > Profile**
+2. Click the **Edit** icon next to Avatar
+3. Enter a URL to your profile image
+4. Click **Save**
+
+**Supported formats:**
+- JPEG, PNG, GIF, WebP
+- Recommended size: 200x200 pixels
+- URL must be publicly accessible
+
+**Tips for avatar URLs:**
+- Use Gravatar with your email
+- Upload to a CDN or image host
+- Use GitHub avatar URL
+
+### Changing Your Email
+
+Email changes require support assistance for security:
+
+1. Contact support@terrascale.io
+2. Verify your identity (current email, organization name)
+3. Provide the new email address
+4. Confirm via link sent to both addresses
+
+---
+
+## Preferences
+
+Access preferences from **Settings > Preferences**.
+
+### Theme
+
+Choose your dashboard appearance:
+
+<Tabs>
+  <TabItem label="Light">
+    Bright interface with white background. Best for well-lit environments.
+  </TabItem>
+  <TabItem label="Dark">
+    Dark interface with reduced brightness. Best for low-light environments.
+  </TabItem>
+  <TabItem label="System">
+    Automatically follows your operating system's theme setting.
+  </TabItem>
+</Tabs>
+
+**To change theme:**
+
+1. Navigate to **Settings > Preferences**
+2. Select your preferred theme
+3. Change applies immediately
+
+### Timezone
+
+Set your local timezone for accurate date/time display:
+
+1. Navigate to **Settings > Preferences**
+2. Select your timezone from the dropdown
+3. Click **Save**
+
+Timezone affects:
+- Dashboard timestamps
+- Invoice dates
+- Activity logs
+- Scheduled operations
+
+### Notifications
+
+Configure email notifications:
+
+| Notification | Description | Default |
+|--------------|-------------|---------|
+| **Security Alerts** | Login from new device, password changes | On |
+| **Billing** | Payment confirmations, failed payments | On |
+| **Usage Alerts** | Approaching plan limits | On |
+| **Product Updates** | New features, maintenance notices | Off |
+| **Marketing** | Tips, best practices, promotions | Off |
+
+**To update notification preferences:**
+
+1. Navigate to **Settings > Preferences**
+2. Toggle each notification type
+3. Click **Save**
+
+### Default Region
+
+Set the default region for new databases:
+
+1. Navigate to **Settings > Preferences**
+2. Select your preferred region
+3. Click **Save**
+
+This region will be pre-selected when creating new databases. You can always choose a different region during creation.
+
+**Choosing a default region:**
+- Select the region closest to your users
+- Consider data residency requirements
+- Check [available regions](/reference/regions/)
+
+---
+
+## Account Information
+
+### Viewing Account Details
+
+From **Settings > Profile**, you can view:
+
+| Field | Description |
+|-------|-------------|
+| **User ID** | Your unique identifier (e.g., `usr_abc123`) |
+| **Email** | Registered email address |
+| **Created** | When your account was created |
+| **Organization** | Your current organization |
+| **Role** | Your role in the organization |
+
+### Account Statistics
+
+View your account activity:
+
+- Total databases created
+- Total API keys generated
+- Last login date and location
+- Account age
+
+---
+
+## Linked Accounts
+
+### OAuth Connections
+
+If you signed up with a social provider, view linked accounts:
+
+| Provider | Status |
+|----------|--------|
+| Google | Connected / Not connected |
+| GitHub | Connected / Not connected |
+
+### Managing OAuth Connections
+
+**To link an account:**
+
+1. Navigate to **Settings > Profile**
+2. Click **"Connect"** next to the provider
+3. Authorize the connection
+4. Account is now linked
+
+**To unlink an account:**
+
+1. Navigate to **Settings > Profile**
+2. Click **"Disconnect"** next to the provider
+3. Confirm the action
+
+**Note**: You cannot unlink your only login method. Set a password first or link another provider.
+
+---
+
+## Deleting Your Account
+
+To permanently delete your TerraScale account:
+
+### Prerequisites
+
+Before deletion:
+- Leave or transfer ownership of all organizations
+- Download any data you need to keep
+- Revoke all API keys
+- Cancel any active subscriptions
+
+### Deletion Process
+
+1. Navigate to **Settings > Profile**
+2. Scroll to **Danger Zone**
+3. Click **"Delete Account"**
+4. Enter your password
+5. Type `DELETE` to confirm
+6. Click **"Permanently Delete Account"**
+
+### What Gets Deleted
+
+- Your user account and profile
+- All personal data
+- Session and login history
+- Notification preferences
+
+### What's NOT Deleted
+
+- Organization data (if you transferred ownership)
+- Shared resources remain with the organization
+- Audit logs are retained for compliance
+
+### Cooling Off Period
+
+After requesting deletion:
+- 7-day grace period before permanent deletion
+- Log in during this period to cancel
+- After 7 days, deletion is irreversible
+
+---
+
+## Export Your Data
+
+Request a copy of your personal data:
+
+1. Navigate to **Settings > Profile**
+2. Click **"Export My Data"**
+3. Select data types to include
+4. Click **"Request Export"**
+5. Download link sent to your email
+
+Export includes:
+- Profile information
+- Preference settings
+- Activity history
+- Organization memberships
+
+Export does not include database contents (use API for data export).
+
+---
+
+## Best Practices
+
+### Profile
+
+| Practice | Recommendation |
+|----------|----------------|
+| Display Name | Use your real name for team collaboration |
+| Avatar | Add a photo for easy identification |
+| Email | Keep updated for security notifications |
+
+### Preferences
+
+| Practice | Recommendation |
+|----------|----------------|
+| Theme | Match your work environment |
+| Timezone | Set to your local timezone |
+| Notifications | Enable security and billing alerts |
+| Default Region | Set to your primary user region |
+
+---
+
+## Next Steps
+
+- [Security Settings](/dashboard/security/) - Configure 2FA
+- [Organization Settings](/dashboard/organization/) - Manage team
+- [Billing & Payments](/dashboard/billing/) - Manage subscription

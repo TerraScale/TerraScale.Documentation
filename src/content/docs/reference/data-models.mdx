@@ -1,0 +1,324 @@
+---
+title: Data Models
+description: Data structures and types used in the TerraScale SDK.
+sidebar:
+  order: 10
+---
+
+Data structures and types used in the TerraScale C# SDK.
+
+---
+
+## DatabaseItem
+
+Represents a raw database item with dynamic attributes.
+
+```csharp
+public sealed record DatabaseItem
+{
+    public required string PartitionKey { get; init; }
+    public string? SortKey { get; init; }
+    public required IReadOnlyDictionary<string, object?> Attributes { get; init; }
+    public DateTime? CreatedAt { get; init; }
+    public DateTime? UpdatedAt { get; init; }
+
+    // Helper methods
+    public T? GetAttribute<T>(string name);
+    public T GetAttribute<T>(string name, T defaultValue);
+}
+```
+
+### Usage
+
+```csharp
+var item = new DatabaseItem
+{
+    PartitionKey = "user#123",
+    SortKey = "profile",
+    Attributes = new Dictionary<string, object?>
+    {
+        ["name"] = "John Doe",
+        ["email"] = "john@example.com",
+        ["age"] = 30
+    }
+};
+
+// Get attributes with type safety
+var name = item.GetAttribute<string>("name");
+var age = item.GetAttribute<int>("age", defaultValue: 0);
+```
+
+---
+
+## QueryFilter
+
+Filter conditions for query operations.
+
+```csharp
+public sealed record QueryFilter
+{
+    public required string PartitionKey { get; init; }
+    public SortKeyCondition? SortKeyCondition { get; init; }
+    public string? FilterExpression { get; init; }
+    public IReadOnlyDictionary<string, object>? ExpressionAttributeValues { get; init; }
+}
+```
+
+### Usage
+
+```csharp
+var filter = new QueryFilter
+{
+    PartitionKey = "user#123",
+    SortKeyCondition = SortKeyCondition.BeginsWith("order#")
+};
+```
+
+---
+
+## SortKeyCondition
+
+Sort key comparison operators.
+
+```csharp
+public sealed record SortKeyCondition
+{
+    public required SortKeyOperator Operator { get; init; }
+    public required object Value { get; init; }
+    public object? Value2 { get; init; }  // For BETWEEN operator
+}
+
+public enum SortKeyOperator
+{
+    Equals,
+    LessThan,
+    LessThanOrEquals,
+    GreaterThan,
+    GreaterThanOrEquals,
+    BeginsWith,
+    Between
+}
+```
+
+### Factory Methods
+
+```csharp
+// Exact match
+SortKeyCondition.Equal("profile")
+
+// Prefix match
+SortKeyCondition.BeginsWith("order#")
+
+// Range (inclusive)
+SortKeyCondition.Between("2024-01-01", "2024-12-31")
+
+// Comparisons
+SortKeyCondition.LessThan("2024-06-01")
+SortKeyCondition.LessThanOrEquals("2024-06-01")
+SortKeyCondition.GreaterThan("2024-01-01")
+SortKeyCondition.GreaterThanOrEquals("2024-01-01")
+```
+
+---
+
+## PaginationOptions
+
+Options for paginated requests.
+
+```csharp
+public record PaginationOptions
+{
+    public int Limit { get; init; } = 50;
+    public string? NextToken { get; init; }
+    public bool IncludeTotalCount { get; init; } = false;
+}
+```
+
+---
+
+## QueryOptions
+
+Extended options for query operations.
+
+```csharp
+public sealed record QueryOptions : PaginationOptions
+{
+    public string? IndexName { get; init; }
+    public bool ScanForward { get; init; } = true;
+    public IReadOnlyList<string>? ProjectionAttributes { get; init; }
+}
+```
+
+### Usage
+
+```csharp
+var options = new QueryOptions
+{
+    Limit = 50,
+    ScanForward = false,  // Descending order
+    ProjectionAttributes = new[] { "name", "email" }
+};
+```
+
+---
+
+## PaginatedResult
+
+Paginated response wrapper.
+
+```csharp
+public sealed record PaginatedResult<T>
+{
+    public required IReadOnlyList<T> Items { get; init; }
+    public string? NextToken { get; init; }
+    public bool HasMore => NextToken is not null;
+    public long? TotalCount { get; init; }
+}
+```
+
+### Pagination Example
+
+```csharp
+var result = await client.QueryAsync(filter, new QueryOptions { Limit = 50 });
+
+// Process current page
+foreach (var item in result.Value.Items)
+{
+    Console.WriteLine(item.PartitionKey);
+}
+
+// Get next page if available
+if (result.Value.HasMore)
+{
+    var nextResult = await client.QueryAsync(filter, new QueryOptions
+    {
+        Limit = 50,
+        NextToken = result.Value.NextToken
+    });
+}
+```
+
+---
+
+## IEntity / EntityBase
+
+Base interface and class for typed entities.
+
+```csharp
+public interface IEntity
+{
+    string GetPartitionKey();
+    string? GetSortKey() => null;
+}
+
+public abstract record EntityBase : IEntity
+{
+    public required string Id { get; init; }
+    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? UpdatedAt { get; init; }
+    public long Version { get; init; } = 1;
+
+    public virtual string GetPartitionKey() => Id;
+    public virtual string? GetSortKey() => null;
+}
+```
+
+### Custom Entity Example
+
+```csharp
+public record Customer : EntityBase
+{
+    public required string Name { get; init; }
+    public required string Email { get; init; }
+    public CustomerTier Tier { get; init; } = CustomerTier.Standard;
+}
+
+public record Order : EntityBase
+{
+    public required string CustomerId { get; init; }
+    public required string OrderNumber { get; init; }
+    public decimal Total { get; init; }
+
+    // Custom key strategy
+    public override string GetPartitionKey() => $"customer#{CustomerId}";
+    public override string? GetSortKey() => $"order#{OrderNumber}";
+}
+```
+
+---
+
+## BatchWriteItem
+
+Item for batch write operations.
+
+```csharp
+public record BatchWriteItem
+{
+    public required BatchOperation Operation { get; init; }
+    public required string PartitionKey { get; init; }
+    public string? SortKey { get; init; }
+    public Dictionary<string, object?>? Data { get; init; }
+}
+
+public enum BatchOperation
+{
+    Put,
+    Delete
+}
+```
+
+---
+
+## TransactWriteItem
+
+Item for transactional write operations.
+
+```csharp
+public record TransactWriteItem
+{
+    public required TransactAction Action { get; init; }
+    public required string PartitionKey { get; init; }
+    public string? SortKey { get; init; }
+    public Dictionary<string, object?>? Data { get; init; }
+    public string? ConditionExpression { get; init; }
+}
+
+public enum TransactAction
+{
+    Put,
+    Update,
+    Delete,
+    ConditionCheck
+}
+```
+
+---
+
+## ItemKey
+
+Simple key reference for batch get operations.
+
+```csharp
+public record ItemKey(string PartitionKey, string? SortKey = null);
+```
+
+### Usage
+
+```csharp
+var keys = new List<ItemKey>
+{
+    new("user#123", "profile"),
+    new("user#456", "profile"),
+    new("user#789")  // No sort key
+};
+
+var result = await client.BatchGetAsync(keys);
+```
+
+---
+
+## Next Steps
+
+- [C# SDK](/guides/SDKs/csharp/) - Full SDK documentation
+- [Repository Pattern](/guides/repository/) - Typed entity storage
+- [API Reference](/reference/api/) - API documentation

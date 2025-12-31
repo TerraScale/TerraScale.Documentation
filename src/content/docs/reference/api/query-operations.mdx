@@ -1,0 +1,282 @@
+---
+title: Query Operations
+description: Query and Scan operations for retrieving multiple items from your database.
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Query and Scan operations for retrieving multiple items.
+
+---
+
+## Query
+
+### POST /api/v1/databases/\{databaseId\}/items/query
+
+Queries items by partition key with optional sort key conditions.
+
+**Request:**
+```json
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#2024",
+  "filterExpression": null,
+  "limit": 20,
+  "cursor": null,
+  "scanForward": true
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `partitionKey` | string | Yes | Partition key value to query |
+| `sortKeyCondition` | string | No | Sort key condition (see operators below) |
+| `filterExpression` | object | No | Additional filter after query |
+| `limit` | integer | No | Max items to return (default: 20) |
+| `cursor` | string | No | Pagination cursor from previous response |
+| `scanForward` | boolean | No | Sort direction, true = ascending (default: true) |
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "pk": "user#123",
+      "sk": "order#2024-001",
+      "data": { "total": 99.99 }
+    }
+  ],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "count": 1,
+  "scannedCount": 1
+}
+```
+
+---
+
+## Sort Key Operators
+
+| Operator | Format | Example | Description |
+|----------|--------|---------|-------------|
+| Equals | `=:value` | `=:profile` | Exact match |
+| Less than | `<:value` | `<:2024-01-01` | Before value |
+| Less than or equals | `<=:value` | `<=:2024-01-01` | At or before value |
+| Greater than | `>:value` | `>:2024-01-01` | After value |
+| Greater than or equals | `>=:value` | `>=:2024-01-01` | At or after value |
+| Begins with | `begins_with:prefix` | `begins_with:order#` | Prefix match |
+| Between | `between:low:high` | `between:2024-01-01:2024-12-31` | Range inclusive |
+
+### Examples
+
+```json
+// Get all orders for a user
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#"
+}
+
+// Get orders from 2024
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "between:order#2024-01-01:order#2024-12-31"
+}
+
+// Get the user's profile
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "=:profile"
+}
+```
+
+---
+
+## Scan
+
+### POST /api/v1/databases/\{databaseId\}/items/scan
+
+Scans all items in the database. Use with caution on large datasets.
+
+**Request:**
+```json
+{
+  "filterExpression": null,
+  "limit": 20,
+  "cursor": null
+}
+```
+
+**Response:** Same format as query response.
+
+:::caution[Performance Warning]
+Scan reads every item in the database. For large datasets, use Query with a partition key instead.
+:::
+
+---
+
+## Pagination
+
+Both Query and Scan support cursor-based pagination:
+
+```json
+// First request
+{
+  "partitionKey": "user#123",
+  "limit": 10
+}
+
+// Response
+{
+  "items": [...],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "count": 10
+}
+
+// Next page
+{
+  "partitionKey": "user#123",
+  "limit": 10,
+  "cursor": "eyJsYXN0S2V5Ijo..."
+}
+```
+
+When `nextCursor` is `null`, there are no more items.
+
+---
+
+## Sort Direction
+
+Control the order of results with `scanForward`:
+
+```json
+// Ascending order (oldest first)
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#",
+  "scanForward": true
+}
+
+// Descending order (newest first)
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#",
+  "scanForward": false
+}
+```
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // Query with sort key condition
+    var filter = new QueryFilter
+    {
+        PartitionKey = "user#123",
+        SortKeyCondition = SortKeyCondition.BeginsWith("order#")
+    };
+
+    var options = new QueryOptions
+    {
+        Limit = 50,
+        ScanForward = false // Descending order
+    };
+
+    var result = await client.QueryAsync(filter, options);
+
+    if (result.IsSuccess)
+    {
+        foreach (var item in result.Value.Items)
+        {
+            Console.WriteLine($"Order: {item.SortKey}");
+        }
+
+        // Handle pagination
+        if (result.Value.HasMore)
+        {
+            var nextPage = await client.QueryAsync(filter, new QueryOptions
+            {
+                NextToken = result.Value.NextToken
+            });
+        }
+    }
+
+    // Scan all items
+    var scanResult = await client.ScanAsync(new PaginationOptions
+    {
+        Limit = 100
+    });
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    # Query
+    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/query" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "partitionKey": "user#123",
+        "sortKeyCondition": "begins_with:order#",
+        "limit": 20
+      }'
+
+    # Scan
+    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/scan" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "limit": 100
+      }'
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Best Practices
+
+### Use Query Instead of Scan
+
+Queries are efficient because they target a specific partition. Scans read the entire database.
+
+```json
+// Good: Query by partition key
+{ "partitionKey": "user#123" }
+
+// Avoid: Scan the whole database
+{}
+```
+
+### Design Keys for Access Patterns
+
+Structure your keys to support your query patterns:
+
+```json
+// Access pattern: Get all orders for a user
+{ "pk": "user#123", "sk": "order#2024-001" }
+
+// Access pattern: Get orders by date
+{ "pk": "orders#2024-01", "sk": "user#123#order#001" }
+```
+
+### Limit Result Size
+
+Always specify a reasonable limit to avoid fetching too much data:
+
+```json
+{
+  "partitionKey": "user#123",
+  "limit": 50
+}
+```
+
+---
+
+## Next Steps
+
+- [Batch Operations](/reference/api/batch-operations/) - Bulk read operations
+- [Transactions](/reference/api/transactions/) - Consistent reads
+- [Best Practices](/reference/best-practices/) - Query optimization

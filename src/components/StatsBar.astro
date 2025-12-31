@@ -1,0 +1,69 @@
+---
+interface Props {
+  stats: {
+    value: string;
+    label: string;
+  }[];
+}
+
+const { stats } = Astro.props;
+---
+
+<div class="stats-container">
+  {stats.map((stat) => (
+    <div class="stat-item">
+      <div class="stat-value">{stat.value}</div>
+      <div class="stat-label">{stat.label}</div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .stats-container {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 2rem 0;
+    margin: 2rem 0;
+    border-top: 1px solid var(--sl-color-gray-6);
+    border-bottom: 1px solid var(--sl-color-gray-6);
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--sl-color-white);
+    line-height: 1;
+    background: linear-gradient(90deg, #22c55e, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .stat-label {
+    font-size: 0.875rem;
+    color: var(--sl-color-gray-3);
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 768px) {
+    .stats-container {
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .stat-item {
+      flex: 0 0 45%;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+    }
+  }
+</style>

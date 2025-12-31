@@ -1,0 +1,239 @@
+---
+title: API Key Management
+description: Create, manage, and revoke API keys through the TerraScale Dashboard.
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Manage API keys for authenticating your applications with TerraScale.
+
+---
+
+## Creating an API Key
+
+### Step 1: Navigate to API Keys
+
+Click **API Keys** in the sidebar to open the API key management page.
+
+### Step 2: Click Create
+
+Click the **"Create API Key"** button to open the creation dialog.
+
+### Step 3: Configure the Key
+
+| Field | Description | Required |
+|-------|-------------|----------|
+| **Name** | Descriptive identifier (e.g., "Production Backend") | Yes |
+| **Scopes** | Permissions the key will have | Yes |
+| **Expiration** | Optional expiration date | No |
+
+### Step 4: Select Scopes
+
+Choose the permissions for your API key:
+
+| Scope | Description |
+|-------|-------------|
+| `database:read` | Read data from databases |
+| `database:write` | Write and delete data |
+| `database:*` | Full database access (read + write) |
+| `repository:read` | Read from repositories |
+| `repository:write` | Write to repositories |
+| `repository:*` | Full repository access |
+| `*` | Full access to all operations |
+
+### Step 5: Create and Copy
+
+1. Click **"Create"**
+2. **Copy your API key immediately**
+3. Store it securely
+
+The full API key is only shown once. After closing the dialog, you can only see the key prefix.
+
+---
+
+## API Key List
+
+The API Keys page displays all your keys with:
+
+| Column | Description |
+|--------|-------------|
+| **Name** | Descriptive name |
+| **Key Prefix** | First characters of the key (e.g., `ts_live_abc...`) |
+| **Status** | Active, Revoked, or Expired |
+| **Scopes** | Assigned permissions |
+| **Created** | Creation date |
+| **Last Used** | Most recent usage timestamp |
+| **Expires** | Expiration date (if set) |
+
+### Filtering Keys
+
+- **Search**: Filter by key name
+- **Status Filter**: Show Active, Revoked, or Expired keys
+- **Sort**: Click column headers to sort
+
+---
+
+## Key Status
+
+<Tabs>
+  <TabItem label="Active">
+    The key is valid and can be used for API requests.
+
+    - Green status indicator
+    - Can be revoked at any time
+    - Shows last used timestamp
+  </TabItem>
+  <TabItem label="Revoked">
+    The key has been manually disabled and cannot be used.
+
+    - Red status indicator
+    - Revocation is permanent
+    - Cannot be re-activated
+  </TabItem>
+  <TabItem label="Expired">
+    The key has passed its expiration date.
+
+    - Yellow status indicator
+    - Automatically stops working at expiration
+    - Cannot be extended
+  </TabItem>
+</Tabs>
+
+---
+
+## Revoking an API Key
+
+To revoke a key:
+
+1. Find the key in the API Keys list
+2. Click the **menu icon** (three dots) on the right
+3. Select **"Revoke"**
+4. Confirm the action
+
+Revocation is immediate and permanent. Any application using the key will receive `401 Unauthorized` errors.
+
+---
+
+## Best Practices
+
+### Naming Conventions
+
+Use descriptive names that identify the key's purpose:
+
+| Good Examples | Bad Examples |
+|---------------|--------------|
+| `Production Backend API` | `key1` |
+| `Mobile App - iOS` | `test` |
+| `CI/CD Pipeline` | `my key` |
+| `Development Server` | `asdf` |
+
+### Scope Selection
+
+Follow the principle of least privilege:
+
+```
+// Good: Specific permissions
+{ "scopes": ["database:read", "repository:read"] }
+
+// Avoid: Overly broad permissions
+{ "scopes": ["*"] }
+```
+
+**Recommendations:**
+- Read-only services: Use `database:read` only
+- Backend APIs: Use `database:read` and `database:write`
+- Management tools: Use specific scopes as needed
+- Never use `*` in production unless absolutely necessary
+
+### Key Rotation
+
+Rotate API keys regularly:
+
+1. Create a new key with the same scopes
+2. Update your application to use the new key
+3. Verify the new key works correctly
+4. Revoke the old key
+
+**Recommended rotation schedule:**
+- Production keys: Every 90 days
+- Development keys: Every 180 days
+- CI/CD keys: Every 90 days
+
+### Expiration Dates
+
+Set expiration dates for temporary keys:
+
+| Use Case | Recommended Expiration |
+|----------|------------------------|
+| Temporary access | 24 hours - 7 days |
+| Contractor access | Project duration |
+| Testing | 30 days |
+| Production | No expiration (rotate manually) |
+
+---
+
+## Security Guidelines
+
+### Do
+
+- Use different keys for different environments
+- Set expiration dates for temporary access
+- Monitor "Last Used" timestamps for suspicious activity
+- Revoke unused keys promptly
+- Store keys in environment variables or secret managers
+
+### Don't
+
+- Share keys between applications
+- Commit keys to source control
+- Use production keys in development
+- Grant more permissions than needed
+- Keep keys active after project completion
+
+---
+
+## Viewing Key Usage
+
+Track API key usage:
+
+1. Find the key in the list
+2. Check the **Last Used** column
+3. Click the key name for detailed usage metrics
+
+Usage metrics include:
+- Total requests
+- Requests by operation type
+- Error rates
+- Geographic distribution
+
+---
+
+## Troubleshooting
+
+### Key Not Working
+
+| Issue | Solution |
+|-------|----------|
+| `401 Unauthorized` | Check key is Active, not Revoked or Expired |
+| `403 Forbidden` | Verify key has required scopes |
+| Key not recognized | Ensure correct prefix (`ts_live_` or `ts_test_`) |
+| Intermittent failures | Check rate limits |
+
+### Lost API Key
+
+If you've lost an API key:
+
+1. **You cannot recover it** - keys are only shown once
+2. Create a new key with the same scopes
+3. Update your application configuration
+4. Revoke the old key
+
+---
+
+## Next Steps
+
+- [Authentication Reference](/reference/authentication/) - API key authentication details
+- [Security Settings](/dashboard/security/) - Enable 2FA for your account
+- [C# SDK Guide](/guides/SDKs/csharp/) - Use keys in your application

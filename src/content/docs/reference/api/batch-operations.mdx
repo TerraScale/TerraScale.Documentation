@@ -1,0 +1,299 @@
+---
+title: Batch Operations
+description: Batch read and write operations for efficient bulk data processing.
+sidebar:
+  order: 4
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Batch operations allow you to read or write multiple items in a single request.
+
+---
+
+## Batch Write
+
+### POST /api/v1/databases/\{databaseId\}/items/batch/write
+
+Performs batch put/delete operations. Maximum 25 items per request.
+
+**Request:**
+```json
+{
+  "items": [
+    {
+      "operation": "Put",
+      "pk": "user#123",
+      "sk": "profile",
+      "data": { "name": "John" }
+    },
+    {
+      "operation": "Put",
+      "pk": "user#456",
+      "sk": "profile",
+      "data": { "name": "Jane" }
+    },
+    {
+      "operation": "Delete",
+      "pk": "user#789",
+      "sk": "profile"
+    }
+  ]
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `operation` | string | `Put` or `Delete` |
+| `pk` | string | Partition key |
+| `sk` | string | Sort key (optional) |
+| `data` | object | Item data (required for Put) |
+
+**Response (200 OK):**
+```json
+{
+  "successCount": 3,
+  "failedCount": 0,
+  "errors": null
+}
+```
+
+### Partial Failures
+
+Some items may fail while others succeed:
+
+```json
+{
+  "successCount": 2,
+  "failedCount": 1,
+  "errors": [
+    {
+      "pk": "user#789",
+      "sk": "profile",
+      "error": "Condition check failed"
+    }
+  ]
+}
+```
+
+---
+
+## Batch Get
+
+### POST /api/v1/databases/\{databaseId\}/items/batch/get
+
+Gets multiple items by keys. Maximum 100 keys per request.
+
+**Request:**
+```json
+{
+  "keys": [
+    { "pk": "user#123", "sk": "profile" },
+    { "pk": "user#456", "sk": "profile" },
+    { "pk": "user#789", "sk": "profile" }
+  ]
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "pk": "user#123",
+      "sk": "profile",
+      "data": { "name": "John" },
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "pk": "user#456",
+      "sk": "profile",
+      "data": { "name": "Jane" },
+      "createdAt": "2024-01-15T11:00:00Z",
+      "updatedAt": "2024-01-15T11:30:00Z"
+    }
+  ],
+  "unprocessedKeys": null
+}
+```
+
+### Unprocessed Keys
+
+If some keys couldn't be processed (e.g., due to throughput limits), they are returned for retry:
+
+```json
+{
+  "items": [...],
+  "unprocessedKeys": [
+    { "pk": "user#789", "sk": "profile" }
+  ]
+}
+```
+
+---
+
+## Limits
+
+| Operation | Limit |
+|-----------|-------|
+| Batch Write | 25 items per request |
+| Batch Get | 100 keys per request |
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // Batch Write
+    var writeItems = new List<BatchWriteItem>
+    {
+        new BatchWriteItem
+        {
+            Operation = BatchOperation.Put,
+            PartitionKey = "user#123",
+            SortKey = "profile",
+            Data = new Dictionary<string, object?> { ["name"] = "John" }
+        },
+        new BatchWriteItem
+        {
+            Operation = BatchOperation.Put,
+            PartitionKey = "user#456",
+            SortKey = "profile",
+            Data = new Dictionary<string, object?> { ["name"] = "Jane" }
+        },
+        new BatchWriteItem
+        {
+            Operation = BatchOperation.Delete,
+            PartitionKey = "user#789",
+            SortKey = "profile"
+        }
+    };
+
+    var writeResult = await client.BatchWriteAsync(writeItems);
+    Console.WriteLine($"Success: {writeResult.Value.SuccessCount}");
+
+    // Batch Get
+    var keys = new List<ItemKey>
+    {
+        new("user#123", "profile"),
+        new("user#456", "profile")
+    };
+
+    var getResult = await client.BatchGetAsync(keys);
+    foreach (var item in getResult.Value.Items)
+    {
+        Console.WriteLine($"{item.PartitionKey}: {item.GetAttribute<string>("name")}");
+    }
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    # Batch Write
+    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/batch/write" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "items": [
+          {
+            "operation": "Put",
+            "pk": "user#123",
+            "sk": "profile",
+            "data": { "name": "John" }
+          },
+          {
+            "operation": "Delete",
+            "pk": "user#789",
+            "sk": "profile"
+          }
+        ]
+      }'
+
+    # Batch Get
+    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/batch/get" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "keys": [
+          { "pk": "user#123", "sk": "profile" },
+          { "pk": "user#456", "sk": "profile" }
+        ]
+      }'
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Best Practices
+
+### Chunk Large Batches
+
+If you have more than 25 items to write, split them into chunks:
+
+```csharp
+var allItems = GetLargeListOfItems(); // 100 items
+var chunks = allItems.Chunk(25);
+
+foreach (var chunk in chunks)
+{
+    await client.BatchWriteAsync(chunk.ToList());
+}
+```
+
+### Handle Partial Failures
+
+Always check for and retry failed items:
+
+```csharp
+var result = await client.BatchWriteAsync(items);
+
+if (result.Value.FailedCount > 0)
+{
+    foreach (var error in result.Value.Errors)
+    {
+        Console.WriteLine($"Failed: {error.Pk}/{error.Sk}: {error.Error}");
+    }
+}
+```
+
+### Use Batch Get for Multiple Items
+
+Instead of multiple individual Gets:
+
+```csharp
+// Inefficient: Multiple requests
+var item1 = await client.GetItemAsync("user#1", "profile");
+var item2 = await client.GetItemAsync("user#2", "profile");
+var item3 = await client.GetItemAsync("user#3", "profile");
+
+// Efficient: Single request
+var items = await client.BatchGetAsync(new[]
+{
+    new ItemKey("user#1", "profile"),
+    new ItemKey("user#2", "profile"),
+    new ItemKey("user#3", "profile")
+});
+```
+
+---
+
+## When to Use Batch vs Transactions
+
+| Use Case | Batch | Transaction |
+|----------|-------|-------------|
+| Independent writes | Yes | No |
+| All-or-nothing | No | Yes |
+| Maximum throughput | Yes | No |
+| Conditional writes | No | Yes |
+| Maximum items | 25 write / 100 read | 25 write / 100 read |
+
+---
+
+## Next Steps
+
+- [Transactions](/reference/api/transactions/) - For atomic operations
+- [Item Operations](/reference/api/item-operations/) - Single item operations
+- [Rate Limits](/reference/rate-limits/) - Throughput limits

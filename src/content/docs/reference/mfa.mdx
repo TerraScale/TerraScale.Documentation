@@ -1,0 +1,304 @@
+---
+title: Multi-Factor Authentication
+description: Add an extra layer of security to your TerraScale account with Multi-Factor Authentication (MFA).
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Add an extra layer of security to your account with Multi-Factor Authentication (MFA).
+
+---
+
+## Supported MFA Methods
+
+| Method | Type | Description |
+|--------|------|-------------|
+| Authenticator App | `totp` | Time-based codes from apps like Google Authenticator, Authy |
+| Email | `email` | Verification codes sent to your email |
+
+---
+
+## Enrolling MFA
+
+To enable MFA on your account, first enroll a factor, then verify it.
+
+### Step 1: Start Enrollment
+
+#### POST /auth/mfa/enroll
+
+Starts enrollment of a new MFA factor. **Requires JWT authentication.**
+
+**Request:**
+```json
+{
+  "type": "totp"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `type` | string | Factor type: `totp` or `email` |
+
+**Response (TOTP):**
+```json
+{
+  "factorId": "fac_abc123",
+  "type": "totp",
+  "qrCode": "data:image/png;base64,iVBORw0KGgo...",
+  "secret": "JBSWY3DPEHPK3PXP",
+  "challengeId": "chl_abc123"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `factorId` | string | The new factor ID |
+| `type` | string | Factor type |
+| `qrCode` | string | QR code image (data URL) for authenticator apps |
+| `secret` | string | Manual entry code if QR scanning unavailable |
+| `challengeId` | string | Challenge ID for verification step |
+
+:::tip
+Scan the QR code with your authenticator app, or manually enter the secret.
+:::
+
+### Step 2: Verify Enrollment
+
+#### POST /auth/mfa/verify-enrollment
+
+Completes MFA enrollment by verifying the first code.
+
+**Request:**
+```json
+{
+  "challengeId": "chl_abc123",
+  "code": "123456"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `challengeId` | string | Yes | Challenge ID from enrollment |
+| `code` | string | Yes | 6-digit code from authenticator app |
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "MFA factor enrolled successfully"
+}
+```
+
+---
+
+## Managing MFA Factors
+
+### List Enrolled Factors
+
+#### GET /auth/mfa/factors
+
+Lists all enrolled MFA factors. **Requires JWT authentication.**
+
+**Response:**
+```json
+{
+  "factors": [
+    {
+      "id": "fac_abc123",
+      "type": "totp",
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "id": "fac_def456",
+      "type": "email",
+      "createdAt": "2024-01-10T08:00:00Z"
+    }
+  ]
+}
+```
+
+### Remove a Factor
+
+#### DELETE /auth/mfa/factors/\{factorId\}
+
+Removes an MFA factor. **Requires JWT authentication.**
+
+**Response:** `204 No Content`
+
+:::caution[Warning]
+Removing all MFA factors disables multi-factor authentication on your account.
+:::
+
+---
+
+## MFA During Login
+
+When MFA is enabled and you log in, you'll receive an `MfaRequired` status with available factors.
+
+### Login Response with MFA
+
+```json
+{
+  "status": "MfaRequired",
+  "pendingInfo": {
+    "pendingAuthenticationToken": "pat_abc123...",
+    "availableFactors": [
+      { "id": "fac_abc123", "type": "totp" },
+      { "id": "fac_def456", "type": "email" }
+    ],
+    "challenge": {
+      "id": "chl_abc123",
+      "factorId": "fac_abc123",
+      "expiresAt": "2024-01-15T10:05:00Z"
+    }
+  }
+}
+```
+
+### Create MFA Challenge
+
+#### POST /auth/mfa/challenge
+
+Creates a new MFA challenge for a specific factor.
+
+**Request:**
+```json
+{
+  "factorId": "fac_abc123"
+}
+```
+
+**Response:**
+```json
+{
+  "challengeId": "chl_xyz789",
+  "expiresAt": "2024-01-15T10:05:00Z"
+}
+```
+
+:::note
+For email factors, this triggers sending a verification code to your email.
+:::
+
+### Verify MFA Code
+
+#### POST /auth/mfa/verify
+
+Verifies the MFA code during login to complete authentication.
+
+**Request:**
+```json
+{
+  "pendingAuthenticationToken": "pat_abc123...",
+  "challengeId": "chl_xyz789",
+  "code": "123456"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `pendingAuthenticationToken` | string | Yes | Token from login response |
+| `challengeId` | string | Yes | Challenge ID |
+| `code` | string | Yes | 6-digit verification code |
+
+**Response:**
+```json
+{
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "rt_abc123...",
+  "expiresIn": 3600,
+  "userId": "usr_abc123",
+  "email": "john@example.com",
+  "name": "John Doe",
+  "avatarUrl": null,
+  "personalOrgId": "org_abc123",
+  "permissions": ["database:read", "database:write"],
+  "roles": ["member"]
+}
+```
+
+---
+
+## Complete MFA Login Flow
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // 1. Attempt login
+    var loginResult = await client.Auth.LoginWithPasswordAsync(
+        new PasswordLoginRequest(
+            Email: "john@example.com",
+            Password: "SecurePassword123!"
+        )
+    );
+
+    if (loginResult.Value.Status == PasswordLoginStatus.MfaRequired)
+    {
+        var pendingInfo = loginResult.Value.PendingInfo!;
+
+        // 2. Get the code from user's authenticator app
+        Console.Write("Enter MFA code: ");
+        var code = Console.ReadLine();
+
+        // 3. Verify MFA
+        var mfaResult = await client.Auth.VerifyMfaAsync(
+            new MfaVerifyRequest(
+                PendingAuthenticationToken: pendingInfo.PendingAuthenticationToken,
+                ChallengeId: pendingInfo.Challenge!.Id,
+                Code: code
+            )
+        );
+
+        if (mfaResult.IsSuccess)
+        {
+            client.SetAccessToken(mfaResult.Value.AccessToken);
+            Console.WriteLine("Login successful!");
+        }
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```javascript
+    async function loginWithMfa(email, password) {
+      // 1. Attempt login
+      const loginResponse = await fetch('https://api.terrascale.io/auth/password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const loginData = await loginResponse.json();
+
+      if (loginData.status === 'MfaRequired') {
+        // 2. Prompt user for MFA code
+        const code = prompt('Enter your MFA code:');
+
+        // 3. Verify MFA
+        const mfaResponse = await fetch('https://api.terrascale.io/auth/mfa/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            pendingAuthenticationToken: loginData.pendingInfo.pendingAuthenticationToken,
+            challengeId: loginData.pendingInfo.challenge.id,
+            code: code
+          })
+        });
+
+        return await mfaResponse.json();
+      }
+
+      return loginData.authResponse;
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Next Steps
+
+- [Authentication](/reference/authentication/) - Authentication methods overview
+- [Dashboard Security Settings](/dashboard/security/) - Manage MFA from the dashboard
+- [Account Login](/account/login/) - Login flow documentation

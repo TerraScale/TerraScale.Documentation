@@ -1,0 +1,218 @@
+---
+title: Profile
+description: Manage your TerraScale user profile and preferences.
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Manage your profile information and preferences.
+
+---
+
+## Get Current User
+
+### GET /api/v1/users/me
+
+Gets the current authenticated user's profile.
+
+**Headers:**
+```http
+Authorization: Bearer eyJhbGci...
+```
+
+**Response (200 OK):**
+```json
+{
+  "userId": "usr_abc123",
+  "email": "john@example.com",
+  "name": "John Doe",
+  "avatarUrl": "https://example.com/avatar.jpg",
+  "role": "member",
+  "status": "active",
+  "preferences": {
+    "theme": "dark",
+    "timezone": "America/New_York",
+    "notificationsEnabled": true,
+    "defaultRegion": "us-east-1"
+  },
+  "lastLoginAt": "2024-01-15T10:00:00Z",
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}
+```
+
+---
+
+## Update Profile
+
+### PUT /api/v1/users/me
+
+Updates the current user's profile.
+
+**Request:**
+```json
+{
+  "name": "John D. Doe",
+  "avatarUrl": "https://example.com/new-avatar.jpg"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | No | Display name |
+| `avatarUrl` | string | No | URL to avatar image |
+
+**Response (200 OK):** Returns updated user profile.
+
+---
+
+## Update Preferences
+
+### PUT /api/v1/users/me/preferences
+
+Updates user preferences.
+
+**Request:**
+```json
+{
+  "theme": "dark",
+  "timezone": "America/Los_Angeles",
+  "notificationsEnabled": false,
+  "defaultRegion": "us-west-1"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `theme` | string | UI theme: `light`, `dark`, or `system` |
+| `timezone` | string | IANA timezone (e.g., `America/New_York`) |
+| `notificationsEnabled` | boolean | Whether to receive email notifications |
+| `defaultRegion` | string | Default region for new databases |
+
+**Response (200 OK):** Returns updated user profile.
+
+---
+
+## Preference Options
+
+### Theme
+
+| Value | Description |
+|-------|-------------|
+| `light` | Light mode |
+| `dark` | Dark mode |
+| `system` | Follow system preference |
+
+### Timezone
+
+Use IANA timezone identifiers:
+
+- `America/New_York` - Eastern Time
+- `America/Los_Angeles` - Pacific Time
+- `Europe/London` - GMT/BST
+- `Europe/Paris` - Central European Time
+- `Asia/Tokyo` - Japan Standard Time
+- `Australia/Sydney` - Australian Eastern Time
+
+[Full list of timezones](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+
+### Default Region
+
+Choose from any [available region](/reference/regions/):
+
+- `us-east` - Newark, NJ
+- `us-west` - Fremont, CA
+- `eu-west` - London, UK
+- `eu-central` - Frankfurt, Germany
+- And more...
+
+---
+
+## C# SDK Example
+
+<Tabs>
+  <TabItem label="Get Profile">
+    ```csharp
+    var userResult = await client.Users.GetCurrentUserAsync();
+
+    if (userResult.IsSuccess)
+    {
+        var user = userResult.Value;
+        Console.WriteLine($"Name: {user.Name}");
+        Console.WriteLine($"Email: {user.Email}");
+        Console.WriteLine($"Theme: {user.Preferences.Theme}");
+        Console.WriteLine($"Timezone: {user.Preferences.Timezone}");
+    }
+    ```
+  </TabItem>
+  <TabItem label="Update Profile">
+    ```csharp
+    var updateResult = await client.Users.UpdateCurrentUserAsync(
+        new UpdateUserRequest(
+            Name: "John D. Doe",
+            AvatarUrl: "https://example.com/new-avatar.jpg"
+        )
+    );
+
+    if (updateResult.IsSuccess)
+    {
+        Console.WriteLine("Profile updated!");
+    }
+    ```
+  </TabItem>
+  <TabItem label="Update Preferences">
+    ```csharp
+    var prefsResult = await client.Users.UpdatePreferencesAsync(
+        new UpdateUserPreferencesRequest(
+            Theme: "dark",
+            Timezone: "America/Los_Angeles",
+            NotificationsEnabled: false,
+            DefaultRegion: "us-west-1"
+        )
+    );
+
+    if (prefsResult.IsSuccess)
+    {
+        Console.WriteLine("Preferences updated!");
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Profile Fields
+
+| Field | Type | Editable | Description |
+|-------|------|----------|-------------|
+| `userId` | string | No | Unique user identifier |
+| `email` | string | No | Account email (contact support to change) |
+| `name` | string | Yes | Display name |
+| `avatarUrl` | string | Yes | Profile picture URL |
+| `role` | string | No | Role in current organization |
+| `status` | string | No | Account status |
+| `preferences` | object | Yes | User preferences |
+| `lastLoginAt` | datetime | No | Last login timestamp |
+| `createdAt` | datetime | No | Account creation date |
+| `updatedAt` | datetime | No | Last update timestamp |
+
+---
+
+## User Status Values
+
+| Status | Description |
+|--------|-------------|
+| `active` | Account is fully operational |
+| `pending` | Email verification pending |
+| `suspended` | Account is suspended |
+| `deleted` | Account has been deleted |
+
+---
+
+## Next Steps
+
+- [Dashboard Settings](/dashboard/settings/) - Manage settings from the UI
+- [Organizations](/reference/organizations/) - Manage team access
+- [MFA](/reference/mfa/) - Enable two-factor authentication

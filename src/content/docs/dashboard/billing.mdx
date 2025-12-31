@@ -1,0 +1,320 @@
+---
+title: Billing & Payments
+description: Manage your subscription, view usage, and handle payments in TerraScale.
+sidebar:
+  order: 6
+---
+
+import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+
+Manage your TerraScale subscription, monitor usage, and handle billing through the dashboard.
+
+---
+
+## Accessing Billing
+
+Navigate to **Payments** in the sidebar to access billing and subscription management.
+
+---
+
+## Billing Overview
+
+The Payments page shows:
+
+<CardGrid>
+  <Card title="Current Plan" icon="star">
+    Your active subscription tier and status.
+  </Card>
+  <Card title="Usage" icon="chart">
+    Current usage against plan limits.
+  </Card>
+  <Card title="Next Invoice" icon="document">
+    Upcoming charge amount and date.
+  </Card>
+  <Card title="Payment Method" icon="credit-card">
+    Default payment method on file.
+  </Card>
+</CardGrid>
+
+---
+
+## Current Plan
+
+View your subscription details:
+
+| Field | Description |
+|-------|-------------|
+| **Plan Name** | Free, Pro, or Enterprise |
+| **Status** | Active, Trialing, Past Due, or Cancelled |
+| **Billing Cycle** | Monthly or Yearly |
+| **Renewal Date** | Next billing date |
+| **Price** | Current subscription cost |
+
+### Plan Status
+
+<Tabs>
+  <TabItem label="Active">
+    Your subscription is current and fully functional.
+  </TabItem>
+  <TabItem label="Trialing">
+    You're in a free trial period. Add a payment method before the trial ends to continue.
+  </TabItem>
+  <TabItem label="Past Due">
+    Payment failed. Update your payment method to restore full access.
+  </TabItem>
+  <TabItem label="Cancelled">
+    Subscription cancelled. Access continues until the end of the billing period.
+  </TabItem>
+</Tabs>
+
+---
+
+## Usage Monitoring
+
+Track your resource usage against plan limits:
+
+### Usage Metrics
+
+| Metric | Description |
+|--------|-------------|
+| **Databases** | Number of databases created |
+| **Storage** | Total data stored across all databases |
+| **Requests** | API requests this billing period |
+| **Team Members** | Organization members |
+
+### Usage Display
+
+Each metric shows:
+
+- Current usage value
+- Plan limit
+- Percentage used
+- Visual progress bar
+
+### Usage Warnings
+
+You'll receive warnings when approaching limits:
+
+| Threshold | Notification |
+|-----------|--------------|
+| 80% | Dashboard warning |
+| 90% | Email notification |
+| 100% | Operations may be restricted |
+
+---
+
+## Upgrading Your Plan
+
+### From Free to Pro
+
+1. Navigate to **Payments**
+2. Click **"Upgrade to Pro"**
+3. Select billing cycle (Monthly or Yearly)
+4. Enter payment information
+5. Click **"Start Subscription"**
+
+### From Pro to Enterprise
+
+Enterprise plans require custom agreements:
+
+1. Click **"Contact Sales"** on the Payments page
+2. Fill out the inquiry form
+3. A sales representative will contact you
+4. Custom pricing based on your needs
+
+### Billing Cycles
+
+| Cycle | Pro Plan | Savings |
+|-------|----------|---------|
+| Monthly | $29/month | - |
+| Yearly | $290/year | 17% ($58 saved) |
+
+---
+
+## Downgrading Your Plan
+
+### Pro to Free
+
+1. Navigate to **Payments**
+2. Click **"Manage Subscription"**
+3. Select **"Downgrade to Free"**
+4. Confirm the change
+
+**What happens:**
+- Change takes effect at end of current billing period
+- No prorated refund for unused time
+- Excess resources become read-only until reduced
+
+### Before Downgrading
+
+Ensure you're within Free plan limits:
+
+| Resource | Free Limit | Action if Over |
+|----------|------------|----------------|
+| Databases | 3 | Delete extras |
+| Storage | 100MB | Reduce data |
+| Requests | 10K/month | N/A (monthly reset) |
+| Team Members | 1 | Remove members |
+
+---
+
+## Payment Methods
+
+### Adding a Payment Method
+
+1. Navigate to **Payments**
+2. Click **"Manage Payment Methods"**
+3. Click **"Add Payment Method"**
+4. Enter card details
+5. Click **"Save"**
+
+### Accepted Payment Methods
+
+- Visa
+- Mastercard
+- American Express
+- Discover
+
+### Updating Payment Method
+
+1. Navigate to **Payments**
+2. Click **"Manage Payment Methods"**
+3. Click **"Update"** next to the card
+4. Enter new details
+5. Click **"Save"**
+
+### Removing Payment Method
+
+1. Navigate to **Payments**
+2. Click **"Manage Payment Methods"**
+3. Click **"Remove"** next to the card
+4. Confirm removal
+
+**Note**: You cannot remove your only payment method if you have an active paid subscription.
+
+---
+
+## Invoices
+
+### Viewing Invoices
+
+1. Navigate to **Payments**
+2. Scroll to **Invoice History**
+3. Click any invoice to view details
+
+### Invoice Information
+
+| Field | Description |
+|-------|-------------|
+| **Invoice Number** | Unique identifier |
+| **Date** | Invoice date |
+| **Amount** | Total charged |
+| **Status** | Paid, Open, or Failed |
+| **PDF** | Download link |
+
+### Downloading Invoices
+
+Click **"Download PDF"** next to any invoice to save a copy for your records.
+
+---
+
+## Failed Payments
+
+### Automatic Retries
+
+When a payment fails, we automatically retry:
+
+| Attempt | Timing |
+|---------|--------|
+| 1st retry | 3 days after failure |
+| 2nd retry | 5 days after failure |
+| 3rd retry | 7 days after failure |
+
+### Resolving Payment Issues
+
+1. Check your card details are current
+2. Ensure sufficient funds
+3. Contact your bank if blocked
+4. Update payment method if needed
+
+### Account Restrictions
+
+If all retries fail:
+
+- Account marked as "Past Due"
+- Write operations may be restricted
+- 14-day grace period to resolve
+- After grace period, downgrade to Free
+
+---
+
+## Billing Portal
+
+For advanced billing management, access the customer portal:
+
+1. Navigate to **Payments**
+2. Click **"Manage Billing"**
+3. Opens Stripe Customer Portal
+
+In the portal, you can:
+
+- Update billing information
+- Change payment method
+- View all invoices
+- Update billing address
+- Download tax documents
+
+---
+
+## Cancellation
+
+### Cancelling Your Subscription
+
+1. Navigate to **Payments**
+2. Click **"Manage Subscription"**
+3. Click **"Cancel Subscription"**
+4. Select a reason (optional)
+5. Confirm cancellation
+
+### After Cancellation
+
+- Access continues until end of billing period
+- No prorated refund
+- Data preserved for 30 days after expiration
+- Can resubscribe anytime
+
+### Reactivating
+
+To reactivate a cancelled subscription:
+
+1. Navigate to **Payments**
+2. Click **"Reactivate Subscription"**
+3. Confirm payment method
+4. Subscription resumes immediately
+
+---
+
+## Tax Information
+
+### Tax Handling
+
+- Prices shown exclude applicable taxes
+- Tax calculated at checkout based on location
+- Tax invoices available for download
+
+### Business Tax ID
+
+To add a tax ID (VAT, GST, etc.):
+
+1. Navigate to **Payments**
+2. Click **"Manage Billing"**
+3. In the portal, add your Tax ID
+4. Future invoices will include it
+
+---
+
+## Next Steps
+
+- [Plans Reference](/reference/plans/) - Compare plan features
+- [Rate Limits](/reference/rate-limits/) - Understand usage limits
+- [Billing API](/reference/billing/) - API documentation for billing

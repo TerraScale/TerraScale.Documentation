@@ -1,0 +1,224 @@
+---
+title: Authentication
+description: Learn about TerraScale's authentication methods - API Keys for programmatic access and JWT tokens for user sessions.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+TerraScale supports two authentication methods for different use cases.
+
+---
+
+## API Key Authentication
+
+Used for programmatic access to database operations. API keys are generated from the [dashboard](https://dashboard.terrascale.io) and provide scoped access to your resources.
+
+### Header Format
+
+```http
+Authorization: Bearer ts_live_your_api_key
+```
+
+### API Key Scopes
+
+| Scope | Description |
+|-------|-------------|
+| `database:read` | Read items from databases |
+| `database:write` | Write/delete items in databases |
+| `database:*` | Full database access |
+| `repository:read` | Read entities from repositories |
+| `repository:write` | Write/delete entities in repositories |
+| `repository:*` | Full repository access |
+| `*` | Full access to all operations |
+
+### Example Usage
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+    {
+        ApiKey = "ts_live_your_api_key",
+        Endpoint = "https://api.terrascale.io",
+        DefaultDatabase = "my-database"
+    });
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    curl "https://api.terrascale.io/api/v1/databases/my-database/items/pk/sk" \
+      -H "Authorization: Bearer ts_live_your_api_key"
+    ```
+  </TabItem>
+</Tabs>
+
+### Best Practices
+
+- **Use specific scopes**: Only grant the permissions your application needs
+- **Set expiration dates**: Rotate keys regularly for security
+- **Separate keys per environment**: Use different keys for development and production
+- **Never commit keys to source control**: Use environment variables or secret managers
+
+---
+
+## JWT Authentication
+
+Used for dashboard access and user sessions. JWT tokens are obtained through the login flow.
+
+### Header Format
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Token Lifecycle
+
+| Token | Lifetime | Usage |
+|-------|----------|-------|
+| Access Token | 1 hour | Authenticate API requests |
+| Refresh Token | 7 days | Obtain new access tokens |
+
+### Login Flow
+
+#### POST /auth/password
+
+Logs in with email and password.
+
+**Request:**
+```json
+{
+  "email": "john@example.com",
+  "password": "SecurePassword123!"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "status": "Success",
+  "authResponse": {
+    "accessToken": "eyJhbGci...",
+    "refreshToken": "rt_abc123...",
+    "expiresIn": 3600,
+    "userId": "usr_abc123",
+    "email": "john@example.com",
+    "name": "John Doe",
+    "avatarUrl": null,
+    "personalOrgId": "org_abc123",
+    "permissions": ["database:read", "database:write"],
+    "roles": ["member"]
+  }
+}
+```
+
+### Login Status Values
+
+| Status | Description |
+|--------|-------------|
+| `Success` | Login successful, tokens returned |
+| `InvalidCredentials` | Wrong email or password |
+| `EmailVerificationRequired` | Must verify email first |
+| `MfaRequired` | Must complete MFA challenge |
+| `Error` | An error occurred |
+
+---
+
+## Token Refresh
+
+When your access token expires, use the refresh token to obtain a new one:
+
+#### POST /auth/refresh
+
+**Request:**
+```json
+{
+  "refreshToken": "rt_abc123..."
+}
+```
+
+**Response:**
+```json
+{
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "rt_def456...",
+  "expiresIn": 3600
+}
+```
+
+### Handling Token Expiration
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // The Management Client handles token refresh automatically
+    var client = new ManagementClient(new ManagementClientOptions
+    {
+        ApiBaseUrl = "https://api.terrascale.io"
+    });
+
+    // After login
+    client.SetAccessToken(authResponse.AccessToken);
+
+    // When token expires, refresh it
+    var refreshResult = await client.Auth.RefreshTokenAsync(
+        new RefreshTokenRequest(RefreshToken: currentRefreshToken)
+    );
+
+    if (refreshResult.IsSuccess)
+    {
+        client.SetAccessToken(refreshResult.Value.AccessToken);
+    }
+    ```
+  </TabItem>
+  <TabItem label="Manual Flow">
+    ```javascript
+    async function refreshToken(refreshToken) {
+      const response = await fetch('https://api.terrascale.io/auth/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refreshToken })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Store new tokens
+        localStorage.setItem('accessToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        return data.accessToken;
+      }
+
+      // Refresh failed, redirect to login
+      window.location.href = '/login';
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Auth Response Fields
+
+The authentication response includes user information and permissions:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `accessToken` | string | JWT for authenticating requests |
+| `refreshToken` | string | Token for obtaining new access tokens |
+| `expiresIn` | integer | Access token lifetime in seconds |
+| `userId` | string | Unique user identifier |
+| `email` | string | User's email address |
+| `name` | string | User's display name |
+| `avatarUrl` | string | URL to user's avatar image |
+| `personalOrgId` | string | User's personal organization ID |
+| `permissions` | array | List of granted permissions |
+| `roles` | array | List of assigned roles |
+
+---
+
+## Next Steps
+
+- [Multi-Factor Authentication](/reference/mfa/) - Add extra security with MFA
+- [Account Registration](/account/registration/) - Create a new account
+- [Organizations](/reference/organizations/) - Manage team access

@@ -25,6 +25,15 @@ bun run build    # Build production site to ./dist/
 bun run preview  # Preview production build locally
 ```
 
+## Important: After Installing Packages
+
+After installing packages with `bun add`, always run `npm install` as well to generate the `package-lock.json` lockfile. This is required for Cloudflare Pages deployment.
+
+```bash
+bun add <package>   # Install with bun
+npm install         # Generate npm lockfile for Cloudflare Pages
+```
+
 ## Permissions
 
 You are allowed to install any packages or dependencies needed to complete tasks (use `bun add`).

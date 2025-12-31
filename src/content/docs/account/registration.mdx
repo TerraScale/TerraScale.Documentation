@@ -1,0 +1,157 @@
+---
+title: Account Registration
+description: Create a new TerraScale account with email verification.
+sidebar:
+  order: 1
+---
+
+Create a new TerraScale account by providing your email, password, and optional profile information.
+
+---
+
+## Registration Flow
+
+### Step 1: Submit Registration
+
+Visit [dashboard.terrascale.io](https://dashboard.terrascale.io) and click **Sign Up**, or use the API directly.
+
+### Step 2: Verify Email
+
+Check your inbox for a verification code and enter it to activate your account.
+
+### Step 3: Start Using TerraScale
+
+After verification, you'll have a personal organization ready for creating databases.
+
+---
+
+## API Reference
+
+### POST /auth/signup
+
+Creates a new user account.
+
+**Request:**
+```json
+{
+  "email": "john@example.com",
+  "password": "SecurePassword123!",
+  "firstName": "John",
+  "lastName": "Doe"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `email` | string | Yes | Valid email address |
+| `password` | string | Yes | Password (min 8 characters, must include uppercase, lowercase, and number) |
+| `firstName` | string | No | User's first name |
+| `lastName` | string | No | User's last name |
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "requiresEmailVerification": true,
+  "pendingAuthenticationToken": "pat_abc123...",
+  "email": "john@example.com"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `success` | boolean | Whether signup was successful |
+| `requiresEmailVerification` | boolean | If true, user must verify email before login |
+| `pendingAuthenticationToken` | string | Token for email verification flow |
+| `email` | string | The registered email address |
+
+---
+
+## Password Requirements
+
+Your password must meet these requirements:
+
+- Minimum 8 characters
+- At least one uppercase letter (A-Z)
+- At least one lowercase letter (a-z)
+- At least one number (0-9)
+
+**Example of valid passwords:**
+- `SecurePass123`
+- `MyPassword1`
+- `TerraScale2024!`
+
+---
+
+## After Registration
+
+Once you register:
+
+1. A **verification email** is sent to your address
+2. You receive a `pendingAuthenticationToken` for the verification flow
+3. Your account is inactive until email verification is complete
+4. A **personal organization** is created automatically upon verification
+
+---
+
+## Error Responses
+
+### Email Already Exists
+
+```json
+{
+  "success": false,
+  "error": "An account with this email already exists"
+}
+```
+
+### Invalid Password
+
+```json
+{
+  "success": false,
+  "error": "Password does not meet requirements"
+}
+```
+
+### Invalid Email
+
+```json
+{
+  "success": false,
+  "error": "Invalid email address format"
+}
+```
+
+---
+
+## C# SDK Example
+
+```csharp
+var client = new ManagementClient(new ManagementClientOptions
+{
+    ApiBaseUrl = "https://api.terrascale.io"
+});
+
+var signupResult = await client.Auth.SignupAsync(new SignupRequest(
+    Email: "john@example.com",
+    Password: "SecurePassword123!",
+    FirstName: "John",
+    LastName: "Doe"
+));
+
+if (signupResult.IsSuccess && signupResult.Value.RequiresEmailVerification)
+{
+    Console.WriteLine("Check your email for a verification code!");
+    // Store the pending token for the verification step
+    var pendingToken = signupResult.Value.PendingAuthenticationToken;
+}
+```
+
+---
+
+## Next Steps
+
+- [Email Verification](/account/email-verification/) - Complete your registration
+- [Login](/account/login/) - Sign in to your account
+- [Getting Started](/guides/getting-started/) - Create your first database

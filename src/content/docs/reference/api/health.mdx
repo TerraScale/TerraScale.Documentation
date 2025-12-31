@@ -1,0 +1,155 @@
+---
+title: Health Endpoints
+description: Health check endpoints for monitoring TerraScale API status.
+sidebar:
+  order: 8
+---
+
+Health endpoints for monitoring API status. No authentication required.
+
+---
+
+## Health Check
+
+### GET /health
+
+Overall health check for the API.
+
+**Response (200 OK):**
+```json
+{
+  "status": "Healthy"
+}
+```
+
+**Response (503 Service Unavailable):**
+```json
+{
+  "status": "Unhealthy",
+  "details": "Database connection failed"
+}
+```
+
+---
+
+## Readiness Probe
+
+### GET /health/ready
+
+Readiness probe for load balancers. Returns 200 when the service is ready to accept traffic.
+
+**Response (200 OK):**
+```json
+{
+  "status": "Ready"
+}
+```
+
+**Response (503 Service Unavailable):**
+```json
+{
+  "status": "NotReady",
+  "details": "Warming up"
+}
+```
+
+Use this endpoint for:
+- Kubernetes readiness probes
+- Load balancer health checks
+- Deployment verification
+
+---
+
+## Liveness Probe
+
+### GET /health/live
+
+Liveness probe to confirm the application is running.
+
+**Response (200 OK):**
+```json
+{
+  "status": "Alive"
+}
+```
+
+Use this endpoint for:
+- Kubernetes liveness probes
+- Basic uptime monitoring
+- Container orchestration
+
+---
+
+## Usage Examples
+
+### Kubernetes Configuration
+
+```yaml
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: app
+    livenessProbe:
+      httpGet:
+        path: /health/live
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /health/ready
+        port: 80
+      initialDelaySeconds: 5
+      periodSeconds: 5
+```
+
+### Load Balancer Health Check
+
+```bash
+# Check if API is ready for traffic
+curl -f https://api.terrascale.io/health/ready || exit 1
+```
+
+### Monitoring Script
+
+```bash
+#!/bin/bash
+# Simple uptime check
+
+response=$(curl -s -o /dev/null -w "%{http_code}" https://api.terrascale.io/health)
+
+if [ "$response" = "200" ]; then
+  echo "API is healthy"
+else
+  echo "API is unhealthy: HTTP $response"
+  # Send alert
+fi
+```
+
+---
+
+## Status Values
+
+| Endpoint | Healthy Response | Unhealthy Response |
+|----------|------------------|-------------------|
+| `/health` | `Healthy` | `Unhealthy` |
+| `/health/ready` | `Ready` | `NotReady` |
+| `/health/live` | `Alive` | `Dead` |
+
+---
+
+## Best Practices
+
+1. **Use appropriate endpoints** - `/live` for container restarts, `/ready` for traffic routing
+2. **Set reasonable timeouts** - Health checks should complete within 5 seconds
+3. **Monitor response times** - Slow health checks may indicate issues
+4. **Don't over-check** - Every 10-30 seconds is usually sufficient
+
+---
+
+## Next Steps
+
+- [API Overview](/reference/api/) - Full API documentation
+- [Error Handling](/reference/error-handling/) - Handle API errors
+- [Rate Limits](/reference/rate-limits/) - Understand limits

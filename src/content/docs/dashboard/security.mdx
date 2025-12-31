@@ -1,0 +1,277 @@
+---
+title: Security Settings
+description: Configure two-factor authentication and security settings for your TerraScale account.
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+
+Protect your TerraScale account with two-factor authentication and other security settings.
+
+---
+
+## Accessing Security Settings
+
+Navigate to **Settings > Security** from the sidebar to manage your account security.
+
+---
+
+## Two-Factor Authentication (2FA)
+
+Two-factor authentication adds an extra layer of security by requiring a verification code in addition to your password.
+
+### Why Enable 2FA?
+
+- Protects against password theft
+- Prevents unauthorized access even if credentials leak
+- Required for some compliance standards
+- Best practice for production accounts
+
+---
+
+## Adding 2FA Methods
+
+### Authenticator App (Recommended)
+
+Use an authenticator app like Google Authenticator, Authy, or 1Password:
+
+#### Step 1: Start Setup
+
+1. Navigate to **Settings > Security**
+2. Click **"Add Method"**
+3. Select **"Authenticator App"**
+
+#### Step 2: Scan QR Code
+
+1. Open your authenticator app
+2. Tap the "+" or "Add" button
+3. Scan the QR code displayed
+4. The app will show a 6-digit code
+
+#### Step 3: Verify
+
+1. Enter the 6-digit code from your app
+2. Click **"Verify"**
+3. Your authenticator is now active
+
+**Supported Apps:**
+- Google Authenticator
+- Authy
+- Microsoft Authenticator
+- 1Password
+- Any TOTP-compatible app
+
+### Email Verification
+
+Receive verification codes via email:
+
+#### Step 1: Start Setup
+
+1. Navigate to **Settings > Security**
+2. Click **"Add Method"**
+3. Select **"Email"**
+
+#### Step 2: Verify Email
+
+1. Click **"Send Code"**
+2. Check your email for the 6-digit code
+3. Enter the code
+4. Click **"Verify"**
+
+Email 2FA sends a code to your registered email address each time you log in.
+
+---
+
+## Managing 2FA Methods
+
+### Viewing Enrolled Methods
+
+The Security page shows all your 2FA methods:
+
+| Column | Description |
+|--------|-------------|
+| **Method** | Type (Authenticator or Email) |
+| **Name** | Identifier (e.g., app name) |
+| **Added** | Date enrolled |
+| **Last Used** | Most recent verification |
+
+### Removing a Method
+
+To remove a 2FA method:
+
+1. Find the method in the list
+2. Click the **menu icon** (three dots)
+3. Select **"Remove"**
+4. Confirm with your password
+5. Enter a verification code from another method (if you have multiple)
+
+**Warning**: If you remove your only 2FA method, your account will no longer have two-factor protection.
+
+### Adding Backup Methods
+
+We recommend having multiple 2FA methods:
+
+<CardGrid>
+  <Card title="Primary: Authenticator" icon="approve-check">
+    Fast and works offline. Use as your primary method.
+  </Card>
+  <Card title="Backup: Email" icon="email">
+    Works if you lose your phone. Add as a backup.
+  </Card>
+</CardGrid>
+
+---
+
+## Logging In with 2FA
+
+When 2FA is enabled, login requires two steps:
+
+### Step 1: Enter Credentials
+
+Enter your email and password as usual.
+
+### Step 2: Enter Verification Code
+
+<Tabs>
+  <TabItem label="Authenticator">
+    1. Open your authenticator app
+    2. Find your TerraScale entry
+    3. Enter the current 6-digit code
+    4. Click **"Verify"**
+
+    Codes refresh every 30 seconds. If the code is about to expire, wait for the next one.
+  </TabItem>
+  <TabItem label="Email">
+    1. Click **"Send Code"** on the verification screen
+    2. Check your email for the code
+    3. Enter the 6-digit code
+    4. Click **"Verify"**
+
+    Email codes expire after 10 minutes.
+  </TabItem>
+</Tabs>
+
+---
+
+## Recovery Options
+
+### Lost Authenticator Access
+
+If you lose access to your authenticator app:
+
+1. On the login screen, click **"Use different method"**
+2. Select your backup method (e.g., Email)
+3. Complete verification with the backup method
+4. Once logged in, remove the old authenticator
+5. Set up a new authenticator
+
+### Lost All 2FA Methods
+
+If you've lost access to all 2FA methods:
+
+1. Contact support at support@terrascale.io
+2. Provide account verification (registered email, organization name)
+3. Support will verify your identity
+4. 2FA will be temporarily disabled for password reset
+
+This process may take 24-48 hours for security verification.
+
+---
+
+## Session Management
+
+### Active Sessions
+
+View all active sessions from **Settings > Security > Sessions**:
+
+| Info | Description |
+|------|-------------|
+| **Device** | Browser and OS |
+| **Location** | Approximate location (by IP) |
+| **IP Address** | Connection IP |
+| **Last Active** | Most recent activity |
+| **Current** | Indicates your current session |
+
+### Revoking Sessions
+
+To sign out of other sessions:
+
+1. Find the session in the list
+2. Click **"Revoke"**
+3. The session is immediately terminated
+
+To sign out of all sessions except current:
+
+1. Click **"Revoke All Other Sessions"**
+2. Confirm the action
+
+---
+
+## Security Best Practices
+
+### Account Protection
+
+| Practice | Recommendation |
+|----------|----------------|
+| **2FA** | Enable with authenticator app |
+| **Backup method** | Add email as backup |
+| **Password** | Use strong, unique password |
+| **Sessions** | Review and revoke unused sessions |
+| **API keys** | Rotate every 90 days |
+
+### Warning Signs
+
+Watch for these security indicators:
+
+- Unfamiliar sessions in your session list
+- Login notifications from unknown locations
+- API keys you didn't create
+- Unexpected 2FA method additions
+
+If you notice suspicious activity:
+
+1. Change your password immediately
+2. Revoke all sessions
+3. Revoke suspicious API keys
+4. Contact support@terrascale.io
+
+---
+
+## Password Management
+
+### Changing Your Password
+
+1. Navigate to **Settings > Security**
+2. Click **"Change Password"**
+3. Enter your current password
+4. Enter your new password (twice)
+5. Click **"Update Password"**
+
+### Password Requirements
+
+- Minimum 8 characters
+- At least one uppercase letter
+- At least one lowercase letter
+- At least one number
+- At least one special character
+
+### Forgot Password
+
+If you forgot your password:
+
+1. Go to [dashboard.terrascale.io/login](https://dashboard.terrascale.io/login)
+2. Click **"Forgot Password"**
+3. Enter your email address
+4. Check email for reset link
+5. Create a new password
+
+See [Password Reset](/account/password-reset/) for detailed instructions.
+
+---
+
+## Next Steps
+
+- [Profile Settings](/dashboard/settings/) - Update your profile
+- [Organization Settings](/dashboard/organization/) - Manage team security
+- [MFA Reference](/reference/mfa/) - API documentation for MFA

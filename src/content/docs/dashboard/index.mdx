@@ -1,0 +1,100 @@
+---
+title: Dashboard Overview
+description: Web-based interface for managing your TerraScale databases, API keys, and account.
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+The TerraScale Dashboard provides a web-based interface for managing your databases, API keys, organizations, and account settings.
+
+---
+
+## Accessing the Dashboard
+
+Visit [dashboard.terrascale.io](https://dashboard.terrascale.io) and log in with your TerraScale credentials.
+
+---
+
+## Dashboard Home
+
+After logging in, you'll see the main dashboard with:
+
+<CardGrid>
+  <Card title="Metrics Overview" icon="chart">
+    Real-time statistics including total databases, read/write units consumed, and storage usage.
+  </Card>
+  <Card title="Recent Databases" icon="database">
+    Quick access to your most recently created databases.
+  </Card>
+  <Card title="Quick Actions" icon="rocket">
+    Common operations like creating databases and generating API keys.
+  </Card>
+  <Card title="System Status" icon="heart">
+    Current API operational status and health indicators.
+  </Card>
+</CardGrid>
+
+---
+
+## Navigation
+
+The dashboard sidebar provides access to all features:
+
+| Section | Description |
+|---------|-------------|
+| **Dashboard** | Home page with overview metrics |
+| **Databases** | Create and manage databases |
+| **API Keys** | Generate and manage API keys |
+| **Organization** | Team members and roles |
+| **Payments** | Billing, plans, and invoices |
+| **Settings** | Profile, security, and preferences |
+
+---
+
+## Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Enter` | Execute query in Explorer |
+| `Ctrl+Shift+F` | Format query in Explorer |
+| `Esc` | Close dialogs and modals |
+
+---
+
+## Mobile Access
+
+The Dashboard is fully responsive and works on mobile devices:
+
+- Collapsible sidebar navigation
+- Touch-friendly buttons and controls
+- Optimized layouts for smaller screens
+
+---
+
+## Quick Start
+
+<CardGrid>
+  <Card title="Create a Database" icon="add-document">
+    [Database Management](/dashboard/databases/) - Set up your first database in seconds.
+  </Card>
+  <Card title="Generate API Key" icon="key">
+    [API Key Management](/dashboard/api-keys/) - Create credentials for your applications.
+  </Card>
+  <Card title="Invite Team Members" icon="group">
+    [Organization Settings](/dashboard/organization/) - Add collaborators to your account.
+  </Card>
+  <Card title="Enable 2FA" icon="shield">
+    [Security Settings](/dashboard/security/) - Protect your account with two-factor authentication.
+  </Card>
+</CardGrid>
+
+---
+
+## Next Steps
+
+- [Database Management](/dashboard/databases/) - Create and manage databases
+- [API Key Management](/dashboard/api-keys/) - Generate API keys
+- [Organization Settings](/dashboard/organization/) - Manage team members
+- [Getting Started Guide](/guides/getting-started/) - Complete setup tutorial

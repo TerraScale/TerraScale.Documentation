@@ -1,11 +1,422 @@
 ---
-title: C#
-description: A guide for using the TerraScale SDK with C#
+title: C# Database Client
+description: Complete guide to using the TerraScale Database Client SDK for C# and .NET.
 sidebar:
-  # Set a custom order for the link (lower numbers are displayed higher up)
-  order: 11
-  # Add a badge to the link
+  order: 1
   badge:
     text: New
     variant: tip
 ---
+
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+The TerraScale Database Client provides a strongly-typed, high-performance SDK for C# and .NET applications.
+
+---
+
+## Installation
+
+```bash
+dotnet add package TerraScale.Database.Client
+```
+
+---
+
+## Configuration
+
+### Basic Configuration
+
+```csharp
+using TerraScale.Database.Client;
+using TerraScale.Database.Client.Configuration;
+
+var options = new TerraScaleDatabaseOptions
+{
+    ApiKey = "ts_live_your_api_key",
+    Endpoint = "https://api.terrascale.io",
+    Region = "us-east-1",
+    DefaultDatabase = "my-database",
+    Timeout = TimeSpan.FromSeconds(30),
+    Retry = new RetryPolicyOptions
+    {
+        MaxRetries = 3,
+        BaseDelay = TimeSpan.FromMilliseconds(500),
+        MaxDelay = TimeSpan.FromSeconds(10),
+        UseJitter = true
+    }
+};
+
+var client = new TerraScaleDatabase(options);
+```
+
+### Configuration Options
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `ApiKey` | string | Required | Your API key |
+| `Endpoint` | string | Required | API endpoint URL |
+| `Region` | string | `"us-east-1"` | Default region |
+| `DefaultDatabase` | string | null | Default database ID |
+| `Timeout` | TimeSpan | 30 seconds | HTTP request timeout |
+| `Retry.MaxRetries` | int | 3 | Max retry attempts |
+| `Retry.BaseDelay` | TimeSpan | 500ms | Initial retry delay |
+| `Retry.MaxDelay` | TimeSpan | 10 seconds | Maximum retry delay |
+| `Retry.UseJitter` | bool | true | Add randomness to delays |
+
+### Builder Pattern
+
+```csharp
+var client = TerraScaleDatabase.Create(options => options
+    .WithApiKey("ts_live_your_api_key")
+    .WithEndpoint("https://api.terrascale.io")
+    .WithDefaultDatabase("my-database")
+    .WithTimeout(TimeSpan.FromSeconds(60))
+    .WithRetry(retry => retry
+        .MaxRetries(5)
+        .BaseDelay(TimeSpan.FromSeconds(1))
+    )
+);
+```
+
+---
+
+## Item Operations
+
+### Put Item
+
+```csharp
+var item = new DatabaseItem
+{
+    PartitionKey = "user#123",
+    SortKey = "profile",
+    Attributes = new Dictionary<string, object?>
+    {
+        ["name"] = "John Doe",
+        ["email"] = "john@example.com",
+        ["age"] = 30,
+        ["tags"] = new[] { "premium", "verified" }
+    }
+};
+
+var result = await client.PutItemAsync(item);
+
+if (result.IsSuccess)
+{
+    Console.WriteLine("Item saved!");
+}
+else
+{
+    Console.WriteLine($"Error: {result.Errors.First().Message}");
+}
+```
+
+### Get Item
+
+```csharp
+// Get by partition key only
+var result = await client.GetItemAsync("user#123");
+
+// Get by partition key and sort key
+var result = await client.GetItemAsync("user#123", "profile");
+
+if (result.IsSuccess)
+{
+    var item = result.Value;
+    var name = item.GetAttribute<string>("name");
+    var age = item.GetAttribute<int>("age", defaultValue: 0);
+    Console.WriteLine($"User: \{name\}, Age: {age}");
+}
+```
+
+### Delete Item
+
+```csharp
+var result = await client.DeleteItemAsync("user#123", "profile");
+
+if (result.IsSuccess)
+{
+    Console.WriteLine("Item deleted!");
+}
+```
+
+---
+
+## Query Operations
+
+### Query with Filter
+
+```csharp
+var filter = new QueryFilter
+{
+    PartitionKey = "user#123",
+    SortKeyCondition = SortKeyCondition.BeginsWith("order#")
+};
+
+var options = new QueryOptions
+{
+    Limit = 50,
+    ScanForward = false // Descending order
+};
+
+var result = await client.QueryAsync(filter, options);
+
+if (result.IsSuccess)
+{
+    foreach (var item in result.Value.Items)
+    {
+        Console.WriteLine($"Order: {item.SortKey}");
+    }
+
+    // Handle pagination
+    if (result.Value.HasMore)
+    {
+        var nextPage = await client.QueryAsync(filter, new QueryOptions
+        {
+            NextToken = result.Value.NextToken
+        });
+    }
+}
+```
+
+### Sort Key Conditions
+
+```csharp
+// Exact match
+SortKeyCondition.Equal("profile")
+
+// Prefix match
+SortKeyCondition.BeginsWith("order#")
+
+// Range (inclusive)
+SortKeyCondition.Between("2024-01-01", "2024-12-31")
+
+// Comparison
+SortKeyCondition.LessThan("2024-06-01")
+SortKeyCondition.GreaterThan("2024-01-01")
+SortKeyCondition.LessThanOrEquals("2024-06-01")
+SortKeyCondition.GreaterThanOrEquals("2024-01-01")
+```
+
+### Scan
+
+```csharp
+var options = new PaginationOptions
+{
+    Limit = 100
+};
+
+var result = await client.ScanAsync(options);
+
+if (result.IsSuccess)
+{
+    Console.WriteLine($"Found {result.Value.Items.Count} items");
+}
+```
+
+---
+
+## Batch Operations
+
+### Batch Write
+
+```csharp
+var writeItems = new List<BatchWriteItem>
+{
+    new()
+    {
+        Operation = BatchOperation.Put,
+        PartitionKey = "user#123",
+        SortKey = "profile",
+        Data = new Dictionary<string, object?> { ["name"] = "John" }
+    },
+    new()
+    {
+        Operation = BatchOperation.Delete,
+        PartitionKey = "user#789",
+        SortKey = "profile"
+    }
+};
+
+var result = await client.BatchWriteAsync(writeItems);
+Console.WriteLine($"Success: {result.Value.SuccessCount}");
+```
+
+### Batch Get
+
+```csharp
+var keys = new List<ItemKey>
+{
+    new("user#123", "profile"),
+    new("user#456", "profile")
+};
+
+var result = await client.BatchGetAsync(keys);
+
+foreach (var item in result.Value.Items)
+{
+    Console.WriteLine($"{item.PartitionKey}: {item.GetAttribute<string>("name")}");
+}
+```
+
+---
+
+## Transactions
+
+### Transactional Write
+
+```csharp
+var writeItems = new List<TransactWriteItem>
+{
+    new()
+    {
+        Action = TransactAction.Put,
+        PartitionKey = "account#A",
+        SortKey = "balance",
+        Data = new Dictionary<string, object?> { ["amount"] = 900 }
+    },
+    new()
+    {
+        Action = TransactAction.Put,
+        PartitionKey = "account#B",
+        SortKey = "balance",
+        Data = new Dictionary<string, object?> { ["amount"] = 1100 }
+    }
+};
+
+var result = await client.TransactWriteAsync(writeItems, "transfer-12345");
+
+if (result.IsSuccess)
+{
+    Console.WriteLine("Transaction completed!");
+}
+else
+{
+    Console.WriteLine("Transaction failed - rolled back");
+}
+```
+
+### Transactional Get
+
+```csharp
+var getItems = new List<TransactGetItem>
+{
+    new() { PartitionKey = "user#123", SortKey = "profile" },
+    new() { PartitionKey = "user#123", SortKey = "settings" }
+};
+
+var result = await client.TransactGetAsync(getItems);
+
+foreach (var item in result.Value.Items)
+{
+    if (item.ItemExists)
+    {
+        Console.WriteLine($"{item.PartitionKey}: found");
+    }
+}
+```
+
+---
+
+## Repository Pattern
+
+For typed entities, use the repository pattern:
+
+```csharp
+// Define your entity
+public record Customer : EntityBase
+{
+    public required string Name { get; init; }
+    public required string Email { get; init; }
+    public CustomerTier Tier { get; init; } = CustomerTier.Standard;
+}
+
+// Get repository
+var customers = client.GetRepository<Customer>("repo_customers");
+
+// Create
+var customer = new Customer
+{
+    Id = Guid.NewGuid().ToString(),
+    Name = "Acme Corp",
+    Email = "contact@acme.com"
+};
+await customers.CreateAsync(customer);
+
+// Read
+var result = await customers.GetAsync(customer.Id);
+
+// Update
+var updated = customer with { Tier = CustomerTier.Premium };
+await customers.UpdateAsync(updated);
+
+// Delete
+await customers.DeleteAsync(customer.Id);
+
+// List
+var list = await customers.ListAsync(new PaginationOptions { Limit = 50 });
+
+// Check exists
+var exists = await customers.ExistsAsync(customer.Id);
+```
+
+See [Repository Pattern Guide](/guides/repository/) for more details.
+
+---
+
+## Error Handling
+
+All operations return `Result<T>` objects:
+
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsSuccess)
+{
+    var item = result.Value;
+    // Process item
+}
+else if (result.IsFailed)
+{
+    foreach (var error in result.Errors)
+    {
+        Console.WriteLine($"Error: {error.Message}");
+    }
+}
+```
+
+### Common Patterns
+
+```csharp
+// Throw on failure
+var item = result.ValueOrThrow();
+
+// Provide default
+var item = result.ValueOr(defaultItem);
+
+// Match pattern
+result.Match(
+    onSuccess: item => Console.WriteLine($"Found: {item.PartitionKey}"),
+    onFailure: errors => Console.WriteLine($"Failed: {errors.First().Message}")
+);
+```
+
+---
+
+## Cleanup
+
+Always dispose the client when done:
+
+```csharp
+await client.DisposeAsync();
+
+// Or use 'using' statement
+await using var client = new TerraScaleDatabase(options);
+```
+
+---
+
+## Next Steps
+
+- [Repository Pattern](/guides/repository/) - Typed entity storage
+- [C# Management Client](/guides/SDKs/csharp-management/) - User and org management
+- [API Reference](/reference/api/) - Complete API documentation

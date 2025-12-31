@@ -1,5 +1,528 @@
 @layer base, starlight, theme, components, utilities;
 
+@import '@fontsource/quantico/400.css';
+@import '@fontsource/quantico/700.css';
 @import '@astrojs/starlight-tailwind';
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
+
+/* TerraScale Dark Theme - Matching terrascale.tech */
+:root {
+  /* Typography - Quantico font */
+  --sl-font: 'Quantico', system-ui, sans-serif;
+  --sl-font-system: 'Quantico', system-ui, sans-serif;
+
+  /* Background colors - Deep navy/black (darker) */
+  --sl-color-bg: #050810;
+  --sl-color-bg-nav: #080c14;
+  --sl-color-bg-sidebar: #080c14;
+  --sl-color-bg-inline-code: #0f1520;
+  --sl-color-black: #050810;
+}
+
+/* Page background glow effects */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(34, 197, 94, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at 100% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Grid pattern overlay for main content */
+.main-frame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 400px;
+  background-image:
+    linear-gradient(rgba(34, 197, 94, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 197, 94, 0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: linear-gradient(to bottom, black, transparent);
+  pointer-events: none;
+  z-index: 0;
+}
+
+:root {
+  /* Text colors */
+  --sl-color-white: #f8fafc;
+  --sl-color-text: #e2e8f0;
+  --sl-color-text-accent: #22c55e;
+
+  /* Gray scale */
+  --sl-color-gray-1: #f1f5f9;
+  --sl-color-gray-2: #cbd5e1;
+  --sl-color-gray-3: #94a3b8;
+  --sl-color-gray-4: #64748b;
+  --sl-color-gray-5: #334155;
+  --sl-color-gray-6: #1e293b;
+  --sl-color-gray-7: #0f172a;
+
+  /* Accent colors - Green/Cyan gradient */
+  --sl-color-accent: #22c55e;
+  --sl-color-accent-low: rgba(34, 197, 94, 0.15);
+  --sl-color-accent-high: #4ade80;
+  --sl-color-text-accent: #22c55e;
+
+  /* Status colors */
+  --sl-color-green: #22c55e;
+  --sl-color-green-low: rgba(34, 197, 94, 0.15);
+  --sl-color-green-high: #4ade80;
+
+  --sl-color-blue: #06b6d4;
+  --sl-color-blue-low: rgba(6, 182, 212, 0.15);
+  --sl-color-blue-high: #22d3ee;
+
+  --sl-color-orange: #f97316;
+  --sl-color-orange-low: rgba(249, 115, 22, 0.15);
+  --sl-color-orange-high: #fb923c;
+
+  --sl-color-red: #ef4444;
+  --sl-color-red-low: rgba(239, 68, 68, 0.15);
+  --sl-color-red-high: #f87171;
+
+  --sl-color-purple: #a855f7;
+  --sl-color-purple-low: rgba(168, 85, 247, 0.15);
+  --sl-color-purple-high: #c084fc;
+
+  /* Hairlines/borders */
+  --sl-color-hairline: #334155;
+  --sl-color-hairline-light: #1e293b;
+  --sl-color-hairline-shade: #475569;
+
+  /* Custom TerraScale gradients */
+  --ts-gradient-primary: linear-gradient(135deg, #22c55e 0%, #06b6d4 100%);
+  --ts-gradient-text: linear-gradient(90deg, #22c55e, #06b6d4);
+  --ts-gradient-footer: linear-gradient(135deg, #22c55e 0%, #06b6d4 50%, #eab308 100%);
+  --ts-gradient-card-border: linear-gradient(135deg, #22c55e 0%, #06b6d4 100%);
+}
+
+/* Light theme override - keep dark */
+[data-theme='light'] {
+  --sl-color-bg: #050810;
+  --sl-color-bg-nav: #080c14;
+  --sl-color-bg-sidebar: #080c14;
+  --sl-color-text: #e2e8f0;
+  --sl-color-white: #f8fafc;
+  --sl-color-black: #050810;
+}
+
+/* Gradient text utility */
+.gradient-text {
+  background: var(--ts-gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Primary gradient button */
+.btn-gradient {
+  background: var(--ts-gradient-primary);
+  color: #0a0f1a;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+}
+
+/* Secondary outline button */
+.btn-outline {
+  background: transparent;
+  color: var(--sl-color-white);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: 1px solid var(--sl-color-gray-5);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--sl-color-accent);
+  color: var(--sl-color-accent);
+}
+
+/* Stats bar styling */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 2rem 0;
+  margin-top: 2rem;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--sl-color-white);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  color: var(--sl-color-gray-3);
+  margin-top: 0.5rem;
+}
+
+/* Feature cards */
+.feature-card {
+  background: linear-gradient(135deg, #0f1724 0%, #080c14 100%);
+  border: 1px solid var(--sl-color-gray-6);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  border-color: var(--sl-color-gray-4);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.feature-icon {
+  width: 3rem;
+  height: 3rem;
+  background: rgba(148, 163, 184, 0.1);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  color: var(--sl-color-gray-2);
+}
+
+/* Hero section enhancements */
+.hero {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+}
+
+.hero .tagline {
+  font-size: 1.25rem;
+  color: var(--sl-color-gray-3);
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+/* Code block enhancements - darker theme */
+.expressive-code {
+  border: 1px solid var(--sl-color-gray-6) !important;
+  border-radius: 0.75rem !important;
+}
+
+.expressive-code .frame {
+  background: #030508 !important;
+}
+
+.expressive-code pre {
+  background: #030508 !important;
+}
+
+.expressive-code .header {
+  background: #050810 !important;
+  border-bottom-color: var(--sl-color-gray-6) !important;
+}
+
+/* Card grid - remove stagger effect for consistent layout */
+.card-grid > * {
+  height: 100%;
+}
+
+/* Starlight component overrides */
+.sl-link-button.primary {
+  background: var(--ts-gradient-primary) !important;
+  border: none !important;
+  color: #0a0f1a !important;
+}
+
+.sl-link-button.primary:hover {
+  box-shadow: 0 6px 20px rgba(34, 197, 94, 0.4);
+}
+
+/* Card component enhancements */
+.card {
+  background: linear-gradient(135deg, #0f1724 0%, #080c14 100%) !important;
+  border: 1px solid var(--sl-color-gray-6) !important;
+  transition: all 0.3s ease !important;
+}
+
+.card:hover {
+  border-color: var(--sl-color-gray-4) !important;
+  transform: translateY(-4px);
+}
+
+/* Navigation enhancements */
+header.header {
+  background: var(--sl-color-bg-nav) !important;
+  border-bottom: 1px solid var(--sl-color-gray-6) !important;
+}
+
+/* Sidebar enhancements */
+.sidebar-content {
+  background: var(--sl-color-bg-sidebar);
+}
+
+/* Sidebar navigation links */
+nav.sidebar-content a {
+  color: var(--sl-color-gray-2) !important;
+  text-decoration: none !important;
+}
+
+nav.sidebar-content a:hover {
+  color: var(--sl-color-white) !important;
+}
+
+/* Active/current page in sidebar */
+nav.sidebar-content a[aria-current="page"],
+nav.sidebar-content a[data-current="true"],
+.sidebar-content [aria-current="page"],
+.sidebar-content .current {
+  color: var(--sl-color-white) !important;
+  background: var(--sl-color-accent-low) !important;
+  border-left: 2px solid var(--sl-color-accent) !important;
+}
+
+/* Sidebar group labels */
+.sidebar-content summary,
+.sidebar-content .group-label {
+  color: var(--sl-color-white) !important;
+  font-weight: 600 !important;
+}
+
+/* Ensure sidebar text is always visible */
+.sidebar-content * {
+  -webkit-text-fill-color: inherit !important;
+}
+
+/* Fix for any gradient text issues in sidebar */
+.sidebar-content .gradient-text {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  -webkit-text-fill-color: var(--sl-color-white) !important;
+}
+
+/* Search styling - centered in header */
+header.header {
+  position: relative !important;
+}
+
+header.header site-search {
+  position: absolute !important;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+site-search button {
+  background: var(--sl-color-gray-6) !important;
+  border: 1px solid var(--sl-color-gray-5) !important;
+  min-width: 280px !important;
+}
+
+/* Hero image removal for splash pages */
+.hero img[src*="houston"] {
+  display: none;
+}
+
+/* Section dividers */
+.section-title {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-title h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.section-title p {
+  color: var(--sl-color-gray-3);
+  font-size: 1.125rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stats-bar {
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+
+  .stat-item {
+    flex: 0 0 45%;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+  background: var(--sl-color-accent);
+  color: var(--sl-color-black);
+}
+
+/* Focus states */
+:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sl-color-gray-7);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--sl-color-gray-5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--sl-color-gray-4);
+}
+
+/* Table of contents styling */
+starlight-toc a {
+  color: var(--sl-color-gray-3) !important;
+}
+
+starlight-toc a:hover {
+  color: var(--sl-color-white) !important;
+}
+
+starlight-toc a[aria-current="true"] {
+  color: var(--sl-color-accent) !important;
+  font-weight: 600 !important;
+}
+
+/* Breadcrumbs */
+.breadcrumbs a {
+  color: var(--sl-color-gray-3) !important;
+}
+
+.breadcrumbs a:hover {
+  color: var(--sl-color-white) !important;
+}
+
+/* Mobile menu */
+.mobile-menu-toggle {
+  color: var(--sl-color-white) !important;
+}
+
+/* Pagination links */
+.pagination-links a {
+  color: var(--sl-color-gray-2) !important;
+  border-color: var(--sl-color-gray-6) !important;
+  background: var(--sl-color-bg) !important;
+}
+
+.pagination-links a:hover {
+  border-color: var(--sl-color-accent) !important;
+  color: var(--sl-color-white) !important;
+}
+
+/* Tab styling for code examples */
+starlight-tabs [role="tablist"] {
+  border-bottom-color: var(--sl-color-gray-6) !important;
+}
+
+starlight-tabs [role="tab"] {
+  color: var(--sl-color-gray-3) !important;
+}
+
+starlight-tabs [role="tab"]:hover {
+  color: var(--sl-color-white) !important;
+}
+
+starlight-tabs [role="tab"][aria-selected="true"] {
+  color: var(--sl-color-accent) !important;
+  border-bottom-color: var(--sl-color-accent) !important;
+}
+
+/* Ensure all links in content are visible */
+.sl-markdown-content a {
+  color: var(--sl-color-accent) !important;
+}
+
+.sl-markdown-content a:hover {
+  color: var(--sl-color-accent-high) !important;
+}
+
+/* Fix any text visibility issues */
+.sl-markdown-content,
+.sl-markdown-content p,
+.sl-markdown-content li,
+.sl-markdown-content td,
+.sl-markdown-content th {
+  color: var(--sl-color-text) !important;
+}
+
+.sl-markdown-content h1,
+.sl-markdown-content h2,
+.sl-markdown-content h3,
+.sl-markdown-content h4,
+.sl-markdown-content h5,
+.sl-markdown-content h6 {
+  color: var(--sl-color-white) !important;
+}
+
+/* Aside/callout boxes */
+.starlight-aside {
+  border-color: var(--sl-color-gray-5) !important;
+  background: var(--sl-color-gray-7) !important;
+}
+
+.starlight-aside__title {
+  color: var(--sl-color-white) !important;
+}

@@ -1,0 +1,188 @@
+---
+title: API Strategy
+description: Choose the right API pattern for your TerraScale application - Custom API, DynamoDB-Compatible, or SQL.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+
+TerraScale provides three API access patterns. Each serves different use cases and offers different tradeoffs.
+
+---
+
+## TerraScale Custom API (Recommended)
+
+The TerraScale Custom API is the **preferred method** for accessing your databases. It provides:
+
+- **Best Performance**: Optimized for TerraScale's architecture
+- **Full Feature Access**: All platform capabilities available
+- **Type Safety**: Strongly-typed client libraries
+- **Native Patterns**: Repository pattern, batch operations, transactions
+
+**Use this API when:**
+- Building new applications on TerraScale
+- You want the best performance and developer experience
+- You need access to all TerraScale features
+
+```csharp
+// Example: Using the Custom API
+var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+{
+    ApiKey = "ts_live_your_api_key",
+    Endpoint = "https://api.terrascale.io",
+    DefaultDatabase = "my-database"
+});
+
+var result = await client.PutItemAsync(new DatabaseItem
+{
+    PartitionKey = "user#123",
+    SortKey = "profile",
+    Attributes = new Dictionary<string, object?>
+    {
+        ["name"] = "John Doe",
+        ["email"] = "john@example.com"
+    }
+});
+```
+
+---
+
+## DynamoDB-Compatible API
+
+A partially compatible DynamoDB API for easier migration from AWS.
+
+:::note[Migration Focus]
+This API is designed for **migration scenarios**. It provides partial compatibility to ease transitions from AWS DynamoDB.
+:::
+
+**Important Notes:**
+- **Partial compatibility only** - Not a complete DynamoDB replacement
+- **Migration-focused** - Use to ease transition from AWS
+- **Feature subset** - Some DynamoDB operations are not supported
+- **Transitional** - Consider migrating to Custom API over time
+
+### Supported Operations
+
+| Operation | Status |
+|-----------|--------|
+| GetItem | Supported |
+| PutItem | Supported |
+| DeleteItem | Supported |
+| UpdateItem | Supported |
+| Query | Supported |
+| Scan | Supported |
+| BatchGetItem | Supported |
+| BatchWriteItem | Supported |
+| TransactGetItems | Supported |
+| TransactWriteItems | Supported |
+
+### Not Supported
+
+| Feature | Status |
+|---------|--------|
+| Global Secondary Indexes (GSI) | Not Supported |
+| Local Secondary Indexes (LSI) | Not Supported |
+| DynamoDB Streams | Not Supported |
+| PartiQL | Not Supported |
+| On-Demand/Provisioned capacity modes | Not Supported |
+
+**Use this API when:**
+- Migrating existing DynamoDB applications
+- You have existing code using AWS SDK
+- You want a gradual transition path
+
+---
+
+## SQL API
+
+A SQL-like interface for developers who prefer relational-style queries.
+
+:::note[Exploratory Use]
+The SQL API provides a familiar interface but is a **minimal SQL subset**. Best for exploration and prototyping.
+:::
+
+**Important Notes:**
+- **Minimal SQL subset** - Not a full SQL database
+- **Structured queries** - Uses familiar SQL-like syntax for data operations
+- **Schema-aware** - Requires CREATE TABLE before data operations
+- **Exploratory** - Good for ad-hoc queries and schema exploration
+
+### Supported Statements
+
+```sql
+-- Data Manipulation (DML)
+SELECT columns FROM table WHERE conditions [ORDER BY] [LIMIT]
+INSERT INTO table (columns) VALUES (values)
+UPDATE table SET assignments WHERE conditions
+DELETE FROM table WHERE conditions
+
+-- Data Definition (DDL)
+CREATE TABLE table (columns, PRIMARY KEY (pk [, ck...]))
+ALTER TABLE table ADD column type
+ALTER TABLE table DROP column
+DROP TABLE table
+CREATE INDEX name ON table (column)
+DROP INDEX name
+```
+
+### Limitations
+
+- No JOIN operations
+- No subqueries
+- No GROUP BY or aggregate functions (except COUNT)
+- No complex expressions in SELECT
+- WHERE clause limited to primary key and indexed columns
+- ORDER BY only on clustering columns
+
+**Use this API when:**
+- You prefer SQL syntax for simple operations
+- Exploring data or schemas interactively
+- Building prototypes or admin tools
+- Coming from a SQL background
+
+---
+
+## API Comparison
+
+| Feature | Custom API | DynamoDB API | SQL API |
+|---------|------------|--------------|---------|
+| Performance | Best | Good | Good |
+| Type Safety | Full | Partial | Minimal |
+| Feature Coverage | 100% | ~70% | ~40% |
+| Learning Curve | Low | Medium | Low |
+| Migration Path | Native | From AWS | From SQL |
+| Schema Required | No | No | Yes |
+| Best For | Production | Migration | Exploration |
+
+---
+
+## Choosing the Right API
+
+<CardGrid>
+  <Card title="New Projects" icon="rocket">
+    **Use Custom API** from day one for best performance and full feature access.
+  </Card>
+  <Card title="AWS Migration" icon="right-arrow">
+    **Start with DynamoDB API**, then migrate to Custom API over time.
+  </Card>
+  <Card title="SQL Background" icon="document">
+    **Use SQL API** for exploration, **Custom API** for production.
+  </Card>
+</CardGrid>
+
+### Recommendation
+
+**Start with the Custom API** unless you have a specific reason to use the alternatives:
+
+1. **New projects**: Use Custom API from day one
+2. **AWS migration**: Start with DynamoDB API, migrate to Custom API over time
+3. **SQL familiarity**: Use SQL API for exploration, Custom API for production
+
+---
+
+## Next Steps
+
+- [C# SDK Guide](/guides/SDKs/csharp/) - Learn the Custom API with the C# SDK
+- [API Reference](/reference/api/) - Complete API documentation
+- [SQL API Reference](/reference/api/sql-api/) - SQL statement reference

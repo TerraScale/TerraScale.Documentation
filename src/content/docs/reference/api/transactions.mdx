@@ -1,0 +1,341 @@
+---
+title: Transactions
+description: ACID-compliant transactional operations for atomic multi-item updates.
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Transactional operations provide ACID-compliant atomic reads and writes across multiple items.
+
+---
+
+## Transactional Get
+
+### POST /api/v1/databases/\{databaseId\}/items/transact/get
+
+Atomically reads multiple items at a consistent point in time. Maximum 100 items.
+
+**Request:**
+```json
+{
+  "items": [
+    { "pk": "user#123", "sk": "profile" },
+    { "pk": "user#123", "sk": "settings", "projectionExpression": ["theme", "locale"] }
+  ],
+  "clientRequestToken": "unique-request-id"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `pk` | string | Partition key |
+| `sk` | string | Sort key (optional) |
+| `projectionExpression` | array | Specific attributes to return (optional) |
+| `clientRequestToken` | string | Idempotency token (optional) |
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "pk": "user#123",
+      "sk": "profile",
+      "item": { "name": "John" },
+      "itemExists": true
+    },
+    {
+      "pk": "user#123",
+      "sk": "settings",
+      "item": null,
+      "itemExists": false
+    }
+  ]
+}
+```
+
+---
+
+## Transactional Write
+
+### POST /api/v1/databases/\{databaseId\}/items/transact/write
+
+Atomically writes, updates, or deletes multiple items. All operations succeed or all fail. Maximum 25 items.
+
+**Request:**
+```json
+{
+  "items": [
+    {
+      "action": "Put",
+      "pk": "user#123",
+      "sk": "profile",
+      "data": { "name": "John" }
+    },
+    {
+      "action": "Update",
+      "pk": "user#123",
+      "sk": "stats",
+      "data": { "loginCount": 5 }
+    },
+    {
+      "action": "Delete",
+      "pk": "user#123",
+      "sk": "temp"
+    },
+    {
+      "action": "ConditionCheck",
+      "pk": "user#123",
+      "sk": "settings",
+      "conditionExpression": "attribute_exists(pk)"
+    }
+  ],
+  "clientRequestToken": "unique-request-id"
+}
+```
+
+### Transaction Actions
+
+| Action | Description |
+|--------|-------------|
+| `Put` | Insert or replace an item |
+| `Update` | Update existing item attributes |
+| `Delete` | Remove an item |
+| `ConditionCheck` | Verify condition without modification |
+
+**Response (200 OK):**
+```json
+{
+  "successCount": 4,
+  "errors": null
+}
+```
+
+### Transaction Failure
+
+If any operation fails, the entire transaction is rolled back:
+
+```json
+{
+  "successCount": 0,
+  "errors": [
+    {
+      "itemIndex": 3,
+      "pk": "user#123",
+      "sk": "settings",
+      "error": "Condition check failed",
+      "errorType": "ConditionalCheckFailed"
+    }
+  ]
+}
+```
+
+---
+
+## Error Types
+
+| Error Type | Description |
+|------------|-------------|
+| `ConditionalCheckFailed` | Condition expression evaluated to false |
+| `ItemCollectionSizeLimitExceeded` | Item collection too large |
+| `TransactionCanceled` | Transaction was canceled |
+| `ValidationError` | Invalid request parameters |
+| `InternalServerError` | Server error |
+
+---
+
+## Idempotency
+
+Use `clientRequestToken` to make transactions idempotent:
+
+```json
+{
+  "items": [...],
+  "clientRequestToken": "order-12345-payment"
+}
+```
+
+If you retry with the same token within 10 minutes, TerraScale returns the original result without re-executing the transaction.
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // Transactional Get
+    var getItems = new List<TransactGetItem>
+    {
+        new() { PartitionKey = "user#123", SortKey = "profile" },
+        new() { PartitionKey = "user#123", SortKey = "settings" }
+    };
+
+    var getResult = await client.TransactGetAsync(getItems);
+
+    foreach (var item in getResult.Value.Items)
+    {
+        if (item.ItemExists)
+        {
+            Console.WriteLine($"{item.PartitionKey}/{item.SortKey}: {item.Item}");
+        }
+    }
+
+    // Transactional Write - Transfer money between accounts
+    var writeItems = new List<TransactWriteItem>
+    {
+        new()
+        {
+            Action = TransactAction.Update,
+            PartitionKey = "account#source",
+            SortKey = "balance",
+            Data = new Dictionary<string, object?> { ["amount"] = 900 },
+            ConditionExpression = "amount >= :minAmount"
+        },
+        new()
+        {
+            Action = TransactAction.Update,
+            PartitionKey = "account#dest",
+            SortKey = "balance",
+            Data = new Dictionary<string, object?> { ["amount"] = 1100 }
+        },
+        new()
+        {
+            Action = TransactAction.Put,
+            PartitionKey = "transfer#12345",
+            SortKey = "record",
+            Data = new Dictionary<string, object?>
+            {
+                ["from"] = "account#source",
+                ["to"] = "account#dest",
+                ["amount"] = 100,
+                ["timestamp"] = DateTime.UtcNow
+            }
+        }
+    };
+
+    var writeResult = await client.TransactWriteAsync(writeItems, "transfer-12345");
+
+    if (writeResult.IsSuccess)
+    {
+        Console.WriteLine("Transfer completed!");
+    }
+    else
+    {
+        Console.WriteLine("Transfer failed - rolled back");
+    }
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    # Transactional Get
+    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/transact/get" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "items": [
+          { "pk": "user#123", "sk": "profile" },
+          { "pk": "user#123", "sk": "settings" }
+        ]
+      }'
+
+    # Transactional Write
+    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/transact/write" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "items": [
+          {
+            "action": "Put",
+            "pk": "user#123",
+            "sk": "profile",
+            "data": { "name": "John" }
+          },
+          {
+            "action": "ConditionCheck",
+            "pk": "user#123",
+            "sk": "settings",
+            "conditionExpression": "attribute_exists(pk)"
+          }
+        ],
+        "clientRequestToken": "unique-request-id"
+      }'
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Use Cases
+
+### Money Transfer
+
+Ensure both debit and credit happen atomically:
+
+```json
+{
+  "items": [
+    { "action": "Update", "pk": "account#A", "sk": "balance", "data": {"amount": 900} },
+    { "action": "Update", "pk": "account#B", "sk": "balance", "data": {"amount": 1100} },
+    { "action": "Put", "pk": "transfer#123", "sk": "log", "data": {...} }
+  ]
+}
+```
+
+### Inventory Management
+
+Reserve stock only if available:
+
+```json
+{
+  "items": [
+    {
+      "action": "ConditionCheck",
+      "pk": "product#ABC",
+      "sk": "inventory",
+      "conditionExpression": "quantity >= :required"
+    },
+    {
+      "action": "Update",
+      "pk": "product#ABC",
+      "sk": "inventory",
+      "data": { "quantity": 45 }
+    },
+    {
+      "action": "Put",
+      "pk": "order#12345",
+      "sk": "item#ABC",
+      "data": { "quantity": 5 }
+    }
+  ]
+}
+```
+
+---
+
+## Limits
+
+| Limit | Value |
+|-------|-------|
+| Transact Get items | 100 |
+| Transact Write items | 25 |
+| Total request size | 4 MB |
+| Item size | 400 KB |
+
+---
+
+## Best Practices
+
+1. **Use transactions only when needed** - They have higher latency than batch operations
+2. **Keep transactions small** - Fewer items = faster execution
+3. **Use idempotency tokens** - Prevents duplicate operations on retry
+4. **Handle failures gracefully** - The entire transaction rolls back on any failure
+
+---
+
+## Next Steps
+
+- [Batch Operations](/reference/api/batch-operations/) - For non-atomic bulk operations
+- [Item Operations](/reference/api/item-operations/) - Single item operations
+- [Error Handling](/reference/error-handling/) - Handle transaction errors

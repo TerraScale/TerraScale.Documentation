@@ -1,0 +1,368 @@
+---
+title: SQL API
+description: SQL-like interface for TerraScale databases with familiar query syntax.
+sidebar:
+  order: 7
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+A SQL-like interface for developers who prefer relational-style queries.
+
+:::note[Minimal SQL Subset]
+The SQL API provides a minimal SQL subset. It's ideal for exploration and prototyping, but consider the [Custom API](/guides/api-strategy/) for production.
+:::
+
+---
+
+## Authorization
+
+| Operation | JWT | API Key (read) | API Key (write) | API Key (admin) |
+|-----------|-----|----------------|-----------------|-----------------|
+| SELECT | Yes | Yes | Yes | Yes |
+| INSERT/UPDATE/DELETE | Yes | No | Yes | Yes |
+| CREATE/ALTER/DROP TABLE | Yes | No | No | Yes |
+
+---
+
+## Execute Query
+
+### POST /databases/\{databaseId\}/sql/query
+
+Executes a SQL query (SELECT, INSERT, UPDATE, DELETE).
+
+**Request:**
+```json
+{
+  "sql": "SELECT * FROM users WHERE id = ?",
+  "parameters": {
+    "id": "user_123"
+  },
+  "limit": 100,
+  "pageToken": null
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `sql` | string | Yes | SQL statement to execute |
+| `parameters` | object | No | Named parameters for the query |
+| `limit` | integer | No | Max rows to return |
+| `pageToken` | string | No | Pagination token from previous response |
+
+**Response (200 OK):**
+```json
+{
+  "rows": [
+    {
+      "id": "user_123",
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  ],
+  "rowCount": 1,
+  "columns": [
+    { "name": "id", "type": "text" },
+    { "name": "name", "type": "text" },
+    { "name": "email", "type": "text" }
+  ],
+  "nextPageToken": null,
+  "executionTimeMs": 15
+}
+```
+
+---
+
+## Execute DDL
+
+### POST /databases/\{databaseId\}/sql/execute
+
+Executes a DDL statement (CREATE TABLE, ALTER TABLE, DROP TABLE, CREATE INDEX, DROP INDEX).
+
+**Request:**
+```json
+{
+  "sql": "CREATE TABLE users (id TEXT, name TEXT, email TEXT, PRIMARY KEY (id))"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Table 'users' created successfully",
+  "affectedRows": 0
+}
+```
+
+---
+
+## List Tables
+
+### GET /databases/\{databaseId\}/sql/tables
+
+Lists all tables in the database.
+
+**Response (200 OK):**
+```json
+{
+  "tables": [
+    {
+      "name": "users",
+      "rowCount": 1500,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "name": "orders",
+      "rowCount": 5200,
+      "createdAt": "2024-01-15T10:05:00Z"
+    }
+  ]
+}
+```
+
+---
+
+## Get Table Schema
+
+### GET /databases/\{databaseId\}/sql/tables/\{tableName\}/schema
+
+Gets the schema of a specific table.
+
+**Response (200 OK):**
+```json
+{
+  "tableName": "users",
+  "columns": [
+    {
+      "name": "id",
+      "type": "text",
+      "isPartitionKey": true,
+      "isClusteringKey": false,
+      "isNullable": false,
+      "defaultValue": null
+    },
+    {
+      "name": "name",
+      "type": "text",
+      "isPartitionKey": false,
+      "isClusteringKey": false,
+      "isNullable": true,
+      "defaultValue": null
+    }
+  ],
+  "primaryKey": {
+    "partitionKeys": ["id"],
+    "clusteringKeys": []
+  },
+  "indexes": [
+    {
+      "name": "users_email_idx",
+      "columns": ["email"],
+      "isUnique": false
+    }
+  ]
+}
+```
+
+---
+
+## Supported Data Types
+
+| SQL Type | Description |
+|----------|-------------|
+| `VARCHAR`, `TEXT`, `STRING` | UTF-8 string |
+| `INT`, `INTEGER` | 32-bit signed integer |
+| `BIGINT`, `LONG` | 64-bit signed integer |
+| `SMALLINT`, `SHORT` | 16-bit signed integer |
+| `TINYINT`, `BYTE` | 8-bit signed integer |
+| `FLOAT`, `REAL` | 32-bit IEEE-754 floating point |
+| `DOUBLE` | 64-bit IEEE-754 floating point |
+| `DECIMAL`, `NUMERIC` | Variable-precision decimal |
+| `BOOLEAN`, `BOOL` | True/false value |
+| `DATE` | Date without time |
+| `TIME` | Time without date |
+| `TIMESTAMP`, `DATETIME` | Date and time |
+| `BLOB`, `BINARY` | Binary data |
+| `UUID`, `GUID` | UUID value |
+| `TIMEUUID` | Time-based UUID |
+| `LIST<T>` | Ordered collection (e.g., `LIST<TEXT>`) |
+| `SET<T>` | Unique collection (e.g., `SET<INT>`) |
+| `MAP<K,V>` | Key-value collection (e.g., `MAP<TEXT,INT>`) |
+
+---
+
+## SQL Examples
+
+### Create Table
+
+```sql
+CREATE TABLE products (
+  category TEXT,
+  product_id TEXT,
+  name TEXT,
+  price DECIMAL,
+  in_stock BOOLEAN,
+  tags SET<TEXT>,
+  PRIMARY KEY (category, product_id)
+)
+```
+
+### Insert Data
+
+```sql
+INSERT INTO products (category, product_id, name, price, in_stock)
+VALUES ('electronics', 'prod_001', 'Wireless Mouse', 29.99, true)
+```
+
+### Query with Conditions
+
+```sql
+SELECT name, price FROM products
+WHERE category = 'electronics' AND product_id > 'prod_000'
+ORDER BY product_id
+LIMIT 10
+```
+
+### Update Data
+
+```sql
+UPDATE products SET price = 24.99, in_stock = false
+WHERE category = 'electronics' AND product_id = 'prod_001'
+```
+
+### Delete Data
+
+```sql
+DELETE FROM products
+WHERE category = 'electronics' AND product_id = 'prod_001'
+```
+
+### Create Index
+
+```sql
+CREATE INDEX products_name_idx ON products (name)
+```
+
+---
+
+## Limitations
+
+| Feature | Status |
+|---------|--------|
+| JOIN operations | Not Supported |
+| Subqueries | Not Supported |
+| GROUP BY | Not Supported |
+| Aggregate functions | COUNT only |
+| Complex expressions in SELECT | Not Supported |
+| WHERE on non-indexed columns | Limited |
+| ORDER BY | Clustering columns only |
+
+---
+
+## Error Codes
+
+| Code | Description |
+|------|-------------|
+| `SQL_SYNTAX_ERROR` | SQL statement has syntax errors |
+| `SQL_VALIDATION_ERROR` | SQL is valid but violates constraints |
+| `ACCESS_DENIED` | User lacks permission for this operation |
+| `TABLE_NOT_FOUND` | Referenced table does not exist |
+| `DATABASE_NOT_FOUND` | Database ID is invalid |
+| `SQL_EXECUTION_ERROR` | Error during query execution |
+
+**Error Response (400 Bad Request):**
+```json
+{
+  "code": "SQL_SYNTAX_ERROR",
+  "message": "Unexpected token at position 15",
+  "details": "Expected FROM keyword"
+}
+```
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="cURL">
+    ```bash
+    # Create table
+    curl -X POST "https://api.terrascale.io/databases/my-db/sql/execute" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "sql": "CREATE TABLE users (id TEXT, name TEXT, PRIMARY KEY (id))"
+      }'
+
+    # Insert data
+    curl -X POST "https://api.terrascale.io/databases/my-db/sql/query" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "sql": "INSERT INTO users (id, name) VALUES ('\''user_1'\'', '\''John'\'')"
+      }'
+
+    # Query data
+    curl -X POST "https://api.terrascale.io/databases/my-db/sql/query" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "sql": "SELECT * FROM users WHERE id = ?",
+        "parameters": { "id": "user_1" }
+      }'
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```javascript
+    async function executeQuery(sql, parameters = {}) {
+      const response = await fetch(
+        `https://api.terrascale.io/databases/$\{databaseId\}/sql/query`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ sql, parameters })
+        }
+      );
+
+      return await response.json();
+    }
+
+    // Query users
+    const result = await executeQuery(
+      'SELECT * FROM users WHERE id = ?',
+      { id: 'user_123' }
+    );
+
+    console.log(result.rows);
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## When to Use SQL API
+
+**Good for:**
+- Interactive data exploration
+- Ad-hoc queries
+- Admin tools
+- Developers with SQL background
+- Prototyping
+
+**Consider Custom API for:**
+- Production applications
+- Performance-critical code
+- Full feature access
+- Type safety
+
+---
+
+## Next Steps
+
+- [API Strategy](/guides/api-strategy/) - Compare API options
+- [Query Operations](/reference/api/query-operations/) - Custom API queries
+- [Getting Started](/guides/getting-started/) - Quick start guide

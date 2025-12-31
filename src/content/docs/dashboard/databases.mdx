@@ -1,0 +1,214 @@
+---
+title: Database Management
+description: Create, configure, and manage databases through the TerraScale Dashboard.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Manage your TerraScale databases through the web dashboard with an intuitive visual interface.
+
+---
+
+## Creating a Database
+
+### Step 1: Open Create Dialog
+
+Click **"Create Database"** from the dashboard home page or navigate to **Databases** and click the create button.
+
+### Step 2: Configure Database
+
+Enter your database configuration:
+
+| Field | Description | Requirements |
+|-------|-------------|--------------|
+| **Database Name** | Unique identifier | Lowercase letters, numbers, hyphens only |
+| **Region** | Geographic location | Select from dropdown |
+| **Automatic Backups** | Daily backup schedule | Optional, configurable retention |
+| **Deletion Protection** | Prevent accidental deletion | Optional, recommended for production |
+
+### Step 3: Create
+
+Click **"Create Database"** to provision your database. It will be ready within seconds and appear with "Active" status.
+
+---
+
+## Database List
+
+The Databases page shows all your databases with:
+
+| Column | Description |
+|--------|-------------|
+| **Name** | Database identifier (click to open details) |
+| **Region** | Geographic location |
+| **Status** | Active, Creating, or Deleting |
+| **Created** | Creation timestamp |
+| **Items** | Total item count |
+| **Storage** | Storage used |
+
+### Filtering and Search
+
+- Use the search box to filter by database name
+- Sort by any column by clicking the header
+- Filter by region or status
+
+---
+
+## Database Details
+
+Click on any database to view its detail page with three tabs:
+
+<Tabs>
+  <TabItem label="Dashboard Tab">
+    Overview metrics for your database:
+
+    - **Item Count**: Total number of items stored
+    - **Storage Used**: Current storage consumption
+    - **Read Units**: Read capacity consumed
+    - **Write Units**: Write capacity consumed
+    - **Recent Activity**: Graph of operations over time
+  </TabItem>
+  <TabItem label="Explorer Tab">
+    Built-in query editor for running queries directly in your browser:
+
+    - Write queries in the editor
+    - Click **"Execute"** or press `Ctrl+Enter`
+    - View results in the JSON viewer
+
+    **Features:**
+    - Syntax highlighting
+    - Format query button (`Ctrl+Shift+F`)
+    - Error highlighting with line numbers
+    - JSON result viewer with expand/collapse
+    - Query history
+  </TabItem>
+  <TabItem label="Settings Tab">
+    Configuration options for your database:
+
+    - **Automatic Backups**: Enable/disable daily backups
+    - **Backup Retention**: Set retention period (7-30 days)
+    - **Deletion Protection**: Toggle protection on/off
+    - **Database Info**: View endpoint, region, and creation date
+    - **Danger Zone**: Delete database option
+  </TabItem>
+</Tabs>
+
+---
+
+## Query Explorer
+
+The built-in Query Explorer allows you to run queries directly in your browser:
+
+### Running a Query
+
+1. Navigate to your database's **Explorer** tab
+2. Write your query in the editor
+3. Click **"Execute"** or press `Ctrl+Enter`
+4. View results in the JSON viewer below
+
+### Example Queries
+
+```json
+// Get a single item
+{
+  "operation": "GetItem",
+  "pk": "user#123",
+  "sk": "profile"
+}
+```
+
+```json
+// Query items by partition key
+{
+  "operation": "Query",
+  "pk": "user#123",
+  "skCondition": {
+    "operator": "begins_with",
+    "value": "order#"
+  }
+}
+```
+
+### Query Editor Features
+
+| Feature | Description |
+|---------|-------------|
+| **Syntax Highlighting** | JSON syntax colors for readability |
+| **Auto-formatting** | Format JSON with `Ctrl+Shift+F` |
+| **Error Indicators** | Red underlines for syntax errors |
+| **Line Numbers** | Easy reference for debugging |
+| **Query History** | Access recent queries from dropdown |
+
+---
+
+## Database Settings
+
+### Automatic Backups
+
+Enable daily automated backups:
+
+1. Navigate to database **Settings** tab
+2. Toggle **Automatic Backups** on
+3. Set **Retention Period** (7, 14, or 30 days)
+4. Click **Save**
+
+Backups run daily and can be restored by contacting support.
+
+### Deletion Protection
+
+Prevent accidental database deletion:
+
+1. Navigate to database **Settings** tab
+2. Toggle **Deletion Protection** on
+3. Click **Save**
+
+When enabled, the delete button is disabled. You must first disable protection to delete the database.
+
+---
+
+## Deleting a Database
+
+To delete a database:
+
+1. Navigate to the database's **Settings** tab
+2. Ensure **Deletion Protection** is disabled
+3. Scroll to **Danger Zone**
+4. Click **"Delete Database"**
+5. Type the database name to confirm
+6. Click **"Delete"**
+
+Deletion is permanent and cannot be undone.
+
+---
+
+## Best Practices
+
+### Production Databases
+
+- Enable **Deletion Protection** for all production databases
+- Enable **Automatic Backups** with 30-day retention
+- Use descriptive names like `prod-users` or `staging-orders`
+
+### Development Databases
+
+- Use naming conventions like `dev-*` or `test-*`
+- Consider shorter backup retention to save storage
+- Clean up unused databases regularly
+
+### Naming Conventions
+
+| Environment | Pattern | Example |
+|-------------|---------|---------|
+| Production | `prod-{service}` | `prod-users` |
+| Staging | `staging-{service}` | `staging-orders` |
+| Development | `dev-{service}` | `dev-inventory` |
+| Testing | `test-{feature}` | `test-auth-flow` |
+
+---
+
+## Next Steps
+
+- [API Key Management](/dashboard/api-keys/) - Create API keys for your databases
+- [Query Operations](/reference/api/query-operations/) - Learn query syntax
+- [C# SDK Guide](/guides/SDKs/csharp/) - Connect from your application

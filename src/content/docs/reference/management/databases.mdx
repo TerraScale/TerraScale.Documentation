@@ -1,0 +1,226 @@
+---
+title: Database Management API
+description: API reference for creating, listing, and managing TerraScale databases.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Manage databases through the Management API. Requires JWT authentication (dashboard access).
+
+---
+
+## Create Database
+
+### POST /api/v1/management/databases
+
+Creates a new database.
+
+**Request:**
+```json
+{
+  "name": "my-production-db",
+  "region": "us-east-1",
+  "settings": null
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Database name (lowercase, numbers, hyphens) |
+| `region` | string | Yes | Region code (e.g., `us-east-1`) |
+| `settings` | object | No | Optional configuration |
+
+**Response (201 Created):**
+```json
+{
+  "databaseId": "db_abc123",
+  "name": "my-production-db",
+  "region": "us-east-1",
+  "status": "Creating",
+  "createdAt": "2024-01-15T10:00:00Z"
+}
+```
+
+---
+
+## List Databases
+
+### GET /api/v1/management/databases
+
+Lists all databases for the authenticated organization.
+
+**Query Parameters:**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `limit` | integer | 20 | Max items to return |
+| `cursor` | string | null | Pagination cursor |
+
+**Response (200 OK):**
+```json
+{
+  "databases": [
+    {
+      "databaseId": "db_abc123",
+      "name": "my-production-db",
+      "region": "us-east-1",
+      "status": "Active",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:05:00Z",
+      "settings": null,
+      "usage": {
+        "itemCount": 15000,
+        "storageBytes": 52428800,
+        "readUnitsConsumed": 1500,
+        "writeUnitsConsumed": 300,
+        "lastUpdated": "2024-01-15T11:00:00Z"
+      }
+    }
+  ],
+  "nextCursor": null
+}
+```
+
+---
+
+## Get Database
+
+### GET /api/v1/management/databases/\{databaseId\}
+
+Gets a specific database by ID.
+
+**Response (200 OK):** Same as individual database in list response.
+
+---
+
+## Delete Database
+
+### DELETE /api/v1/management/databases/\{databaseId\}
+
+Deletes a database.
+
+:::caution[Warning]
+This permanently deletes the database and all its data. This action cannot be undone.
+:::
+
+**Response (204 No Content):** Empty body on success.
+
+---
+
+## Database Status Values
+
+| Status | Description |
+|--------|-------------|
+| `Creating` | Database is being provisioned |
+| `Active` | Database is ready for use |
+| `Inactive` | Database is paused |
+| `Maintenance` | Database is undergoing maintenance |
+| `Deleting` | Database is being deleted |
+| `Error` | Database encountered an error |
+| `BackingUp` | Database backup in progress |
+| `Restoring` | Database restore in progress |
+
+---
+
+## Usage Metrics
+
+Each database includes usage statistics:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `itemCount` | integer | Number of items stored |
+| `storageBytes` | long | Total storage used in bytes |
+| `readUnitsConsumed` | long | Read capacity consumed |
+| `writeUnitsConsumed` | long | Write capacity consumed |
+| `lastUpdated` | datetime | When metrics were last updated |
+
+---
+
+## Code Examples
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    // Create database
+    var createResult = await client.Databases.CreateAsync(new CreateDatabaseRequest(
+        Name: "my-production-db",
+        Region: "us-east-1"
+    ));
+
+    if (createResult.IsSuccess)
+    {
+        Console.WriteLine($"Database created: {createResult.Value.DatabaseId}");
+    }
+
+    // List databases
+    var listResult = await client.Databases.ListAsync();
+
+    foreach (var db in listResult.Value.Databases)
+    {
+        Console.WriteLine($"{db.Name} - {db.Status}");
+        Console.WriteLine($"  Items: {db.Usage?.ItemCount}");
+        Console.WriteLine($"  Storage: {db.Usage?.StorageBytes / 1024 / 1024} MB");
+    }
+
+    // Get database
+    var dbResult = await client.Databases.GetAsync("db_abc123");
+
+    // Delete database
+    var deleteResult = await client.Databases.DeleteAsync("db_abc123");
+    ```
+  </TabItem>
+  <TabItem label="cURL">
+    ```bash
+    # Create database
+    curl -X POST "https://api.terrascale.io/api/v1/management/databases" \
+      -H "Authorization: Bearer eyJhbGci..." \
+      -H "Content-Type: application/json" \
+      -d '{
+        "name": "my-production-db",
+        "region": "us-east-1"
+      }'
+
+    # List databases
+    curl "https://api.terrascale.io/api/v1/management/databases" \
+      -H "Authorization: Bearer eyJhbGci..."
+
+    # Get database
+    curl "https://api.terrascale.io/api/v1/management/databases/db_abc123" \
+      -H "Authorization: Bearer eyJhbGci..."
+
+    # Delete database
+    curl -X DELETE "https://api.terrascale.io/api/v1/management/databases/db_abc123" \
+      -H "Authorization: Bearer eyJhbGci..."
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Database Naming Rules
+
+- Lowercase letters only (a-z)
+- Numbers (0-9)
+- Hyphens (-)
+- Must start with a letter
+- 3-63 characters long
+
+**Valid names:**
+- `my-app-prod`
+- `users-db`
+- `project123`
+
+**Invalid names:**
+- `My-App` (uppercase)
+- `123-db` (starts with number)
+- `my_app` (underscore)
+
+---
+
+## Next Steps
+
+- [Repository Management](/reference/management/repositories/) - Create repositories
+- [API Key Management](/reference/management/api-keys/) - Generate API keys
+- [Regions](/reference/regions/) - Available regions

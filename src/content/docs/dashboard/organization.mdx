@@ -1,0 +1,279 @@
+---
+title: Organization Settings
+description: Manage team members, roles, and organization settings in TerraScale.
+sidebar:
+  order: 4
+---
+
+import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+
+Manage your team and organization settings through the TerraScale Dashboard.
+
+---
+
+## Accessing Organization Settings
+
+Navigate to **Organization** in the sidebar to access team management features.
+
+---
+
+## Team Members
+
+### Viewing Members
+
+The Members page displays all team members with:
+
+| Column | Description |
+|--------|-------------|
+| **Name** | Member's display name |
+| **Email** | Account email address |
+| **Role** | Permission level |
+| **Status** | Active or Pending |
+| **Joined** | Date added to organization |
+
+### Member Status
+
+<Tabs>
+  <TabItem label="Active">
+    Member has accepted the invitation and can access resources.
+
+    - Full access based on assigned role
+    - Appears in member list with active status
+  </TabItem>
+  <TabItem label="Pending">
+    Invitation sent but not yet accepted.
+
+    - Cannot access resources
+    - Invitation can be resent or cancelled
+    - Expires after 7 days
+  </TabItem>
+</Tabs>
+
+---
+
+## Available Roles
+
+<CardGrid>
+  <Card title="Owner" icon="star">
+    **Full access** including billing, organization deletion, and all administrative functions.
+
+    - Manage billing and subscriptions
+    - Delete the organization
+    - Transfer ownership
+    - All Admin permissions
+  </Card>
+  <Card title="Admin" icon="setting">
+    **Administrative access** to databases, API keys, and team members.
+
+    - Invite and remove members
+    - Change member roles (except Owner)
+    - Create and delete databases
+    - Manage all API keys
+  </Card>
+  <Card title="Member" icon="pencil">
+    **Standard access** to create and manage resources.
+
+    - Create databases
+    - Generate API keys
+    - Manage own resources
+    - Cannot manage team members
+  </Card>
+  <Card title="Read-only" icon="open-book">
+    **View-only access** to all resources.
+
+    - View databases and data
+    - View API keys (not secrets)
+    - Cannot create or modify resources
+    - Cannot manage team
+  </Card>
+</CardGrid>
+
+### Role Permissions Matrix
+
+| Permission | Owner | Admin | Member | Read-only |
+|------------|-------|-------|--------|-----------|
+| View databases | Yes | Yes | Yes | Yes |
+| Create databases | Yes | Yes | Yes | No |
+| Delete databases | Yes | Yes | Own only | No |
+| Manage API keys | Yes | Yes | Own only | No |
+| Invite members | Yes | Yes | No | No |
+| Remove members | Yes | Yes | No | No |
+| Change roles | Yes | Yes* | No | No |
+| Manage billing | Yes | No | No | No |
+| Delete organization | Yes | No | No | No |
+
+*Admins cannot change Owner role or promote to Owner.
+
+---
+
+## Inviting Team Members
+
+### Step 1: Open Invite Dialog
+
+Click **"Invite Member"** from the Organization page.
+
+### Step 2: Enter Details
+
+| Field | Description |
+|-------|-------------|
+| **Email** | The person's email address |
+| **Role** | Permission level to assign |
+
+### Step 3: Send Invitation
+
+Click **"Send Invitation"** to email the invite.
+
+### What Happens Next
+
+1. Invitee receives an email with a link
+2. They click the link to accept
+3. If they don't have a TerraScale account, they'll create one
+4. Once accepted, they appear as Active in the member list
+
+### Invitation Expiration
+
+Invitations expire after **7 days**. To resend:
+
+1. Find the pending member in the list
+2. Click the menu icon
+3. Select **"Resend Invitation"**
+
+---
+
+## Managing Members
+
+### Changing Roles
+
+To change a member's role:
+
+1. Find the member in the list
+2. Click the **menu icon** (three dots)
+3. Select **"Change Role"**
+4. Choose the new role
+5. Click **"Save"**
+
+**Restrictions:**
+- Cannot change your own role
+- Cannot change the Owner's role
+- Admins cannot promote to Owner
+
+### Removing Members
+
+To remove a member:
+
+1. Find the member in the list
+2. Click the **menu icon**
+3. Select **"Remove Member"**
+4. Confirm the action
+
+**What happens:**
+- Member loses access immediately
+- Their API keys remain active (revoke separately if needed)
+- Resources they created remain in the organization
+
+---
+
+## Organization Settings
+
+### Organization Profile
+
+Access from **Organization > Settings**:
+
+| Field | Description | Editable |
+|-------|-------------|----------|
+| **Organization Name** | Display name | Yes |
+| **Organization ID** | Unique identifier | No |
+| **Created** | Creation date | No |
+| **Owner** | Current owner | Transfer only |
+
+### Transferring Ownership
+
+To transfer organization ownership:
+
+1. Navigate to **Organization > Settings**
+2. Click **"Transfer Ownership"**
+3. Select the new owner (must be current Admin)
+4. Confirm with your password
+5. The transfer is immediate
+
+After transfer:
+- You become an Admin
+- New owner has full control
+- Billing transfers to new owner
+
+---
+
+## Leaving an Organization
+
+To leave an organization (non-owners):
+
+1. Navigate to **Organization > Settings**
+2. Click **"Leave Organization"**
+3. Confirm the action
+
+**Notes:**
+- Owners cannot leave (transfer ownership first)
+- Your API keys are revoked upon leaving
+- Resources you created remain
+
+---
+
+## Deleting an Organization
+
+Only the Owner can delete an organization:
+
+1. Navigate to **Organization > Settings**
+2. Scroll to **Danger Zone**
+3. Click **"Delete Organization"**
+4. Type the organization name to confirm
+5. Enter your password
+6. Click **"Delete"**
+
+**What's deleted:**
+- All databases and data
+- All API keys
+- All member associations
+- Billing subscription (cancelled)
+
+This action is **permanent and cannot be undone**.
+
+---
+
+## Best Practices
+
+### Role Assignment
+
+| Scenario | Recommended Role |
+|----------|------------------|
+| Co-founder/Partner | Owner (one) or Admin |
+| Engineering team lead | Admin |
+| Developer | Member |
+| QA/Testing | Member or Read-only |
+| External contractor | Member with time limit |
+| Auditor | Read-only |
+
+### Security Recommendations
+
+1. **Limit Owners**: Have only one Owner per organization
+2. **Use Admins sparingly**: Only trusted team leads
+3. **Default to Member**: Most developers only need Member access
+4. **Audit regularly**: Review member list quarterly
+5. **Remove promptly**: Remove access when team members leave
+
+### Onboarding Checklist
+
+When inviting a new team member:
+
+- [ ] Determine appropriate role
+- [ ] Send invitation
+- [ ] Share relevant documentation
+- [ ] Verify they've accepted
+- [ ] Help them generate their first API key
+
+---
+
+## Next Steps
+
+- [Security Settings](/dashboard/security/) - Configure 2FA for your account
+- [API Key Management](/dashboard/api-keys/) - Generate API keys
+- [Organizations Reference](/reference/organizations/) - API for organization management

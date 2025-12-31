@@ -1,0 +1,239 @@
+---
+title: Login
+description: Authenticate with your TerraScale account using email and password.
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+Authenticate with email and password to receive access tokens.
+
+---
+
+## Password Login
+
+### POST /auth/password
+
+Logs in with email and password.
+
+**Request:**
+```json
+{
+  "email": "john@example.com",
+  "password": "SecurePassword123!"
+}
+```
+
+---
+
+## Login Responses
+
+### Success
+
+When login succeeds, you receive access and refresh tokens:
+
+```json
+{
+  "status": "Success",
+  "authResponse": {
+    "accessToken": "eyJhbGci...",
+    "refreshToken": "rt_abc123...",
+    "expiresIn": 3600,
+    "userId": "usr_abc123",
+    "email": "john@example.com",
+    "name": "John Doe",
+    "avatarUrl": null,
+    "personalOrgId": "org_abc123",
+    "permissions": ["database:read", "database:write"],
+    "roles": ["member"]
+  }
+}
+```
+
+### Email Verification Required
+
+If email is not yet verified:
+
+```json
+{
+  "status": "EmailVerificationRequired",
+  "pendingInfo": {
+    "pendingAuthenticationToken": "pat_abc123...",
+    "email": "john@example.com"
+  }
+}
+```
+
+Complete verification using the [Email Verification](/account/email-verification/) flow.
+
+### MFA Required
+
+If Multi-Factor Authentication is enabled:
+
+```json
+{
+  "status": "MfaRequired",
+  "pendingInfo": {
+    "pendingAuthenticationToken": "pat_abc123...",
+    "availableFactors": [
+      { "id": "fac_abc123", "type": "totp" },
+      { "id": "fac_def456", "type": "email" }
+    ],
+    "challenge": {
+      "id": "chl_abc123",
+      "factorId": "fac_abc123",
+      "expiresAt": "2024-01-15T10:05:00Z"
+    }
+  }
+}
+```
+
+Complete authentication using the [MFA Verification](/reference/mfa/) flow.
+
+---
+
+## Login Status Values
+
+| Status | Description | Next Step |
+|--------|-------------|-----------|
+| `Success` | Login successful, tokens returned | Use the access token |
+| `InvalidCredentials` | Wrong email or password | Retry with correct credentials |
+| `EmailVerificationRequired` | Must verify email first | Complete email verification |
+| `MfaRequired` | Must complete MFA challenge | Verify MFA code |
+| `Error` | An error occurred | Check error message |
+
+---
+
+## Complete Login Flow
+
+<Tabs>
+  <TabItem label="C# SDK">
+    ```csharp
+    var client = new ManagementClient(new ManagementClientOptions
+    {
+        ApiBaseUrl = "https://api.terrascale.io"
+    });
+
+    var loginResult = await client.Auth.LoginWithPasswordAsync(
+        new PasswordLoginRequest(
+            Email: "john@example.com",
+            Password: "SecurePassword123!"
+        )
+    );
+
+    if (loginResult.IsSuccess)
+    {
+        switch (loginResult.Value.Status)
+        {
+            case PasswordLoginStatus.Success:
+                client.SetAccessToken(loginResult.Value.AuthResponse!.AccessToken);
+                Console.WriteLine($"Welcome, {loginResult.Value.AuthResponse.Name}!");
+                break;
+
+            case PasswordLoginStatus.EmailVerificationRequired:
+                Console.WriteLine("Please verify your email first.");
+                // Redirect to email verification
+                break;
+
+            case PasswordLoginStatus.MfaRequired:
+                Console.Write("Enter MFA code: ");
+                var code = Console.ReadLine();
+
+                var mfaResult = await client.Auth.VerifyMfaAsync(
+                    new MfaVerifyRequest(
+                        PendingAuthenticationToken: loginResult.Value.PendingInfo!.PendingAuthenticationToken,
+                        ChallengeId: loginResult.Value.PendingInfo.Challenge!.Id,
+                        Code: code!
+                    )
+                );
+
+                if (mfaResult.IsSuccess)
+                {
+                    client.SetAccessToken(mfaResult.Value.AccessToken);
+                    Console.WriteLine("Login successful!");
+                }
+                break;
+
+            case PasswordLoginStatus.InvalidCredentials:
+                Console.WriteLine("Invalid email or password");
+                break;
+        }
+    }
+    ```
+  </TabItem>
+  <TabItem label="JavaScript">
+    ```javascript
+    async function login(email, password) {
+      const response = await fetch('https://api.terrascale.io/auth/password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      switch (data.status) {
+        case 'Success':
+          localStorage.setItem('accessToken', data.authResponse.accessToken);
+          localStorage.setItem('refreshToken', data.authResponse.refreshToken);
+          return { success: true, user: data.authResponse };
+
+        case 'EmailVerificationRequired':
+          return {
+            success: false,
+            requiresVerification: true,
+            pendingToken: data.pendingInfo.pendingAuthenticationToken
+          };
+
+        case 'MfaRequired':
+          return {
+            success: false,
+            requiresMfa: true,
+            pendingInfo: data.pendingInfo
+          };
+
+        case 'InvalidCredentials':
+          return { success: false, error: 'Invalid email or password' };
+
+        default:
+          return { success: false, error: 'An error occurred' };
+      }
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Token Management
+
+### Access Token
+
+- Valid for 1 hour
+- Used in the `Authorization` header: `Bearer eyJhbGci...`
+- Refresh before expiration to maintain session
+
+### Refresh Token
+
+- Valid for 7 days
+- Used to obtain new access tokens
+- See [Authentication](/reference/authentication/) for refresh flow
+
+---
+
+## Security Best Practices
+
+1. **Never store passwords** - Only store tokens
+2. **Use HTTPS** - All requests should use secure connections
+3. **Implement token refresh** - Refresh before expiration
+4. **Clear tokens on logout** - Remove from storage
+5. **Enable MFA** - Add extra security to your account
+
+---
+
+## Next Steps
+
+- [Password Reset](/account/password-reset/) - Recover access to your account
+- [Profile](/account/profile/) - Manage your profile settings
+- [MFA](/reference/mfa/) - Enable two-factor authentication

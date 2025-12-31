@@ -1,0 +1,417 @@
+---
+title: Organizations
+description: Manage organizations, team members, and roles in TerraScale.
+sidebar:
+  order: 3
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+Organizations are the top-level containers for your resources. All databases, API keys, and team members belong to an organization.
+
+---
+
+## Overview
+
+- Every user has a **personal organization** created automatically at signup
+- You can create additional organizations for teams or projects
+- Resources are isolated between organizations
+- Team members can be invited with specific roles
+
+---
+
+## Member Roles
+
+| Role | Permissions |
+|------|-------------|
+| `owner` | Full access. Can delete organization, manage billing, and assign any role |
+| `admin` | Manage databases, API keys, and members. Cannot delete org or change billing |
+| `member` | Create and manage databases and API keys. Cannot manage other members |
+| `readonly` | View-only access to all resources |
+
+---
+
+## Creating Organizations
+
+### POST /api/v1/organizations
+
+Creates a new organization. **Requires JWT authentication.**
+
+**Request:**
+```json
+{
+  "name": "Acme Corporation",
+  "slug": "acme-corp",
+  "billingEmail": "billing@acme.com"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | Yes | Organization display name (2-100 characters) |
+| `slug` | string | No | URL-friendly identifier (auto-generated from name if not provided) |
+| `billingEmail` | string | No | Email for billing notifications |
+
+**Response (201 Created):**
+```json
+{
+  "organizationId": "org_abc123",
+  "name": "Acme Corporation",
+  "slug": "acme-corp",
+  "ownerUserId": "usr_abc123",
+  "plan": "free",
+  "status": "active",
+  "billingEmail": "billing@acme.com",
+  "createdAt": "2024-01-15T10:00:00Z",
+  "settings": {
+    "maxDatabases": 3,
+    "maxApiKeys": 10,
+    "maxMembers": 5,
+    "allowedRegions": null,
+    "requireMfa": false,
+    "ssoEnabled": false
+  }
+}
+```
+
+---
+
+## Listing Organizations
+
+### GET /api/v1/organizations
+
+Lists all organizations you are a member of.
+
+**Response:**
+```json
+{
+  "organizations": [
+    {
+      "organizationId": "org_abc123",
+      "organizationName": "Acme Corporation",
+      "role": "owner",
+      "joinedAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "organizationId": "org_def456",
+      "organizationName": "Side Project",
+      "role": "member",
+      "joinedAt": "2024-01-20T14:30:00Z"
+    }
+  ]
+}
+```
+
+---
+
+## Getting Organization Details
+
+### GET /api/v1/organizations/\{organizationId\}
+
+Gets details of a specific organization. You must be a member.
+
+**Response:**
+```json
+{
+  "organizationId": "org_abc123",
+  "name": "Acme Corporation",
+  "slug": "acme-corp",
+  "ownerUserId": "usr_abc123",
+  "plan": "pro",
+  "status": "active",
+  "billingEmail": "billing@acme.com",
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-20T09:00:00Z",
+  "settings": {
+    "maxDatabases": 10,
+    "maxApiKeys": 50,
+    "maxMembers": 25,
+    "allowedRegions": ["us-east-1", "eu-west-1"],
+    "requireMfa": true,
+    "ssoEnabled": false
+  }
+}
+```
+
+### Organization Status Values
+
+| Status | Description |
+|--------|-------------|
+| `active` | Organization is fully operational |
+| `suspended` | Organization is suspended (usually billing issues) |
+| `deleted` | Organization has been soft-deleted |
+
+---
+
+## Updating Organizations
+
+### PUT /api/v1/organizations/\{organizationId\}
+
+Updates organization details. **Requires admin or owner role.**
+
+**Request:**
+```json
+{
+  "name": "Acme Corp Inc.",
+  "billingEmail": "finance@acme.com",
+  "settings": {
+    "requireMfa": true
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `name` | string | New organization name |
+| `billingEmail` | string | New billing email |
+| `settings.requireMfa` | boolean | Require MFA for all members |
+
+**Response:** Returns updated organization details.
+
+---
+
+## Deleting Organizations
+
+### DELETE /api/v1/organizations/\{organizationId\}
+
+Deletes an organization. **Requires owner role.**
+
+:::caution[Warning]
+This soft-deletes the organization. All resources (databases, API keys) become inaccessible.
+:::
+
+**Response:** `204 No Content`
+
+---
+
+## Team Members
+
+Manage who has access to your organization.
+
+### List Members
+
+#### GET /api/v1/organizations/\{organizationId\}/members
+
+Lists all members of an organization.
+
+**Response:**
+```json
+{
+  "members": [
+    {
+      "userId": "usr_abc123",
+      "email": "john@example.com",
+      "name": "John Doe",
+      "role": "owner",
+      "status": "active",
+      "joinedAt": "2024-01-15T10:00:00Z",
+      "invitedAt": null,
+      "invitedBy": null
+    },
+    {
+      "userId": "usr_def456",
+      "email": "jane@example.com",
+      "name": "Jane Smith",
+      "role": "admin",
+      "status": "active",
+      "joinedAt": "2024-01-20T14:30:00Z",
+      "invitedAt": "2024-01-18T10:00:00Z",
+      "invitedBy": "usr_abc123"
+    },
+    {
+      "userId": null,
+      "email": "pending@example.com",
+      "name": null,
+      "role": "member",
+      "status": "pending",
+      "joinedAt": null,
+      "invitedAt": "2024-01-22T09:00:00Z",
+      "invitedBy": "usr_abc123"
+    }
+  ]
+}
+```
+
+### Member Status Values
+
+| Status | Description |
+|--------|-------------|
+| `active` | Member has accepted invitation |
+| `pending` | Invitation sent, awaiting acceptance |
+
+---
+
+### Invite Members
+
+#### POST /api/v1/organizations/\{organizationId\}/members
+
+Invites a new member. **Requires admin or owner role.**
+
+**Request:**
+```json
+{
+  "email": "newmember@example.com",
+  "role": "member"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `email` | string | Yes | Email address of user to invite |
+| `role` | string | No | Role to assign: `owner`, `admin`, `member`, `readonly` (default: `member`) |
+
+**Response (201 Created):**
+```json
+{
+  "userId": null,
+  "email": "newmember@example.com",
+  "name": null,
+  "role": "member",
+  "status": "pending",
+  "joinedAt": null,
+  "invitedAt": "2024-01-22T15:00:00Z",
+  "invitedBy": "usr_abc123"
+}
+```
+
+:::note
+If the invited user already has a TerraScale account, they'll receive an email to accept the invitation. If not, they'll need to sign up first.
+:::
+
+---
+
+### Update Member Role
+
+#### PUT /api/v1/organizations/\{organizationId\}/members/\{memberId\}
+
+Updates a member's role. **Requires admin or owner role.**
+
+**Request:**
+```json
+{
+  "role": "admin"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `role` | string | Yes | New role: `owner`, `admin`, `member`, `readonly` |
+
+**Response:**
+```json
+{
+  "userId": "usr_def456",
+  "email": "jane@example.com",
+  "name": "Jane Smith",
+  "role": "admin",
+  "status": "active",
+  "joinedAt": "2024-01-20T14:30:00Z",
+  "invitedAt": "2024-01-18T10:00:00Z",
+  "invitedBy": "usr_abc123"
+}
+```
+
+:::note
+Only owners can assign the `owner` role. An organization must always have at least one owner.
+:::
+
+---
+
+### Remove Members
+
+#### DELETE /api/v1/organizations/\{organizationId\}/members/\{memberId\}
+
+Removes a member from the organization. **Requires admin or owner role, or the member themselves.**
+
+**Response:** `204 No Content`
+
+:::note
+Owners cannot remove themselves unless they first transfer ownership to another member.
+:::
+
+---
+
+## Switching Organizations
+
+When you're a member of multiple organizations, you can switch your active context.
+
+### POST /auth/switch-organization
+
+Switches to a different organization. **Requires JWT authentication.**
+
+**Request:**
+```json
+{
+  "organizationId": "org_def456"
+}
+```
+
+**Response:**
+```json
+{
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "rt_abc123...",
+  "expiresIn": 3600,
+  "userId": "usr_abc123",
+  "email": "john@example.com",
+  "name": "John Doe",
+  "avatarUrl": null,
+  "personalOrgId": "org_abc123",
+  "permissions": ["database:read", "database:write"],
+  "roles": ["member"]
+}
+```
+
+---
+
+## C# SDK Example
+
+```csharp
+// Create organization
+var createOrgResult = await client.Organizations.CreateAsync(
+    new CreateOrganizationRequest(
+        Name: "Acme Corporation",
+        Slug: "acme-corp",
+        BillingEmail: "billing@acme.com"
+    )
+);
+
+// List organizations
+var listResult = await client.Organizations.ListAsync();
+
+// Get organization details
+var orgResult = await client.Organizations.GetAsync("org_abc123");
+
+// List members
+var membersResult = await client.Organizations.ListMembersAsync("org_abc123");
+
+// Invite member
+var inviteResult = await client.Organizations.AddMemberAsync(
+    "org_abc123",
+    new AddMemberRequest(
+        Email: "newmember@example.com",
+        Role: "member"
+    )
+);
+
+// Update member role
+var roleResult = await client.Organizations.UpdateMemberAsync(
+    "org_abc123",
+    "usr_def456",
+    new UpdateMemberRequest(Role: "admin")
+);
+
+// Remove member
+var removeResult = await client.Organizations.RemoveMemberAsync(
+    "org_abc123",
+    "usr_def456"
+);
+```
+
+---
+
+## Next Steps
+
+- [Authentication](/reference/authentication/) - Authentication methods
+- [Dashboard Organization Settings](/dashboard/organization/) - Manage from the UI
+- [Billing](/reference/billing/) - Subscription and billing

@@ -1,43 +1,317 @@
 ---
-title: Welcome to TerraScale Documentation
-description: Documentation for TerraScale.Internals, a distributed database orchestration platform.
+title: TerraScale Documentation
+description: The most advanced database platform for modern applications. Deploy, scale, and manage your data with enterprise-grade security and performance.
 template: splash
 hero:
-  tagline: TerraScale.Internals Distributed Database Orchestration for Modern Cloud Applications
-  image:
-    file: ../../assets/houston.webp
+  tagline: The most advanced database platform for modern applications. Deploy, scale, and manage your data with enterprise-grade security and performance.
   actions:
-    - text: Getting Started
+    - text: Start Building
       link: /guides/getting-started/
       icon: right-arrow
-    - text: Read the docs
-      link: /reference/
+      variant: primary
+    - text: View API Reference
+      link: /reference/api/
       icon: external
       variant: minimal
 ---
 
+import { Card, CardGrid, LinkCard, Tabs, TabItem } from '@astrojs/starlight/components';
+import FeatureGrid from '../../components/FeatureGrid.astro';
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+<div class="hero-wrapper">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      <span>Now in Public Beta</span>
+    </div>
+    <h1 class="hero-title">
+      Scale Your <span class="gradient-text">Database</span><br/>Effortlessly
+    </h1>
+    <p class="hero-description">
+      The most advanced database platform for modern applications.<br/>
+      Deploy globally. Scale infinitely. Build faster.
+    </p>
+    <div class="hero-actions">
+      <a href="/guides/getting-started/" class="btn-gradient">
+        Get Started Free
+      </a>
+      <a href="/reference/authentication/" class="btn-outline">
+        View Documentation
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>{`
+  .hero-wrapper {
+    position: relative;
+    padding: 3rem 0 2rem;
+  }
+
+  .hero-glow, .hero-grid {
+    display: none;
+  }
+
+  .hero-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 1rem;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #22c55e;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 1.25rem;
+    color: var(--sl-color-white);
+  }
+
+  .hero-description {
+    font-size: 1.125rem;
+    color: var(--sl-color-gray-3);
+    margin: 0 0 2rem;
+    line-height: 1.6;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.25rem;
+    }
+    .hero-description {
+      font-size: 1rem;
+    }
+  }
+`}</style>
 
 ---
 
-# Welcome to TerraScale Documentation
+## Why Choose <span class="gradient-text">TerraScale</span>
 
-**TerraScale.Internals** is a distributed database orchestration platform built on .NET 10, focused on CouchDB management, multi-region replication, document CRUD, and payment processing. The architecture is modular, cloud-native, and optimized for automation and developer productivity.
+Built for developers, trusted by enterprises. Experience the next generation of database infrastructure.
 
-## Next steps
+<FeatureGrid features={[
+  {
+    icon: "lightning",
+    title: "Lightning Fast",
+    description: "Blazing fast queries with global edge caching and optimized indexing for sub-10ms latency."
+  },
+  {
+    icon: "chart",
+    title: "Real-Time Analytics",
+    description: "Monitor your data and performance with real-time insights and comprehensive dashboards."
+  },
+  {
+    icon: "shield",
+    title: "Enterprise Security",
+    description: "SOC 2 compliant with end-to-end encryption and advanced access controls."
+  },
+  {
+    icon: "globe",
+    title: "Global Scale",
+    description: "Deploy worldwide across 19 regions with automatic failover and geographic distribution."
+  }
+]} />
 
-<CardGrid stagger>
-	<Card title="Getting Started" icon="right-arrow">
-		Begin with the [Getting Started guide](/guides/getting-started/) to set up and use TerraScale.Internals.
-	</Card>
-	<Card title="Explore Features" icon="add-document">
-		Learn about CouchDB management, multi-region replication, document CRUD, and payment processing in the [Reference](/reference/) section.
-	</Card>
-	<Card title="Configuration" icon="setting">
-		See how to configure your deployment in `astro.config.mjs` and other config files.
-	</Card>
-	<Card title="Project Roadmap" icon="open-book">
-		Check the [Roadmap](/roadmap/summary/) for upcoming features and releases.
-	</Card>
+---
+
+## Get Started in Seconds
+
+Simple APIs, powerful features. Deploy your database with just a few lines of code.
+
+<Tabs>
+  <TabItem label="C#">
+    ```csharp
+    using TerraScale.Database.Client;
+
+    // Initialize the client
+    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+    {
+        ApiKey = "ts_live_your_api_key",
+        Endpoint = "https://api.terrascale.io",
+        DefaultDatabase = "my-database"
+    });
+
+    // Store an item
+    await client.PutItemAsync(new DatabaseItem
+    {
+        PartitionKey = "user#123",
+        SortKey = "profile",
+        Attributes = new Dictionary<string, object?>
+        {
+            ["name"] = "John Doe",
+            ["email"] = "john@example.com"
+        }
+    });
+
+    // Query items
+    var result = await client.QueryAsync(new QueryFilter
+    {
+        PartitionKey = "user#123"
+    });
+    ```
+  </TabItem>
+  <TabItem label="TypeScript">
+    ```typescript
+    import { TerraScaleClient } from '@terrascale/sdk';
+
+    // Initialize the client
+    const client = new TerraScaleClient({
+      apiKey: 'ts_live_your_api_key',
+      endpoint: 'https://api.terrascale.io',
+      defaultDatabase: 'my-database'
+    });
+
+    // Store an item
+    await client.putItem({
+      partitionKey: 'user#123',
+      sortKey: 'profile',
+      attributes: {
+        name: 'John Doe',
+        email: 'john@example.com'
+      }
+    });
+
+    // Query items
+    const result = await client.query({
+      partitionKey: 'user#123'
+    });
+    ```
+  </TabItem>
+  <TabItem label="Go">
+    ```go
+    package main
+
+    import (
+        "github.com/terrascale/go-sdk"
+    )
+
+    func main() {
+        // Initialize the client
+        client := terrascale.NewClient(&terrascale.Config{
+            APIKey:          "ts_live_your_api_key",
+            Endpoint:        "https://api.terrascale.io",
+            DefaultDatabase: "my-database",
+        })
+
+        // Store an item
+        client.PutItem(&terrascale.Item{
+            PartitionKey: "user#123",
+            SortKey:      "profile",
+            Attributes: map[string]interface{}{
+                "name":  "John Doe",
+                "email": "john@example.com",
+            },
+        })
+
+        // Query items
+        result, _ := client.Query(&terrascale.QueryInput{
+            PartitionKey: "user#123",
+        })
+    }
+    ```
+  </TabItem>
+  <TabItem label="REST API">
+    ```bash
+    # Store an item
+    curl -X PUT "https://api.terrascale.io/api/v1/databases/my-database/items" \
+      -H "Authorization: Bearer ts_live_your_api_key" \
+      -H "Content-Type: application/json" \
+      -d '{
+        "pk": "user#123",
+        "sk": "profile",
+        "data": {
+          "name": "John Doe",
+          "email": "john@example.com"
+        }
+      }'
+
+    # Query items
+    curl "https://api.terrascale.io/api/v1/databases/my-database/query?pk=user%23123" \
+      -H "Authorization: Bearer ts_live_your_api_key"
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## Explore the Documentation
+
+<CardGrid>
+  <Card title="Getting Started" icon="rocket">
+    Set up your TerraScale account and make your first API call in minutes.
+
+    [Start the guide →](/guides/getting-started/)
+  </Card>
+  <Card title="API Reference" icon="document">
+    Complete API documentation with examples for all endpoints.
+
+    [View API docs →](/reference/api/)
+  </Card>
+  <Card title="SDKs & Libraries" icon="puzzle">
+    Official client libraries for C#, Go, and TypeScript.
+
+    [Browse SDKs →](/guides/sdks/csharp/)
+  </Card>
+  <Card title="Dashboard Guide" icon="laptop">
+    Learn how to use the TerraScale dashboard to manage your databases.
+
+    [Open guide →](/dashboard/why-open-source/)
+  </Card>
 </CardGrid>
+
+---
+
+<div style="text-align: center; padding: 3rem 0;">
+  <h2>Ready to Build the Future?</h2>
+  <p style="color: var(--sl-color-gray-3); margin-bottom: 2rem;">
+    Join thousands of developers building scalable, reliable applications with TerraScale.
+  </p>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <a href="/guides/getting-started/" class="btn-gradient">
+      Start Building Today
+    </a>
+    <a href="https://terrascale.tech/pricing" class="btn-outline">
+      View Pricing
+    </a>
+  </div>
+</div>

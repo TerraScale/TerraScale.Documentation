@@ -38,8 +38,31 @@ export default defineConfig({
 					autogenerate: { directory: 'guides' },
 				},
 				{
+					label: 'Account',
+					autogenerate: { directory: 'account' },
+				},
+				{
 					label: 'Reference',
-					autogenerate: { directory: 'reference' },
+					items: [
+						{ label: 'Authentication', link: '/reference/authentication/' },
+						{ label: 'Multi-Factor Authentication', link: '/reference/mfa/' },
+						{ label: 'Organizations', link: '/reference/organizations/' },
+						{
+							label: 'API Reference',
+							autogenerate: { directory: 'reference/api' },
+						},
+						{
+							label: 'Management API',
+							autogenerate: { directory: 'reference/management' },
+						},
+						{ label: 'Regions', link: '/reference/regions/' },
+						{ label: 'Plans', link: '/reference/plans/' },
+						{ label: 'Billing', link: '/reference/billing/' },
+						{ label: 'Rate Limits', link: '/reference/rate-limits/' },
+						{ label: 'Error Handling', link: '/reference/error-handling/' },
+						{ label: 'Data Models', link: '/reference/data-models/' },
+						{ label: 'Best Practices', link: '/reference/best-practices/' },
+					],
 				},
 				{
 					label: 'Dashboard',
