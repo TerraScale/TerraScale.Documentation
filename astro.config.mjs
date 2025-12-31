@@ -14,6 +14,28 @@ export default defineConfig({
 	integrations: [
 		starlight({
 			title: 'TerraScale Documentation',
+			head: [
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preload',
+						href: '/fonts/quantico-latin-400-normal.woff2',
+						as: 'font',
+						type: 'font/woff2',
+						crossorigin: 'anonymous',
+					},
+				},
+				{
+					tag: 'link',
+					attrs: {
+						rel: 'preload',
+						href: '/fonts/quantico-latin-700-normal.woff2',
+						as: 'font',
+						type: 'font/woff2',
+						crossorigin: 'anonymous',
+					},
+				},
+			],
 			plugins: [
 				// starlightLinksValidator(),
 				starlightBlog(),
@@ -79,8 +101,6 @@ export default defineConfig({
 				// ...openAPISidebarGroups,
 			],
 			customCss: [
-				'@fontsource/quantico/400.css',
-				'@fontsource/quantico/700.css',
 				'./src/styles/global.css'
 			],
 			components: {

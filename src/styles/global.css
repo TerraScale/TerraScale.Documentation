@@ -4,6 +4,23 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
+/* Quantico font - preloaded in head for no FOUT */
+@font-face {
+  font-family: 'Quantico';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/quantico-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Quantico';
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+  src: url('/fonts/quantico-latin-700-normal.woff2') format('woff2');
+}
+
 /* TerraScale Dark Theme - Matching terrascale.tech */
 :root {
   /* Typography - Quantico font */
