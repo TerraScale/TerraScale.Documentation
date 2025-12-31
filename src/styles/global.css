@@ -4,10 +4,6 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
 
-/* Font imports */
-@import '@fontsource/quantico/400.css';
-@import '@fontsource/quantico/700.css';
-
 /* TerraScale Dark Theme - Matching terrascale.tech */
 :root {
   /* Typography - Quantico font */

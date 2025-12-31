@@ -79,6 +79,8 @@ export default defineConfig({
 				// ...openAPISidebarGroups,
 			],
 			customCss: [
+				'@fontsource/quantico/400.css',
+				'@fontsource/quantico/700.css',
 				'./src/styles/global.css'
 			],
 			components: {
