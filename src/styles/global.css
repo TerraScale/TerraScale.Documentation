@@ -300,10 +300,24 @@ body::before {
   transform: translateY(-4px);
 }
 
-/* Navigation enhancements */
+/* Navigation enhancements - always visible header */
 header.header {
   background: var(--sl-color-bg-nav) !important;
   border-bottom: 1px solid var(--sl-color-gray-6) !important;
+  position: sticky !important;
+  top: 0 !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Disable Starlight's header hide-on-scroll behavior */
+:root {
+  --sl-nav-height: 4rem;
+}
+
+[data-hide-header] header.header,
+header.header[style*="transform"] {
+  transform: none !important;
 }
 
 /* Sidebar enhancements */
@@ -352,9 +366,6 @@ nav.sidebar-content a[data-current="true"],
 }
 
 /* Search styling - centered in header */
-header.header {
-  position: relative !important;
-}
 
 header.header site-search {
   position: absolute !important;
