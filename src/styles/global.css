@@ -1,10 +1,12 @@
 @layer base, starlight, theme, components, utilities;
 
-@import '@fontsource/quantico/400.css';
-@import '@fontsource/quantico/700.css';
 @import '@astrojs/starlight-tailwind';
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities);
+
+/* Font imports */
+@import '@fontsource/quantico/400.css';
+@import '@fontsource/quantico/700.css';
 
 /* TerraScale Dark Theme - Matching terrascale.tech */
 :root {
@@ -525,4 +527,9 @@ starlight-tabs [role="tab"][aria-selected="true"] {
 
 .starlight-aside__title {
   color: var(--sl-color-white) !important;
+}
+
+/* Hide RSS icon from header */
+header a[href*="rss.xml"] {
+  display: none !important;
 }

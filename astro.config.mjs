@@ -80,7 +80,10 @@ export default defineConfig({
 			],
 			customCss: [
 				'./src/styles/global.css'
-			]
+			],
+			components: {
+				Header: './src/components/overrides/Header.astro',
+			}
 		}),
 	],
 
