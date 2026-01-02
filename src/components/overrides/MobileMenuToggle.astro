@@ -1,0 +1,134 @@
+---
+/**
+ * Simple hamburger menu toggle for mobile navigation
+ */
+---
+
+<starlight-menu-button>
+	<button
+		aria-expanded="false"
+		aria-label="Menu"
+		aria-controls="starlight__sidebar"
+		class="sl-flex md:sl-hidden"
+	>
+		<svg
+			aria-hidden="true"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+			class="menu-icon"
+		>
+			<line x1="3" y1="6" x2="21" y2="6" class="top"></line>
+			<line x1="3" y1="12" x2="21" y2="12" class="middle"></line>
+			<line x1="3" y1="18" x2="21" y2="18" class="bottom"></line>
+		</svg>
+		<span class="sr-only">Menu</span>
+	</button>
+</starlight-menu-button>
+
+<style>
+	button {
+		position: fixed;
+		top: calc((var(--sl-nav-height) - 44px) / 2);
+		inset-inline-end: var(--sl-nav-pad-x);
+		z-index: var(--sl-z-index-navbar);
+		padding: 0.5rem;
+		background: transparent;
+		border: none;
+		color: var(--sl-color-gray-1);
+		cursor: pointer;
+		border-radius: 0.5rem;
+		min-width: 44px;
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.2s ease;
+	}
+
+	button:hover {
+		background: var(--sl-color-gray-6);
+	}
+
+	button[aria-expanded='true'] {
+		background: var(--sl-color-gray-6);
+	}
+
+	.menu-icon {
+		width: 24px;
+		height: 24px;
+		transition: transform 0.2s ease;
+	}
+
+	button[aria-expanded='true'] .menu-icon .top {
+		transform: translateY(6px) rotate(45deg);
+		transform-origin: center;
+	}
+
+	button[aria-expanded='true'] .menu-icon .middle {
+		opacity: 0;
+	}
+
+	button[aria-expanded='true'] .menu-icon .bottom {
+		transform: translateY(-6px) rotate(-45deg);
+		transform-origin: center;
+	}
+
+	.menu-icon line {
+		transition: all 0.2s ease;
+	}
+
+	.sr-only {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	@media (min-width: 50rem) {
+		button {
+			display: none;
+		}
+	}
+</style>
+
+<script>
+	class StarlightMenuButton extends HTMLElement {
+		btn = this.querySelector('button')!;
+
+		constructor() {
+			super();
+			this.btn.addEventListener('click', () => this.toggleExpanded());
+			const doc = document.documentElement;
+			doc.addEventListener('keyup', (e) => this.closeOnEscape(e));
+		}
+
+		setExpanded(expanded: boolean) {
+			this.btn.setAttribute('aria-expanded', String(expanded));
+			document.body.toggleAttribute('data-mobile-menu-expanded', expanded);
+		}
+
+		toggleExpanded() {
+			this.setExpanded(this.btn.getAttribute('aria-expanded') !== 'true');
+		}
+
+		closeOnEscape(e: KeyboardEvent) {
+			if (e.code === 'Escape') {
+				this.setExpanded(false);
+				this.btn.focus();
+			}
+		}
+	}
+
+	customElements.define('starlight-menu-button', StarlightMenuButton);
+</script>

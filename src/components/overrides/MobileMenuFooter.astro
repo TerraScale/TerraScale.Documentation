@@ -1,0 +1,110 @@
+---
+import SocialIcons from 'virtual:starlight/components/SocialIcons';
+---
+
+<div class="mobile-menu-footer">
+	<nav class="mobile-nav-links">
+		<a href="/reference/api/" class="mobile-nav-link">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+				<polyline points="14 2 14 8 20 8"></polyline>
+				<line x1="16" y1="13" x2="8" y2="13"></line>
+				<line x1="16" y1="17" x2="8" y2="17"></line>
+				<polyline points="10 9 9 9 8 9"></polyline>
+			</svg>
+			<span>Documentation</span>
+		</a>
+		<a href="/blog/" class="mobile-nav-link">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M12 20h9"></path>
+				<path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+			</svg>
+			<span>Blog</span>
+		</a>
+		<a href="/guides/getting-started/" class="mobile-nav-link mobile-nav-primary">
+			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+				<polyline points="22 4 12 14.01 9 11.01"></polyline>
+			</svg>
+			<span>Get Started</span>
+		</a>
+	</nav>
+	<div class="mobile-social-icons">
+		<SocialIcons />
+	</div>
+</div>
+
+<style>
+	.mobile-menu-footer {
+		padding: 1rem;
+		border-top: 1px solid var(--sl-color-gray-6);
+		margin-top: auto;
+	}
+
+	.mobile-nav-links {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		margin-bottom: 1rem;
+	}
+
+	.mobile-nav-link {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.875rem 1rem;
+		border-radius: 0.5rem;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		color: var(--sl-color-gray-2);
+		text-decoration: none;
+		transition: all 0.2s ease;
+		min-height: 48px;
+		background: var(--sl-color-gray-7);
+		border: 1px solid var(--sl-color-gray-6);
+	}
+
+	.mobile-nav-link:hover,
+	.mobile-nav-link:active {
+		color: var(--sl-color-white);
+		background: var(--sl-color-gray-6);
+		border-color: var(--sl-color-gray-5);
+	}
+
+	.mobile-nav-link svg {
+		flex-shrink: 0;
+		opacity: 0.8;
+	}
+
+	.mobile-nav-primary {
+		background: linear-gradient(135deg, #22c55e 0%, #06b6d4 100%);
+		color: #0a0f1a;
+		border: none;
+	}
+
+	.mobile-nav-primary:hover,
+	.mobile-nav-primary:active {
+		background: linear-gradient(135deg, #16a34a 0%, #0891b2 100%);
+		color: #0a0f1a;
+	}
+
+	.mobile-nav-primary svg {
+		opacity: 1;
+	}
+
+	.mobile-social-icons {
+		display: flex;
+		justify-content: center;
+		padding-top: 1rem;
+		border-top: 1px solid var(--sl-color-gray-6);
+	}
+
+	.mobile-social-icons :global(a) {
+		padding: 0.75rem;
+		min-width: 48px;
+		min-height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+</style>

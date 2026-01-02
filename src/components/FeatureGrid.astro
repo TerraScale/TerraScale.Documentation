@@ -38,6 +38,22 @@ const iconMap: Record<string, string> = {
     align-items: stretch;
   }
 
+  /* Small screens: smaller minimum for single column */
+  @media (max-width: 540px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+
+  /* Medium screens: 2 columns */
+  @media (min-width: 541px) and (max-width: 768px) {
+    .features-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
+
   .feature-card {
     background: linear-gradient(135deg, #0f1724 0%, #080c14 100%);
     border: 1px solid var(--sl-color-gray-6);
@@ -50,10 +66,29 @@ const iconMap: Record<string, string> = {
     min-height: 180px;
   }
 
+  @media (max-width: 480px) {
+    .feature-card {
+      padding: 1.25rem;
+      min-height: 160px;
+      border-radius: 0.75rem;
+    }
+  }
+
   .feature-card:hover {
     border-color: var(--sl-color-gray-4);
     transform: translateY(-4px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Disable hover transform on touch devices */
+  @media (hover: none) {
+    .feature-card:hover {
+      transform: none;
+    }
+
+    .feature-card:active {
+      transform: scale(0.98);
+    }
   }
 
   .feature-icon {
@@ -67,6 +102,20 @@ const iconMap: Record<string, string> = {
     justify-content: center;
     margin-bottom: 1rem;
     color: var(--sl-color-gray-2);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    .feature-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .feature-icon :global(svg) {
+      width: 20px;
+      height: 20px;
+    }
   }
 
   .feature-title {
@@ -76,11 +125,24 @@ const iconMap: Record<string, string> = {
     margin: 0 0 0.5rem 0;
   }
 
+  @media (max-width: 480px) {
+    .feature-title {
+      font-size: 1rem;
+    }
+  }
+
   .feature-description {
     font-size: 0.875rem;
     color: var(--sl-color-gray-3);
     margin: 0;
     line-height: 1.6;
     flex-grow: 1;
+  }
+
+  @media (max-width: 480px) {
+    .feature-description {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
   }
 </style>

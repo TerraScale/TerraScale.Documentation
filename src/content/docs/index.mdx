@@ -60,6 +60,7 @@ import FeatureGrid from '../../components/FeatureGrid.astro';
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 1rem;
   }
 
   .hero-badge {
@@ -84,6 +85,7 @@ import FeatureGrid from '../../components/FeatureGrid.astro';
     background: #22c55e;
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
+    flex-shrink: 0;
   }
 
   @keyframes pulse {
@@ -92,7 +94,7 @@ import FeatureGrid from '../../components/FeatureGrid.astro';
   }
 
   .hero-title {
-    font-size: 3.5rem;
+    font-size: clamp(2rem, 5vw + 1rem, 3.5rem);
     font-weight: 700;
     line-height: 1.1;
     margin: 0 0 1.25rem;
@@ -100,10 +102,11 @@ import FeatureGrid from '../../components/FeatureGrid.astro';
   }
 
   .hero-description {
-    font-size: 1.125rem;
+    font-size: clamp(0.9375rem, 1vw + 0.75rem, 1.125rem);
     color: var(--sl-color-gray-3);
     margin: 0 0 2rem;
     line-height: 1.6;
+    max-width: 600px;
   }
 
   .hero-actions {
@@ -111,14 +114,67 @@ import FeatureGrid from '../../components/FeatureGrid.astro';
     gap: 1rem;
     flex-wrap: wrap;
     justify-content: center;
+    width: 100%;
+    max-width: 500px;
   }
 
-  @media (max-width: 768px) {
-    .hero-title {
-      font-size: 2.25rem;
+  .hero-actions .btn-gradient,
+  .hero-actions .btn-outline {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Tablet: 768px - 1024px */
+  @media (max-width: 1024px) {
+    .hero-wrapper {
+      padding: 2.5rem 0 1.5rem;
     }
-    .hero-description {
-      font-size: 1rem;
+  }
+
+  /* Mobile: max-width 768px */
+  @media (max-width: 768px) {
+    .hero-wrapper {
+      padding: 2rem 0 1rem;
+    }
+
+    .hero-badge {
+      font-size: 0.6875rem;
+      padding: 0.3125rem 0.875rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-description br {
+      display: none;
+    }
+  }
+
+  /* Small mobile: max-width 480px */
+  @media (max-width: 480px) {
+    .hero-wrapper {
+      padding: 1.5rem 0 1rem;
+    }
+
+    .hero-content {
+      padding: 0 0.5rem;
+    }
+
+    .hero-badge {
+      font-size: 0.625rem;
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .hero-actions {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .hero-actions .btn-gradient,
+    .hero-actions .btn-outline {
+      width: 100%;
+      padding: 0.875rem 1.5rem;
     }
   }
 `}</style>
