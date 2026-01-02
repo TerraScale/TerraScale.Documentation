@@ -106,6 +106,7 @@ export default defineConfig({
 			components: {
 				Header: './src/components/overrides/Header.astro',
 				MobileMenuFooter: './src/components/overrides/MobileMenuFooter.astro',
+				MobileMenuToggle: './src/components/overrides/MobileMenuToggle.astro',
 			}
 		}),
 	],

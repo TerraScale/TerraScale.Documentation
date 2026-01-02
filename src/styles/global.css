@@ -378,10 +378,10 @@ site-search button {
   }
 }
 
-/* Mobile: constrain search */
+/* Hide header search on mobile - search is in mobile menu */
 @media (max-width: 50rem) {
-  site-search button {
-    min-width: unset !important;
+  header.header site-search {
+    display: none !important;
   }
 }
 

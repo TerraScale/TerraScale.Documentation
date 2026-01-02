@@ -1,8 +1,20 @@
 ---
+import Search from 'virtual:starlight/components/Search';
 import SocialIcons from 'virtual:starlight/components/SocialIcons';
+import config from 'virtual:starlight/user-config';
+
+const shouldRenderSearch =
+	config.pagefind || config.components.Search !== '@astrojs/starlight/components/Search.astro';
 ---
 
 <div class="mobile-menu-footer">
+	<!-- Search at top of mobile menu -->
+	{shouldRenderSearch && (
+		<div class="mobile-search">
+			<Search />
+		</div>
+	)}
+
 	<nav class="mobile-nav-links">
 		<a href="/reference/api/" class="mobile-nav-link">
 			<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -39,6 +51,20 @@ import SocialIcons from 'virtual:starlight/components/SocialIcons';
 		padding: 1rem;
 		border-top: 1px solid var(--sl-color-gray-6);
 		margin-top: auto;
+	}
+
+	.mobile-search {
+		margin-bottom: 1rem;
+	}
+
+	.mobile-search :global(site-search) {
+		width: 100%;
+	}
+
+	.mobile-search :global(button) {
+		width: 100%;
+		min-width: unset !important;
+		justify-content: flex-start;
 	}
 
 	.mobile-nav-links {

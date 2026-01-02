@@ -13,7 +13,8 @@ const shouldRenderSearch =
 	<div class="title-wrapper sl-flex">
 		<SiteTitle />
 	</div>
-	<div class="search-wrapper sl-flex print:hidden">
+	<!-- Search hidden on mobile, shown in mobile menu instead -->
+	<div class="search-wrapper sl-hidden md:sl-flex print:hidden">
 		{shouldRenderSearch && <Search />}
 	</div>
 	<div class="sl-hidden md:sl-flex print:hidden right-group">
@@ -53,44 +54,6 @@ const shouldRenderSearch =
 			justify-content: center;
 			max-width: 100%;
 			min-width: 0;
-		}
-
-		/* Mobile: constrain search width */
-		@media (max-width: 50rem) {
-			.search-wrapper {
-				flex: 0 1 auto;
-				margin-left: auto;
-			}
-
-			.search-wrapper :global(site-search) {
-				width: 100%;
-				max-width: 180px;
-			}
-
-			.search-wrapper :global(button) {
-				min-width: unset !important;
-				width: 100%;
-			}
-		}
-
-		/* Very small screens: icon-only search */
-		@media (max-width: 480px) {
-			.search-wrapper :global(site-search) {
-				max-width: 48px;
-			}
-
-			.search-wrapper :global(button) {
-				padding: 0 !important;
-				justify-content: center;
-			}
-
-			.search-wrapper :global(button span:not(.sl-flex)) {
-				display: none;
-			}
-
-			.search-wrapper :global(button .sl-flex) {
-				margin: 0;
-			}
 		}
 
 		.right-group,
@@ -172,11 +135,6 @@ const shouldRenderSearch =
 					1fr
 					auto;
 				align-content: center;
-			}
-
-			.search-wrapper {
-				flex: unset;
-				margin-left: 0;
 			}
 
 			.search-wrapper :global(site-search) {
