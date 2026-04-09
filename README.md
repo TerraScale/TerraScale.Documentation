@@ -7,18 +7,18 @@ Official documentation for TerraScale, available at [docs.terrascale.tech](https
 ## Getting Started
 
 ```bash
-bun install      # Install dependencies
-bun run dev      # Start dev server at localhost:4321
+npm install      # Install dependencies
+npm run dev      # Start the dev server
 ```
 
 ## Commands
 
 | Command         | Action                                      |
 | :-------------- | :------------------------------------------ |
-| `bun install`   | Install dependencies                        |
-| `bun run dev`   | Start local dev server at `localhost:4321`  |
-| `bun run build` | Build production site to `./dist/`          |
-| `bun run preview` | Preview production build locally          |
+| `npm install`   | Install dependencies                        |
+| `npm run dev`   | Start the local dev server                  |
+| `npm run build` | Build the production site to `./build/`     |
+| `npm run preview` | Preview the production build locally      |
 
 ## Project Structure
 
