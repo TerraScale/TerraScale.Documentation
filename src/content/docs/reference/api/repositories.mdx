@@ -5,7 +5,7 @@ sidebar:
   order: 6
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Repositories provide typed entity storage with schema validation.
 
@@ -153,116 +153,13 @@ Queries entities with optional filtering.
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Define entity
-    public record Customer : EntityBase
-    {
-        public required string Name { get; init; }
-        public required string Email { get; init; }
-        public string? Phone { get; init; }
-        public CustomerTier Tier { get; init; } = CustomerTier.Standard;
-    }
-
-    public enum CustomerTier
-    {
-        Standard,
-        Premium,
-        Enterprise
-    }
-
-    // Get repository reference
-    var customers = client.GetRepository<Customer>("repo_customers");
-
-    // Create entity
-    var customer = new Customer
-    {
-        Id = Guid.NewGuid().ToString(),
-        Name = "Acme Corp",
-        Email = "contact@acme.com",
-        Tier = CustomerTier.Premium
-    };
-
-    var createResult = await customers.CreateAsync(customer);
-
-    // Get entity
-    var getResult = await customers.GetAsync(customer.Id);
-
-    // Update entity
-    var updatedCustomer = customer with { Tier = CustomerTier.Enterprise };
-    var updateResult = await customers.UpdateAsync(updatedCustomer);
-
-    // Delete entity
-    var deleteResult = await customers.DeleteAsync(customer.Id);
-
-    // List entities
-    var listResult = await customers.ListAsync(new PaginationOptions { Limit = 50 });
-
-    // Query entities
-    var filter = new QueryFilter { PartitionKey = customer.Id };
-    var queryResult = await customers.QueryAsync(filter);
-
-    // Check existence
-    var existsResult = await customers.ExistsAsync(customer.Id);
-    if (existsResult.IsSuccess && existsResult.Value)
-    {
-        Console.WriteLine("Customer exists");
-    }
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Create entity
-    curl -X POST "https://api.terrascale.io/api/v1/repositories/repo_customers" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "data": {
-          "name": "Acme Corp",
-          "email": "contact@acme.com",
-          "tier": "Premium"
-        }
-      }'
-
-    # Get entity
-    curl "https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123" \
-      -H "Authorization: Bearer ts_live_your_api_key"
-
-    # Update entity
-    curl -X PUT "https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "data": {
-          "name": "Acme Corporation",
-          "email": "contact@acme.com",
-          "tier": "Enterprise"
-        }
-      }'
-
-    # Delete entity
-    curl -X DELETE "https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123" \
-      -H "Authorization: Bearer ts_live_your_api_key"
-
-    # Query entities
-    curl -X POST "https://api.terrascale.io/api/v1/repositories/repo_customers/query" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "filter": "tier = :tier",
-        "filterValues": { ":tier": "Enterprise" }
-      }'
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Define entity\n    public record Customer : EntityBase\n    {\n        public required string Name { get; init; }\n        public required string Email { get; init; }\n        public string? Phone { get; init; }\n        public CustomerTier Tier { get; init; } = CustomerTier.Standard;\n    }\n\n    public enum CustomerTier\n    {\n        Standard,\n        Premium,\n        Enterprise\n    }\n\n    // Get repository reference\n    var customers = client.GetRepository&lt;Customer&gt;(&quot;repo_customers&quot;);\n\n    // Create entity\n    var customer = new Customer\n    {\n        Id = Guid.NewGuid().ToString(),\n        Name = &quot;Acme Corp&quot;,\n        Email = &quot;contact@acme.com&quot;,\n        Tier = CustomerTier.Premium\n    };\n\n    var createResult = await customers.CreateAsync(customer);\n\n    // Get entity\n    var getResult = await customers.GetAsync(customer.Id);\n\n    // Update entity\n    var updatedCustomer = customer with { Tier = CustomerTier.Enterprise };\n    var updateResult = await customers.UpdateAsync(updatedCustomer);\n\n    // Delete entity\n    var deleteResult = await customers.DeleteAsync(customer.Id);\n\n    // List entities\n    var listResult = await customers.ListAsync(new PaginationOptions { Limit = 50 });\n\n    // Query entities\n    var filter = new QueryFilter { PartitionKey = customer.Id };\n    var queryResult = await customers.QueryAsync(filter);\n\n    // Check existence\n    var existsResult = await customers.ExistsAsync(customer.Id);\n    if (existsResult.IsSuccess &amp;&amp; existsResult.Value)\n    {\n        Console.WriteLine(&quot;Customer exists&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create entity\n    curl -X POST &quot;https://api.terrascale.io/api/v1/repositories/repo_customers&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;Acme Corp&quot;,\n          &quot;email&quot;: &quot;contact@acme.com&quot;,\n          &quot;tier&quot;: &quot;Premium&quot;\n        }\n      }&#39;\n\n    # Get entity\n    curl &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n\n    # Update entity\n    curl -X PUT &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;Acme Corporation&quot;,\n          &quot;email&quot;: &quot;contact@acme.com&quot;,\n          &quot;tier&quot;: &quot;Enterprise&quot;\n        }\n      }&#39;\n\n    # Delete entity\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n\n    # Query entities\n    curl -X POST &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/query&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;filter&quot;: &quot;tier = :tier&quot;,\n        &quot;filterValues&quot;: { &quot;:tier&quot;: &quot;Enterprise&quot; }\n      }&#39;\n</code></pre>"}]} />
 
 ---
 
 ## Entity Base Class
 
 When using the C# SDK, entities should extend `EntityBase`:
-
 ```csharp
 public abstract record EntityBase : IEntity
 {
@@ -295,4 +192,4 @@ public abstract record EntityBase : IEntity
 
 - [Repository Management](/reference/management/repositories/) - Create and configure repositories
 - [Data Models](/reference/data-models/) - Entity interfaces and types
-- [C# SDK](/guides/SDKs/csharp/) - Full SDK documentation
+- [C# SDK](/guides/sdks/csharp/) - Full SDK documentation

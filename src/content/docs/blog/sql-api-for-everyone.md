@@ -21,7 +21,6 @@ That's why we built the SQL API.
 ## The SQL API
 
 TerraScale has a full SQL interface. It's not an afterthought or a compatibility layer. It's a first-class way to interact with your data.
-
 ```sql
 SELECT * FROM users WHERE id = 'user_123'
 ```
@@ -31,7 +30,6 @@ That's it. That query works.
 ## How to Use It
 
 ### Via API
-
 ```bash
 curl -X POST "https://api.terrascale.io/databases/my-db/sql/query" \
   -H "Authorization: Bearer ts_live_your_api_key" \
@@ -43,7 +41,6 @@ curl -X POST "https://api.terrascale.io/databases/my-db/sql/query" \
 ```
 
 ### Via SDK
-
 ```csharp
 var result = await client.Sql.QueryAsync(
     "SELECT name, email FROM users WHERE created_at > @date",
@@ -72,7 +69,6 @@ TerraScale tables are a bit different from relational tables. Here's how they ma
 | Row | Item |
 
 When you write SQL, think of the partition key as part of the WHERE clause:
-
 ```sql
 -- This is efficient (uses partition key)
 SELECT * FROM orders
@@ -89,7 +85,6 @@ The query optimizer is smart, but it can't work miracles. If you're not filterin
 ## Supported Operations
 
 ### SELECT
-
 ```sql
 SELECT * FROM products WHERE category = 'electronics'
 SELECT name, price FROM products WHERE category = 'electronics'
@@ -99,14 +94,12 @@ SELECT COUNT(*) FROM orders WHERE customer_id = 'cust_123'
 ```
 
 ### INSERT
-
 ```sql
 INSERT INTO users (id, name, email, created_at)
 VALUES ('user_456', 'Mario', 'mariogk@terrascale.tech', NOW())
 ```
 
 ### UPDATE
-
 ```sql
 UPDATE users
 SET last_login = NOW(), login_count = login_count + 1
@@ -114,7 +107,6 @@ WHERE id = 'user_123'
 ```
 
 ### DELETE
-
 ```sql
 DELETE FROM orders
 WHERE customer_id = 'cust_123'
@@ -122,7 +114,6 @@ WHERE customer_id = 'cust_123'
 ```
 
 ### CREATE TABLE
-
 ```sql
 CREATE TABLE products (
     category TEXT,

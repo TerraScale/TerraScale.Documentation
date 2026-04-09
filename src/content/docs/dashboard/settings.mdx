@@ -5,7 +5,7 @@ sidebar:
   order: 7
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Customize your TerraScale account with profile information and personal preferences.
 
@@ -79,17 +79,7 @@ Access preferences from **Settings > Preferences**.
 
 Choose your dashboard appearance:
 
-<Tabs>
-  <TabItem label="Light">
-    Bright interface with white background. Best for well-lit environments.
-  </TabItem>
-  <TabItem label="Dark">
-    Dark interface with reduced brightness. Best for low-light environments.
-  </TabItem>
-  <TabItem label="System">
-    Automatically follows your operating system's theme setting.
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Light","content":"<p>Bright interface with white background. Best for well-lit environments.</p>"},{"label":"Dark","content":"<p>Dark interface with reduced brightness. Best for low-light environments.</p>"},{"label":"System","content":"<p>Automatically follows your operating system&#39;s theme setting.</p>"}]} />
 
 **To change theme:**
 

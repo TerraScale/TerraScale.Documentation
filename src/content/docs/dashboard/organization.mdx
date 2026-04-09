@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
 
 Manage your team and organization settings through the TerraScale Dashboard.
 
@@ -33,60 +33,13 @@ The Members page displays all team members with:
 
 ### Member Status
 
-<Tabs>
-  <TabItem label="Active">
-    Member has accepted the invitation and can access resources.
-
-    - Full access based on assigned role
-    - Appears in member list with active status
-  </TabItem>
-  <TabItem label="Pending">
-    Invitation sent but not yet accepted.
-
-    - Cannot access resources
-    - Invitation can be resent or cancelled
-    - Expires after 7 days
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Active","content":"<p>Member has accepted the invitation and can access resources.</p>\n<pre><code>- Full access based on assigned role\n- Appears in member list with active status\n</code></pre>"},{"label":"Pending","content":"<p>Invitation sent but not yet accepted.</p>\n<pre><code>- Cannot access resources\n- Invitation can be resent or cancelled\n- Expires after 7 days\n</code></pre>"}]} />
 
 ---
 
 ## Available Roles
 
-<CardGrid>
-  <Card title="Owner" icon="star">
-    **Full access** including billing, organization deletion, and all administrative functions.
-
-    - Manage billing and subscriptions
-    - Delete the organization
-    - Transfer ownership
-    - All Admin permissions
-  </Card>
-  <Card title="Admin" icon="setting">
-    **Administrative access** to databases, API keys, and team members.
-
-    - Invite and remove members
-    - Change member roles (except Owner)
-    - Create and delete databases
-    - Manage all API keys
-  </Card>
-  <Card title="Member" icon="pencil">
-    **Standard access** to create and manage resources.
-
-    - Create databases
-    - Generate API keys
-    - Manage own resources
-    - Cannot manage team members
-  </Card>
-  <Card title="Read-only" icon="open-book">
-    **View-only access** to all resources.
-
-    - View databases and data
-    - View API keys (not secrets)
-    - Cannot create or modify resources
-    - Cannot manage team
-  </Card>
-</CardGrid>
+<CardGrid items={[{"title":"Owner","icon":"star","content":"<p><strong>Full access</strong> including billing, organization deletion, and all administrative functions.</p>\n<pre><code>- Manage billing and subscriptions\n- Delete the organization\n- Transfer ownership\n- All Admin permissions\n</code></pre>"},{"title":"Admin","icon":"setting","content":"<p><strong>Administrative access</strong> to databases, API keys, and team members.</p>\n<pre><code>- Invite and remove members\n- Change member roles (except Owner)\n- Create and delete databases\n- Manage all API keys\n</code></pre>"},{"title":"Member","icon":"pencil","content":"<p><strong>Standard access</strong> to create and manage resources.</p>\n<pre><code>- Create databases\n- Generate API keys\n- Manage own resources\n- Cannot manage team members\n</code></pre>"},{"title":"Read-only","icon":"open-book","content":"<p><strong>View-only access</strong> to all resources.</p>\n<pre><code>- View databases and data\n- View API keys (not secrets)\n- Cannot create or modify resources\n- Cannot manage team\n</code></pre>"}]} />
 
 ### Role Permissions Matrix
 

@@ -34,13 +34,11 @@ Clicked on "API Keys" in the sidebar, then "Create API Key." Named it "local-dev
 ## Minute 3-4: Install the SDK and Write Code
 
 Opened my terminal and ran:
-
 ```bash
 dotnet add package TerraScale.Client
 ```
 
 Then wrote the simplest possible test:
-
 ```csharp
 using TerraScale;
 
@@ -63,7 +61,6 @@ Console.WriteLine(result.Value.GetAttribute<string>("name")); // Mario
 ```
 
 ## Minute 4-5: Run It
-
 ```bash
 dotnet run
 ```

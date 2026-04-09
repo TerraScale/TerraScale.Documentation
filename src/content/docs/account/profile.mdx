@@ -5,7 +5,7 @@ sidebar:
   order: 5
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Manage your profile information and preferences.
 
@@ -132,54 +132,7 @@ Choose from any [available region](/reference/regions/):
 
 ## C# SDK Example
 
-<Tabs>
-  <TabItem label="Get Profile">
-    ```csharp
-    var userResult = await client.Users.GetCurrentUserAsync();
-
-    if (userResult.IsSuccess)
-    {
-        var user = userResult.Value;
-        Console.WriteLine($"Name: {user.Name}");
-        Console.WriteLine($"Email: {user.Email}");
-        Console.WriteLine($"Theme: {user.Preferences.Theme}");
-        Console.WriteLine($"Timezone: {user.Preferences.Timezone}");
-    }
-    ```
-  </TabItem>
-  <TabItem label="Update Profile">
-    ```csharp
-    var updateResult = await client.Users.UpdateCurrentUserAsync(
-        new UpdateUserRequest(
-            Name: "John D. Doe",
-            AvatarUrl: "https://example.com/new-avatar.jpg"
-        )
-    );
-
-    if (updateResult.IsSuccess)
-    {
-        Console.WriteLine("Profile updated!");
-    }
-    ```
-  </TabItem>
-  <TabItem label="Update Preferences">
-    ```csharp
-    var prefsResult = await client.Users.UpdatePreferencesAsync(
-        new UpdateUserPreferencesRequest(
-            Theme: "dark",
-            Timezone: "America/Los_Angeles",
-            NotificationsEnabled: false,
-            DefaultRegion: "us-west-1"
-        )
-    );
-
-    if (prefsResult.IsSuccess)
-    {
-        Console.WriteLine("Preferences updated!");
-    }
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Get Profile","content":"<pre><code class=\"language-csharp\">    var userResult = await client.Users.GetCurrentUserAsync();\n\n    if (userResult.IsSuccess)\n    {\n        var user = userResult.Value;\n        Console.WriteLine($&quot;Name: {user.Name}&quot;);\n        Console.WriteLine($&quot;Email: {user.Email}&quot;);\n        Console.WriteLine($&quot;Theme: {user.Preferences.Theme}&quot;);\n        Console.WriteLine($&quot;Timezone: {user.Preferences.Timezone}&quot;);\n    }\n</code></pre>"},{"label":"Update Profile","content":"<pre><code class=\"language-csharp\">    var updateResult = await client.Users.UpdateCurrentUserAsync(\n        new UpdateUserRequest(\n            Name: &quot;John D. Doe&quot;,\n            AvatarUrl: &quot;https://example.com/new-avatar.jpg&quot;\n        )\n    );\n\n    if (updateResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Profile updated!&quot;);\n    }\n</code></pre>"},{"label":"Update Preferences","content":"<pre><code class=\"language-csharp\">    var prefsResult = await client.Users.UpdatePreferencesAsync(\n        new UpdateUserPreferencesRequest(\n            Theme: &quot;dark&quot;,\n            Timezone: &quot;America/Los_Angeles&quot;,\n            NotificationsEnabled: false,\n            DefaultRegion: &quot;us-west-1&quot;\n        )\n    );\n\n    if (prefsResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Preferences updated!&quot;);\n    }\n</code></pre>"}]} />
 
 ---
 

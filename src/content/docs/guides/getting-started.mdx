@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
 
 This guide walks you through setting up TerraScale and storing your first data.
 
@@ -80,106 +80,17 @@ Your API key will look like: `ts_live_abc123xyz789...`
 
 Install the TerraScale client library for your platform:
 
-<Tabs>
-  <TabItem label="C# / .NET">
-    ```bash
-    dotnet add package TerraScale.Database.Client
-    ```
-  </TabItem>
-  <TabItem label="REST API">
-    Use the REST API directly with any HTTP client. See the [API Reference](/reference/api/) section.
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# / .NET","content":"<pre><code class=\"language-bash\">    dotnet add package TerraScale.Database.Client\n</code></pre>"},{"label":"REST API","content":"<p>Use the REST API directly with any HTTP client. See the <a href=\"/reference/api/\">API Reference</a> section.</p>"}]} />
 
 ## Step 6: Write Your First Code
 
-<Tabs>
-  <TabItem label="C# / .NET">
-    ```csharp
-    using TerraScale.Database.Client;
-    using TerraScale.Database.Client.Configuration;
-    using TerraScale.Database.Client.Models;
-
-    // Create the client
-    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
-    {
-        ApiKey = "ts_live_your_api_key",
-        Endpoint = "https://api.terrascale.io",
-        DefaultDatabase = "my-database"
-    });
-
-    // Store an item
-    var item = new DatabaseItem
-    {
-        PartitionKey = "user#123",
-        SortKey = "profile",
-        Attributes = new Dictionary<string, object?>
-        {
-            ["name"] = "John Doe",
-            ["email"] = "john@example.com",
-            ["age"] = 30
-        }
-    };
-
-    var putResult = await client.PutItemAsync(item);
-    if (putResult.IsSuccess)
-    {
-        Console.WriteLine("Item stored successfully!");
-    }
-
-    // Retrieve the item
-    var getResult = await client.GetItemAsync("user#123", "profile");
-    if (getResult.IsSuccess)
-    {
-        var user = getResult.Value;
-        Console.WriteLine($"Name: {user.GetAttribute<string>("name")}");
-    }
-
-    // Clean up
-    await client.DisposeAsync();
-    ```
-  </TabItem>
-  <TabItem label="REST API">
-    ```bash
-    # Store an item
-    curl -X PUT "https://api.terrascale.io/api/v1/databases/my-database/items" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "pk": "user#123",
-        "sk": "profile",
-        "data": {
-          "name": "John Doe",
-          "email": "john@example.com",
-          "age": 30
-        }
-      }'
-
-    # Retrieve the item
-    curl "https://api.terrascale.io/api/v1/databases/my-database/items/user%23123/profile" \
-      -H "Authorization: Bearer ts_live_your_api_key"
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# / .NET","content":"<pre><code class=\"language-csharp\">    using TerraScale.Database.Client;\n    using TerraScale.Database.Client.Configuration;\n    using TerraScale.Database.Client.Models;\n\n    // Create the client\n    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions\n    {\n        ApiKey = &quot;ts_live_your_api_key&quot;,\n        Endpoint = &quot;https://api.terrascale.io&quot;,\n        DefaultDatabase = &quot;my-database&quot;\n    });\n\n    // Store an item\n    var item = new DatabaseItem\n    {\n        PartitionKey = &quot;user#123&quot;,\n        SortKey = &quot;profile&quot;,\n        Attributes = new Dictionary&lt;string, object?&gt;\n        {\n            [&quot;name&quot;] = &quot;John Doe&quot;,\n            [&quot;email&quot;] = &quot;john@example.com&quot;,\n            [&quot;age&quot;] = 30\n        }\n    };\n\n    var putResult = await client.PutItemAsync(item);\n    if (putResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Item stored successfully!&quot;);\n    }\n\n    // Retrieve the item\n    var getResult = await client.GetItemAsync(&quot;user#123&quot;, &quot;profile&quot;);\n    if (getResult.IsSuccess)\n    {\n        var user = getResult.Value;\n        Console.WriteLine($&quot;Name: {user.GetAttribute&lt;string&gt;(&quot;name&quot;)}&quot;);\n    }\n\n    // Clean up\n    await client.DisposeAsync();\n</code></pre>"},{"label":"REST API","content":"<pre><code class=\"language-bash\">    # Store an item\n    curl -X PUT &quot;https://api.terrascale.io/api/v1/databases/my-database/items&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;pk&quot;: &quot;user#123&quot;,\n        &quot;sk&quot;: &quot;profile&quot;,\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;John Doe&quot;,\n          &quot;email&quot;: &quot;john@example.com&quot;,\n          &quot;age&quot;: 30\n        }\n      }&#39;\n\n    # Retrieve the item\n    curl &quot;https://api.terrascale.io/api/v1/databases/my-database/items/user%23123/profile&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n</code></pre>"}]} />
 
 ---
 
 ## Next Steps
 
-<CardGrid>
-  <Card title="API Strategy" icon="rocket">
-    Learn about the [three API patterns](/guides/api-strategy/) available in TerraScale.
-  </Card>
-  <Card title="C# SDK Guide" icon="seti:csharp">
-    Deep dive into the [C# SDK](/guides/SDKs/csharp/) with advanced examples.
-  </Card>
-  <Card title="Repository Pattern" icon="document">
-    Use [typed repositories](/guides/repository/) for schema-validated entities.
-  </Card>
-  <Card title="Querying Data" icon="magnifier">
-    Learn [query operations](/guides/querying/) for efficient data retrieval.
-  </Card>
-</CardGrid>
+<CardGrid items={[{"title":"API Strategy","icon":"rocket","content":"<p>Learn about the <a href=\"/guides/api-strategy/\">three API patterns</a> available in TerraScale.</p>"},{"title":"C# SDK Guide","icon":"seti:csharp","content":"<p>Deep dive into the <a href=\"/guides/sdks/csharp/\">C# SDK</a> with advanced examples.</p>"},{"title":"Repository Pattern","icon":"document","content":"<p>Use <a href=\"/guides/repository/\">typed repositories</a> for schema-validated entities.</p>"},{"title":"Querying Data","icon":"magnifier","content":"<p>Learn <a href=\"/guides/querying/\">query operations</a> for efficient data retrieval.</p>"}]} />
 
 ---
 

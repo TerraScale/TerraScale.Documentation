@@ -43,7 +43,6 @@ In TerraScale, a partition key determines *where* your data lives. Items with th
 A sort key determines *how* items are organized within that partition. Items are sorted by their sort key, so range queries are fast.
 
 Here's a concrete example:
-
 ```
 Partition Key: "user#123"
 ├── Sort Key: "order#2024-001"  →  { total: 59.99, status: "shipped" }
@@ -53,7 +52,6 @@ Partition Key: "user#123"
 ```
 
 Getting all orders for user#123? One query, one network round trip:
-
 ```csharp
 var orders = await client.QueryAsync(new QueryFilter
 {

@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Manage API keys for authenticating your applications with TerraScale.
 
@@ -77,29 +77,7 @@ The API Keys page displays all your keys with:
 
 ## Key Status
 
-<Tabs>
-  <TabItem label="Active">
-    The key is valid and can be used for API requests.
-
-    - Green status indicator
-    - Can be revoked at any time
-    - Shows last used timestamp
-  </TabItem>
-  <TabItem label="Revoked">
-    The key has been manually disabled and cannot be used.
-
-    - Red status indicator
-    - Revocation is permanent
-    - Cannot be re-activated
-  </TabItem>
-  <TabItem label="Expired">
-    The key has passed its expiration date.
-
-    - Yellow status indicator
-    - Automatically stops working at expiration
-    - Cannot be extended
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Active","content":"<p>The key is valid and can be used for API requests.</p>\n<pre><code>- Green status indicator\n- Can be revoked at any time\n- Shows last used timestamp\n</code></pre>"},{"label":"Revoked","content":"<p>The key has been manually disabled and cannot be used.</p>\n<pre><code>- Red status indicator\n- Revocation is permanent\n- Cannot be re-activated\n</code></pre>"},{"label":"Expired","content":"<p>The key has passed its expiration date.</p>\n<pre><code>- Yellow status indicator\n- Automatically stops working at expiration\n- Cannot be extended\n</code></pre>"}]} />
 
 ---
 
@@ -132,7 +110,6 @@ Use descriptive names that identify the key's purpose:
 ### Scope Selection
 
 Follow the principle of least privilege:
-
 ```
 // Good: Specific permissions
 { "scopes": ["database:read", "repository:read"] }
@@ -236,4 +213,4 @@ If you've lost an API key:
 
 - [Authentication Reference](/reference/authentication/) - API key authentication details
 - [Security Settings](/dashboard/security/) - Enable 2FA for your account
-- [C# SDK Guide](/guides/SDKs/csharp/) - Use keys in your application
+- [C# SDK Guide](/guides/sdks/csharp/) - Use keys in your application

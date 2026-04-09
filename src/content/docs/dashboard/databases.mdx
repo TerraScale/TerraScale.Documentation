@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Manage your TerraScale databases through the web dashboard with an intuitive visual interface.
 
@@ -59,40 +59,7 @@ The Databases page shows all your databases with:
 
 Click on any database to view its detail page with three tabs:
 
-<Tabs>
-  <TabItem label="Dashboard Tab">
-    Overview metrics for your database:
-
-    - **Item Count**: Total number of items stored
-    - **Storage Used**: Current storage consumption
-    - **Read Units**: Read capacity consumed
-    - **Write Units**: Write capacity consumed
-    - **Recent Activity**: Graph of operations over time
-  </TabItem>
-  <TabItem label="Explorer Tab">
-    Built-in query editor for running queries directly in your browser:
-
-    - Write queries in the editor
-    - Click **"Execute"** or press `Ctrl+Enter`
-    - View results in the JSON viewer
-
-    **Features:**
-    - Syntax highlighting
-    - Format query button (`Ctrl+Shift+F`)
-    - Error highlighting with line numbers
-    - JSON result viewer with expand/collapse
-    - Query history
-  </TabItem>
-  <TabItem label="Settings Tab">
-    Configuration options for your database:
-
-    - **Automatic Backups**: Enable/disable daily backups
-    - **Backup Retention**: Set retention period (7-30 days)
-    - **Deletion Protection**: Toggle protection on/off
-    - **Database Info**: View endpoint, region, and creation date
-    - **Danger Zone**: Delete database option
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Dashboard Tab","content":"<p>Overview metrics for your database:</p>\n<pre><code>- **Item Count**: Total number of items stored\n- **Storage Used**: Current storage consumption\n- **Read Units**: Read capacity consumed\n- **Write Units**: Write capacity consumed\n- **Recent Activity**: Graph of operations over time\n</code></pre>"},{"label":"Explorer Tab","content":"<p>Built-in query editor for running queries directly in your browser:</p>\n<pre><code>- Write queries in the editor\n- Click **&quot;Execute&quot;** or press `Ctrl+Enter`\n- View results in the JSON viewer\n\n**Features:**\n- Syntax highlighting\n- Format query button (`Ctrl+Shift+F`)\n- Error highlighting with line numbers\n- JSON result viewer with expand/collapse\n- Query history\n</code></pre>"},{"label":"Settings Tab","content":"<p>Configuration options for your database:</p>\n<pre><code>- **Automatic Backups**: Enable/disable daily backups\n- **Backup Retention**: Set retention period (7-30 days)\n- **Deletion Protection**: Toggle protection on/off\n- **Database Info**: View endpoint, region, and creation date\n- **Danger Zone**: Delete database option\n</code></pre>"}]} />
 
 ---
 
@@ -108,7 +75,6 @@ The built-in Query Explorer allows you to run queries directly in your browser:
 4. View results in the JSON viewer below
 
 ### Example Queries
-
 ```json
 // Get a single item
 {
@@ -117,7 +83,6 @@ The built-in Query Explorer allows you to run queries directly in your browser:
   "sk": "profile"
 }
 ```
-
 ```json
 // Query items by partition key
 {
@@ -211,4 +176,4 @@ Deletion is permanent and cannot be undone.
 
 - [API Key Management](/dashboard/api-keys/) - Create API keys for your databases
 - [Query Operations](/reference/api/query-operations/) - Learn query syntax
-- [C# SDK Guide](/guides/SDKs/csharp/) - Connect from your application
+- [C# SDK Guide](/guides/sdks/csharp/) - Connect from your application

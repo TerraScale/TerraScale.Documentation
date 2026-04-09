@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 The repository pattern provides typed entity storage with schema validation, automatic timestamps, and versioning.
 
@@ -40,7 +40,6 @@ Repositories offer:
 ### Step 1: Create Entity Class
 
 Extend `EntityBase` for your entities:
-
 ```csharp
 using TerraScale.Database.Client.Abstractions;
 
@@ -64,7 +63,6 @@ public enum CustomerTier
 ### Step 2: Entity Base Properties
 
 `EntityBase` provides these properties automatically:
-
 ```csharp
 public abstract record EntityBase : IEntity
 {
@@ -81,7 +79,6 @@ public abstract record EntityBase : IEntity
 ### Step 3: Custom Keys (Optional)
 
 Override key methods for custom partitioning:
-
 ```csharp
 public record Order : EntityBase
 {
@@ -102,13 +99,11 @@ public record Order : EntityBase
 ## Repository Operations
 
 ### Get Repository Reference
-
 ```csharp
 var customers = client.GetRepository<Customer>("repo_customers");
 ```
 
 ### Create Entity
-
 ```csharp
 var customer = new Customer
 {
@@ -127,7 +122,6 @@ if (result.IsSuccess)
 ```
 
 ### Get Entity
-
 ```csharp
 var result = await customers.GetAsync(customerId);
 
@@ -139,7 +133,6 @@ if (result.IsSuccess)
 ```
 
 ### Update Entity
-
 ```csharp
 // Get existing entity
 var getResult = await customers.GetAsync(customerId);
@@ -157,7 +150,6 @@ var updateResult = await customers.UpdateAsync(updated);
 ```
 
 ### Delete Entity
-
 ```csharp
 var result = await customers.DeleteAsync(customerId);
 
@@ -168,7 +160,6 @@ if (result.IsSuccess)
 ```
 
 ### List Entities
-
 ```csharp
 var result = await customers.ListAsync(new PaginationOptions
 {
@@ -195,7 +186,6 @@ if (result.IsSuccess)
 ```
 
 ### Query Entities
-
 ```csharp
 var filter = new QueryFilter
 {
@@ -207,7 +197,6 @@ var result = await customers.QueryAsync(filter);
 ```
 
 ### Check Existence
-
 ```csharp
 var result = await customers.ExistsAsync(customerId);
 
@@ -220,7 +209,6 @@ if (result.IsSuccess && result.Value)
 ---
 
 ## Complete Example
-
 ```csharp
 using TerraScale.Database.Client;
 using TerraScale.Database.Client.Abstractions;
@@ -280,7 +268,6 @@ await client.DisposeAsync();
 ## Schema Validation
 
 When creating a repository via the Management API, define a schema:
-
 ```json
 {
   "name": "products",
@@ -304,7 +291,6 @@ Entities that don't match the schema will be rejected.
 ### Use Immutable Records
 
 C# records with `init` properties ensure immutability:
-
 ```csharp
 public record Customer : EntityBase
 {
@@ -318,7 +304,6 @@ var updated = customer with { Name = "New Name" };
 ### Handle Optimistic Concurrency
 
 Use the `Version` property to detect conflicts:
-
 ```csharp
 try
 {
@@ -335,7 +320,6 @@ catch (ConcurrencyException)
 ### Design for Access Patterns
 
 Override key methods to optimize queries:
-
 ```csharp
 // If you often query by customer
 public override string GetPartitionKey() => $"customer#{CustomerId}";
@@ -347,4 +331,4 @@ public override string GetPartitionKey() => $"customer#{CustomerId}";
 
 - [Repository Operations API](/reference/api/repositories/) - API reference
 - [Repository Management](/reference/management/repositories/) - Create repositories
-- [C# SDK](/guides/SDKs/csharp/) - Full SDK documentation
+- [C# SDK](/guides/sdks/csharp/) - Full SDK documentation

@@ -8,14 +8,13 @@ sidebar:
     variant: tip
 ---
 
-import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Steps } from '$lib/mdx';
 
 The TerraScale Database Client provides a strongly-typed, high-performance SDK for C# and .NET applications.
 
 ---
 
 ## Installation
-
 ```bash
 dotnet add package TerraScale.Database.Client
 ```
@@ -25,7 +24,6 @@ dotnet add package TerraScale.Database.Client
 ## Configuration
 
 ### Basic Configuration
-
 ```csharp
 using TerraScale.Database.Client;
 using TerraScale.Database.Client.Configuration;
@@ -64,7 +62,6 @@ var client = new TerraScaleDatabase(options);
 | `Retry.UseJitter` | bool | true | Add randomness to delays |
 
 ### Builder Pattern
-
 ```csharp
 var client = TerraScaleDatabase.Create(options => options
     .WithApiKey("ts_live_your_api_key")
@@ -83,7 +80,6 @@ var client = TerraScaleDatabase.Create(options => options
 ## Item Operations
 
 ### Put Item
-
 ```csharp
 var item = new DatabaseItem
 {
@@ -111,7 +107,6 @@ else
 ```
 
 ### Get Item
-
 ```csharp
 // Get by partition key only
 var result = await client.GetItemAsync("user#123");
@@ -129,7 +124,6 @@ if (result.IsSuccess)
 ```
 
 ### Delete Item
-
 ```csharp
 var result = await client.DeleteItemAsync("user#123", "profile");
 
@@ -144,7 +138,6 @@ if (result.IsSuccess)
 ## Query Operations
 
 ### Query with Filter
-
 ```csharp
 var filter = new QueryFilter
 {
@@ -179,7 +172,6 @@ if (result.IsSuccess)
 ```
 
 ### Sort Key Conditions
-
 ```csharp
 // Exact match
 SortKeyCondition.Equal("profile")
@@ -198,7 +190,6 @@ SortKeyCondition.GreaterThanOrEquals("2024-01-01")
 ```
 
 ### Scan
-
 ```csharp
 var options = new PaginationOptions
 {
@@ -218,7 +209,6 @@ if (result.IsSuccess)
 ## Batch Operations
 
 ### Batch Write
-
 ```csharp
 var writeItems = new List<BatchWriteItem>
 {
@@ -242,7 +232,6 @@ Console.WriteLine($"Success: {result.Value.SuccessCount}");
 ```
 
 ### Batch Get
-
 ```csharp
 var keys = new List<ItemKey>
 {
@@ -263,7 +252,6 @@ foreach (var item in result.Value.Items)
 ## Transactions
 
 ### Transactional Write
-
 ```csharp
 var writeItems = new List<TransactWriteItem>
 {
@@ -296,7 +284,6 @@ else
 ```
 
 ### Transactional Get
-
 ```csharp
 var getItems = new List<TransactGetItem>
 {
@@ -320,7 +307,6 @@ foreach (var item in result.Value.Items)
 ## Repository Pattern
 
 For typed entities, use the repository pattern:
-
 ```csharp
 // Define your entity
 public record Customer : EntityBase
@@ -366,7 +352,6 @@ See [Repository Pattern Guide](/guides/repository/) for more details.
 ## Error Handling
 
 All operations return `Result<T>` objects:
-
 ```csharp
 var result = await client.GetItemAsync("user#123");
 
@@ -385,7 +370,6 @@ else if (result.IsFailed)
 ```
 
 ### Common Patterns
-
 ```csharp
 // Throw on failure
 var item = result.ValueOrThrow();
@@ -405,7 +389,6 @@ result.Match(
 ## Cleanup
 
 Always dispose the client when done:
-
 ```csharp
 await client.DisposeAsync();
 
@@ -418,5 +401,5 @@ await using var client = new TerraScaleDatabase(options);
 ## Next Steps
 
 - [Repository Pattern](/guides/repository/) - Typed entity storage
-- [C# Management Client](/guides/SDKs/csharp-management/) - User and org management
+- [C# Management Client](/guides/sdks/csharp-management/) - User and org management
 - [API Reference](/reference/api/) - Complete API documentation

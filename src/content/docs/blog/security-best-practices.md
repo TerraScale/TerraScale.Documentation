@@ -18,7 +18,6 @@ Security isn't optional. Here's everything you need to know to keep your TerraSc
 ### Use Specific Scopes
 
 Never use `*` (full access) in production. Grant only the permissions each service needs:
-
 ```csharp
 // Bad: Full access
 { "scopes": ["*"] }
@@ -52,7 +51,6 @@ API keys should be rotated every 90 days:
 ### Never Commit Keys
 
 API keys should never be in source control:
-
 ```csharp
 // Bad: Hardcoded
 var apiKey = "ts_live_abc123...";
@@ -143,7 +141,6 @@ All TerraScale APIs require HTTPS. Never attempt to use HTTP.
 ### Validate TLS Certificates
 
 Don't disable certificate validation in production:
-
 ```csharp
 // Never do this in production
 ServicePointManager.ServerCertificateValidationCallback = (s, c, ch, e) => true;
@@ -158,7 +155,6 @@ Enterprise customers can restrict API access to specific IP ranges. Contact supp
 ### Sensitive Data Handling
 
 Don't store highly sensitive data directly:
-
 ```csharp
 // Bad: Storing raw SSN
 ["ssn"] = "123-45-6789"

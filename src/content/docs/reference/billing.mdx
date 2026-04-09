@@ -5,7 +5,7 @@ sidebar:
   order: 7
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Manage your TerraScale subscription and billing.
 
@@ -181,67 +181,7 @@ Gets current usage statistics for the billing period.
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Get subscription info
-    var paymentInfo = await client.Payment.GetPaymentInfoAsync();
-
-    if (paymentInfo.IsSuccess)
-    {
-        Console.WriteLine($"Plan: {paymentInfo.Value.PlanName}");
-        Console.WriteLine($"Status: {paymentInfo.Value.Status}");
-    }
-
-    // Get usage
-    var usageResult = await client.Payment.GetUsageAsync();
-
-    if (usageResult.IsSuccess)
-    {
-        Console.WriteLine($"Databases: {usageResult.Value.DatabaseCount}");
-        Console.WriteLine($"Storage: {usageResult.Value.TotalStorageGb} GB");
-        Console.WriteLine($"Requests: {usageResult.Value.TotalRequests}");
-    }
-
-    // Create checkout for upgrade
-    var checkoutResult = await client.Payment.CreateCheckoutAsync(
-        new CreateCheckoutRequest("pro")
-    );
-
-    if (checkoutResult.IsSuccess)
-    {
-        Console.WriteLine($"Checkout: {checkoutResult.Value.CheckoutUrl}");
-    }
-
-    // Get billing portal
-    var portalResult = await client.Payment.GetPortalUrlAsync();
-
-    // Check status
-    var statusResult = await client.Payment.GetSubscriptionStatusAsync();
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Get payment info
-    curl "https://api.terrascale.io/api/v1/payment" \
-      -H "Authorization: Bearer eyJhbGci..."
-
-    # Get usage
-    curl "https://api.terrascale.io/api/v1/payment/usage" \
-      -H "Authorization: Bearer eyJhbGci..."
-
-    # Create checkout
-    curl -X POST "https://api.terrascale.io/api/v1/payment/checkout" \
-      -H "Authorization: Bearer eyJhbGci..." \
-      -H "Content-Type: application/json" \
-      -d '{"planType": "pro"}'
-
-    # Get billing portal
-    curl "https://api.terrascale.io/api/v1/payment/portal" \
-      -H "Authorization: Bearer eyJhbGci..."
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Get subscription info\n    var paymentInfo = await client.Payment.GetPaymentInfoAsync();\n\n    if (paymentInfo.IsSuccess)\n    {\n        Console.WriteLine($&quot;Plan: {paymentInfo.Value.PlanName}&quot;);\n        Console.WriteLine($&quot;Status: {paymentInfo.Value.Status}&quot;);\n    }\n\n    // Get usage\n    var usageResult = await client.Payment.GetUsageAsync();\n\n    if (usageResult.IsSuccess)\n    {\n        Console.WriteLine($&quot;Databases: {usageResult.Value.DatabaseCount}&quot;);\n        Console.WriteLine($&quot;Storage: {usageResult.Value.TotalStorageGb} GB&quot;);\n        Console.WriteLine($&quot;Requests: {usageResult.Value.TotalRequests}&quot;);\n    }\n\n    // Create checkout for upgrade\n    var checkoutResult = await client.Payment.CreateCheckoutAsync(\n        new CreateCheckoutRequest(&quot;pro&quot;)\n    );\n\n    if (checkoutResult.IsSuccess)\n    {\n        Console.WriteLine($&quot;Checkout: {checkoutResult.Value.CheckoutUrl}&quot;);\n    }\n\n    // Get billing portal\n    var portalResult = await client.Payment.GetPortalUrlAsync();\n\n    // Check status\n    var statusResult = await client.Payment.GetSubscriptionStatusAsync();\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Get payment info\n    curl &quot;https://api.terrascale.io/api/v1/payment&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Get usage\n    curl &quot;https://api.terrascale.io/api/v1/payment/usage&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Create checkout\n    curl -X POST &quot;https://api.terrascale.io/api/v1/payment/checkout&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{&quot;planType&quot;: &quot;pro&quot;}&#39;\n\n    # Get billing portal\n    curl &quot;https://api.terrascale.io/api/v1/payment/portal&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
 
 ---
 

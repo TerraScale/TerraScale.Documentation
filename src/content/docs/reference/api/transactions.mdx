@@ -5,7 +5,7 @@ sidebar:
   order: 5
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Transactional operations provide ACID-compliant atomic reads and writes across multiple items.
 
@@ -115,7 +115,6 @@ Atomically writes, updates, or deletes multiple items. All operations succeed or
 ### Transaction Failure
 
 If any operation fails, the entire transaction is rolled back:
-
 ```json
 {
   "successCount": 0,
@@ -148,7 +147,6 @@ If any operation fails, the entire transaction is rolled back:
 ## Idempotency
 
 Use `clientRequestToken` to make transactions idempotent:
-
 ```json
 {
   "items": [...],
@@ -162,108 +160,7 @@ If you retry with the same token within 10 minutes, TerraScale returns the origi
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Transactional Get
-    var getItems = new List<TransactGetItem>
-    {
-        new() { PartitionKey = "user#123", SortKey = "profile" },
-        new() { PartitionKey = "user#123", SortKey = "settings" }
-    };
-
-    var getResult = await client.TransactGetAsync(getItems);
-
-    foreach (var item in getResult.Value.Items)
-    {
-        if (item.ItemExists)
-        {
-            Console.WriteLine($"{item.PartitionKey}/{item.SortKey}: {item.Item}");
-        }
-    }
-
-    // Transactional Write - Transfer money between accounts
-    var writeItems = new List<TransactWriteItem>
-    {
-        new()
-        {
-            Action = TransactAction.Update,
-            PartitionKey = "account#source",
-            SortKey = "balance",
-            Data = new Dictionary<string, object?> { ["amount"] = 900 },
-            ConditionExpression = "amount >= :minAmount"
-        },
-        new()
-        {
-            Action = TransactAction.Update,
-            PartitionKey = "account#dest",
-            SortKey = "balance",
-            Data = new Dictionary<string, object?> { ["amount"] = 1100 }
-        },
-        new()
-        {
-            Action = TransactAction.Put,
-            PartitionKey = "transfer#12345",
-            SortKey = "record",
-            Data = new Dictionary<string, object?>
-            {
-                ["from"] = "account#source",
-                ["to"] = "account#dest",
-                ["amount"] = 100,
-                ["timestamp"] = DateTime.UtcNow
-            }
-        }
-    };
-
-    var writeResult = await client.TransactWriteAsync(writeItems, "transfer-12345");
-
-    if (writeResult.IsSuccess)
-    {
-        Console.WriteLine("Transfer completed!");
-    }
-    else
-    {
-        Console.WriteLine("Transfer failed - rolled back");
-    }
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Transactional Get
-    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/transact/get" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "items": [
-          { "pk": "user#123", "sk": "profile" },
-          { "pk": "user#123", "sk": "settings" }
-        ]
-      }'
-
-    # Transactional Write
-    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/transact/write" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "items": [
-          {
-            "action": "Put",
-            "pk": "user#123",
-            "sk": "profile",
-            "data": { "name": "John" }
-          },
-          {
-            "action": "ConditionCheck",
-            "pk": "user#123",
-            "sk": "settings",
-            "conditionExpression": "attribute_exists(pk)"
-          }
-        ],
-        "clientRequestToken": "unique-request-id"
-      }'
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Transactional Get\n    var getItems = new List&lt;TransactGetItem&gt;\n    {\n        new() { PartitionKey = &quot;user#123&quot;, SortKey = &quot;profile&quot; },\n        new() { PartitionKey = &quot;user#123&quot;, SortKey = &quot;settings&quot; }\n    };\n\n    var getResult = await client.TransactGetAsync(getItems);\n\n    foreach (var item in getResult.Value.Items)\n    {\n        if (item.ItemExists)\n        {\n            Console.WriteLine($&quot;{item.PartitionKey}/{item.SortKey}: {item.Item}&quot;);\n        }\n    }\n\n    // Transactional Write - Transfer money between accounts\n    var writeItems = new List&lt;TransactWriteItem&gt;\n    {\n        new()\n        {\n            Action = TransactAction.Update,\n            PartitionKey = &quot;account#source&quot;,\n            SortKey = &quot;balance&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;amount&quot;] = 900 },\n            ConditionExpression = &quot;amount &gt;= :minAmount&quot;\n        },\n        new()\n        {\n            Action = TransactAction.Update,\n            PartitionKey = &quot;account#dest&quot;,\n            SortKey = &quot;balance&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;amount&quot;] = 1100 }\n        },\n        new()\n        {\n            Action = TransactAction.Put,\n            PartitionKey = &quot;transfer#12345&quot;,\n            SortKey = &quot;record&quot;,\n            Data = new Dictionary&lt;string, object?&gt;\n            {\n                [&quot;from&quot;] = &quot;account#source&quot;,\n                [&quot;to&quot;] = &quot;account#dest&quot;,\n                [&quot;amount&quot;] = 100,\n                [&quot;timestamp&quot;] = DateTime.UtcNow\n            }\n        }\n    };\n\n    var writeResult = await client.TransactWriteAsync(writeItems, &quot;transfer-12345&quot;);\n\n    if (writeResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Transfer completed!&quot;);\n    }\n    else\n    {\n        Console.WriteLine(&quot;Transfer failed - rolled back&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Transactional Get\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/transact/get&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;items&quot;: [\n          { &quot;pk&quot;: &quot;user#123&quot;, &quot;sk&quot;: &quot;profile&quot; },\n          { &quot;pk&quot;: &quot;user#123&quot;, &quot;sk&quot;: &quot;settings&quot; }\n        ]\n      }&#39;\n\n    # Transactional Write\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/transact/write&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;items&quot;: [\n          {\n            &quot;action&quot;: &quot;Put&quot;,\n            &quot;pk&quot;: &quot;user#123&quot;,\n            &quot;sk&quot;: &quot;profile&quot;,\n            &quot;data&quot;: { &quot;name&quot;: &quot;John&quot; }\n          },\n          {\n            &quot;action&quot;: &quot;ConditionCheck&quot;,\n            &quot;pk&quot;: &quot;user#123&quot;,\n            &quot;sk&quot;: &quot;settings&quot;,\n            &quot;conditionExpression&quot;: &quot;attribute_exists(pk)&quot;\n          }\n        ],\n        &quot;clientRequestToken&quot;: &quot;unique-request-id&quot;\n      }&#39;\n</code></pre>"}]} />
 
 ---
 
@@ -272,7 +169,6 @@ If you retry with the same token within 10 minutes, TerraScale returns the origi
 ### Money Transfer
 
 Ensure both debit and credit happen atomically:
-
 ```json
 {
   "items": [
@@ -286,7 +182,6 @@ Ensure both debit and credit happen atomically:
 ### Inventory Management
 
 Reserve stock only if available:
-
 ```json
 {
   "items": [

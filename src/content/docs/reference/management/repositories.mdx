@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Manage repositories through the Management API. Requires JWT authentication.
 
@@ -106,7 +106,6 @@ This permanently deletes the repository and all its data.
 ## Schema Definition
 
 Define schemas for entity validation:
-
 ```json
 {
   "schema": {
@@ -155,64 +154,7 @@ Define schemas for entity validation:
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Create repository
-    var createResult = await client.Repositories.CreateAsync(
-        "db_abc123",
-        new CreateRepositoryRequest(
-            Name: "customers",
-            EntityName: "Customer",
-            Schema: new Dictionary<string, SchemaField>
-            {
-                ["name"] = new() { Type = "string", Required = true },
-                ["email"] = new() { Type = "string", Required = true },
-                ["tier"] = new() { Type = "string", Required = false }
-            }
-        )
-    );
-
-    // List repositories
-    var listResult = await client.Repositories.ListAsync("db_abc123");
-
-    foreach (var repo in listResult.Value.Repositories)
-    {
-        Console.WriteLine($"{repo.Name} ({repo.EntityName}): {repo.ItemCount} items");
-    }
-
-    // Get repository
-    var repoResult = await client.Repositories.GetAsync("db_abc123", "repo_abc123");
-
-    // Delete repository
-    var deleteResult = await client.Repositories.DeleteAsync("db_abc123", "repo_abc123");
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Create repository
-    curl -X POST "https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories" \
-      -H "Authorization: Bearer eyJhbGci..." \
-      -H "Content-Type: application/json" \
-      -d '{
-        "name": "customers",
-        "entityName": "Customer",
-        "schema": {
-          "name": { "type": "string", "required": true },
-          "email": { "type": "string", "required": true }
-        }
-      }'
-
-    # List repositories
-    curl "https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories" \
-      -H "Authorization: Bearer eyJhbGci..."
-
-    # Delete repository
-    curl -X DELETE "https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories/repo_abc123" \
-      -H "Authorization: Bearer eyJhbGci..."
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Create repository\n    var createResult = await client.Repositories.CreateAsync(\n        &quot;db_abc123&quot;,\n        new CreateRepositoryRequest(\n            Name: &quot;customers&quot;,\n            EntityName: &quot;Customer&quot;,\n            Schema: new Dictionary&lt;string, SchemaField&gt;\n            {\n                [&quot;name&quot;] = new() { Type = &quot;string&quot;, Required = true },\n                [&quot;email&quot;] = new() { Type = &quot;string&quot;, Required = true },\n                [&quot;tier&quot;] = new() { Type = &quot;string&quot;, Required = false }\n            }\n        )\n    );\n\n    // List repositories\n    var listResult = await client.Repositories.ListAsync(&quot;db_abc123&quot;);\n\n    foreach (var repo in listResult.Value.Repositories)\n    {\n        Console.WriteLine($&quot;{repo.Name} ({repo.EntityName}): {repo.ItemCount} items&quot;);\n    }\n\n    // Get repository\n    var repoResult = await client.Repositories.GetAsync(&quot;db_abc123&quot;, &quot;repo_abc123&quot;);\n\n    // Delete repository\n    var deleteResult = await client.Repositories.DeleteAsync(&quot;db_abc123&quot;, &quot;repo_abc123&quot;);\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create repository\n    curl -X POST &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;name&quot;: &quot;customers&quot;,\n        &quot;entityName&quot;: &quot;Customer&quot;,\n        &quot;schema&quot;: {\n          &quot;name&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;required&quot;: true },\n          &quot;email&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;required&quot;: true }\n        }\n      }&#39;\n\n    # List repositories\n    curl &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Delete repository\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories/repo_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
 
 ---
 

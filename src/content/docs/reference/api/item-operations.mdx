@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 All item operations require `database:read` or `database:write` scope depending on the operation.
 
@@ -49,7 +49,6 @@ Stores an item in the database. Creates a new item or replaces an existing one.
 ### Conditional Writes
 
 Use `conditionExpression` to prevent overwrites:
-
 ```json
 {
   "pk": "user#123",
@@ -121,72 +120,7 @@ Deletes an item by partition key and sort key.
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Put Item
-    var item = new DatabaseItem
-    {
-        PartitionKey = "user#123",
-        SortKey = "profile",
-        Attributes = new Dictionary<string, object?>
-        {
-            ["name"] = "John Doe",
-            ["email"] = "john@example.com",
-            ["age"] = 30,
-            ["tags"] = new[] { "premium", "verified" }
-        }
-    };
-
-    var putResult = await client.PutItemAsync(item);
-    if (putResult.IsSuccess)
-    {
-        Console.WriteLine("Item saved!");
-    }
-
-    // Get Item
-    var getResult = await client.GetItemAsync("user#123", "profile");
-    if (getResult.IsSuccess)
-    {
-        var user = getResult.Value;
-        var name = user.GetAttribute<string>("name");
-        var age = user.GetAttribute<int>("age", defaultValue: 0);
-        Console.WriteLine($"User: \{name\}, Age: {age}");
-    }
-
-    // Delete Item
-    var deleteResult = await client.DeleteItemAsync("user#123", "profile");
-    if (deleteResult.IsSuccess)
-    {
-        Console.WriteLine("Item deleted!");
-    }
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Put Item
-    curl -X PUT "https://api.terrascale.io/api/v1/databases/my-db/items" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "pk": "user#123",
-        "sk": "profile",
-        "data": {
-          "name": "John Doe",
-          "email": "john@example.com"
-        }
-      }'
-
-    # Get Item
-    curl "https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile" \
-      -H "Authorization: Bearer ts_live_your_api_key"
-
-    # Delete Item
-    curl -X DELETE "https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile" \
-      -H "Authorization: Bearer ts_live_your_api_key"
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Put Item\n    var item = new DatabaseItem\n    {\n        PartitionKey = &quot;user#123&quot;,\n        SortKey = &quot;profile&quot;,\n        Attributes = new Dictionary&lt;string, object?&gt;\n        {\n            [&quot;name&quot;] = &quot;John Doe&quot;,\n            [&quot;email&quot;] = &quot;john@example.com&quot;,\n            [&quot;age&quot;] = 30,\n            [&quot;tags&quot;] = new[] { &quot;premium&quot;, &quot;verified&quot; }\n        }\n    };\n\n    var putResult = await client.PutItemAsync(item);\n    if (putResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Item saved!&quot;);\n    }\n\n    // Get Item\n    var getResult = await client.GetItemAsync(&quot;user#123&quot;, &quot;profile&quot;);\n    if (getResult.IsSuccess)\n    {\n        var user = getResult.Value;\n        var name = user.GetAttribute&lt;string&gt;(&quot;name&quot;);\n        var age = user.GetAttribute&lt;int&gt;(&quot;age&quot;, defaultValue: 0);\n        Console.WriteLine($&quot;User: \\{name\\}, Age: {age}&quot;);\n    }\n\n    // Delete Item\n    var deleteResult = await client.DeleteItemAsync(&quot;user#123&quot;, &quot;profile&quot;);\n    if (deleteResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Item deleted!&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Put Item\n    curl -X PUT &quot;https://api.terrascale.io/api/v1/databases/my-db/items&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;pk&quot;: &quot;user#123&quot;,\n        &quot;sk&quot;: &quot;profile&quot;,\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;John Doe&quot;,\n          &quot;email&quot;: &quot;john@example.com&quot;\n        }\n      }&#39;\n\n    # Get Item\n    curl &quot;https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n\n    # Delete Item\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n</code></pre>"}]} />
 
 ---
 
@@ -210,7 +144,6 @@ Items support the following data types:
 ### Single-Table Design
 
 Store related items with the same partition key:
-
 ```json
 // User profile
 { "pk": "user#123", "sk": "profile", "data": { "name": "John" } }
@@ -223,7 +156,6 @@ Store related items with the same partition key:
 ### Hierarchical Keys
 
 Use delimiters for hierarchical data:
-
 ```json
 { "pk": "org#acme", "sk": "dept#engineering#team#backend" }
 ```

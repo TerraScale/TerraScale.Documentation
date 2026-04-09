@@ -17,7 +17,6 @@ TerraScale's pricing is straightforward: you pay for storage and operations. But
 ## 1. Use Queries, Not Scans
 
 This is the biggest one. A query uses the partition key to find data directly. A scan reads every item in your database.
-
 ```csharp
 // Good: Query by partition key
 var orders = await client.QueryAsync(new QueryFilter
@@ -34,7 +33,6 @@ If you're scanning regularly, redesign your data model.
 ## 2. Use Projection
 
 Only fetch the attributes you need:
-
 ```csharp
 // Fetches entire item (maybe 5KB)
 var user = await client.GetItemAsync("user#123", "profile");
@@ -51,7 +49,6 @@ Less data transferred = lower costs.
 ## 3. Batch Your Operations
 
 Individual requests have overhead. Batch operations are more efficient:
-
 ```csharp
 // Slow and expensive: 100 individual requests
 foreach (var key in keys)
@@ -74,7 +71,6 @@ Use a dedicated logging service instead. You'll save money and get better log-sp
 ## 5. Compress Large Attributes
 
 If you're storing large JSON blobs or text, consider compression:
-
 ```csharp
 var compressed = Compress(largeJsonString);
 await client.PutItemAsync("doc#123", "content", new Dictionary<string, object>
@@ -89,7 +85,6 @@ Typical compression ratios of 3-4x mean significant storage savings.
 ## 6. Set TTL for Temporary Data
 
 If data has a natural expiration, use TTL instead of manual cleanup:
-
 ```csharp
 await client.PutItemAsync("session#abc", "data", new Dictionary<string, object>
 {
@@ -112,7 +107,6 @@ If you have items over 100KB, consider:
 ## 8. Consolidate Small Items
 
 The flip side: if you have many tiny items that you always read together, consider combining them:
-
 ```csharp
 // 10 individual items = 10 read operations
 await client.GetItemAsync("user#123", "setting#theme");

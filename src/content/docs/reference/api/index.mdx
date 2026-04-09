@@ -5,14 +5,13 @@ sidebar:
   order: 1
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '$lib/mdx';
 
 Complete API reference for TerraScale database operations.
 
 ---
 
 ## Base URL
-
 ```
 https://api.terrascale.io
 ```
@@ -41,36 +40,13 @@ See [Authentication](/reference/authentication/) for details.
 
 ## API Sections
 
-<CardGrid>
-  <Card title="Item Operations" icon="pencil">
-    [CRUD operations](/reference/api/item-operations/) for individual database items.
-  </Card>
-  <Card title="Query Operations" icon="magnifier">
-    [Query and Scan](/reference/api/query-operations/) for retrieving multiple items.
-  </Card>
-  <Card title="Batch Operations" icon="list-format">
-    [Batch read/write](/reference/api/batch-operations/) for bulk operations.
-  </Card>
-  <Card title="Transactions" icon="approve-check">
-    [Transactional operations](/reference/api/transactions/) for atomic multi-item updates.
-  </Card>
-  <Card title="Repositories" icon="document">
-    [Repository operations](/reference/api/repositories/) for typed entities.
-  </Card>
-  <Card title="SQL API" icon="seti:db">
-    [SQL interface](/reference/api/sql-api/) for SQL-style queries.
-  </Card>
-  <Card title="Health" icon="heart">
-    [Health endpoints](/reference/api/health/) for monitoring.
-  </Card>
-</CardGrid>
+<CardGrid items={[{"title":"Item Operations","icon":"pencil","content":"<p><a href=\"/reference/api/item-operations/\">CRUD operations</a> for individual database items.</p>"},{"title":"Query Operations","icon":"magnifier","content":"<p><a href=\"/reference/api/query-operations/\">Query and Scan</a> for retrieving multiple items.</p>"},{"title":"Batch Operations","icon":"list-format","content":"<p><a href=\"/reference/api/batch-operations/\">Batch read/write</a> for bulk operations.</p>"},{"title":"Transactions","icon":"approve-check","content":"<p><a href=\"/reference/api/transactions/\">Transactional operations</a> for atomic multi-item updates.</p>"},{"title":"Repositories","icon":"document","content":"<p><a href=\"/reference/api/repositories/\">Repository operations</a> for typed entities.</p>"},{"title":"SQL API","icon":"seti:db","content":"<p><a href=\"/reference/api/sql-api/\">SQL interface</a> for SQL-style queries.</p>"},{"title":"Health","icon":"heart","content":"<p><a href=\"/reference/api/health/\">Health endpoints</a> for monitoring.</p>"}]} />
 
 ---
 
 ## Common Response Patterns
 
 ### Success Response
-
 ```json
 {
   "pk": "user#123",
@@ -84,7 +60,6 @@ See [Authentication](/reference/authentication/) for details.
 ```
 
 ### Error Response
-
 ```json
 {
   "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
@@ -169,4 +144,4 @@ See [Rate Limits](/reference/rate-limits/) for details.
 
 - [Item Operations](/reference/api/item-operations/) - Start with basic CRUD
 - [Query Operations](/reference/api/query-operations/) - Learn to query data
-- [C# SDK](/guides/SDKs/csharp/) - Use the SDK for easier development
+- [C# SDK](/guides/sdks/csharp/) - Use the SDK for easier development

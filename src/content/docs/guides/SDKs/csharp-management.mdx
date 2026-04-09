@@ -8,14 +8,13 @@ sidebar:
     variant: tip
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 The TerraScale Management Client provides access to user accounts, organizations, billing, and administrative operations.
 
 ---
 
 ## Installation
-
 ```bash
 dotnet add package TerraScale.Management.Client
 ```
@@ -23,7 +22,6 @@ dotnet add package TerraScale.Management.Client
 ---
 
 ## Configuration
-
 ```csharp
 using TerraScale.Management.Client;
 
@@ -58,7 +56,6 @@ client.SetAccessToken("eyJhbGci...");
 ## Authentication
 
 ### Login with Password
-
 ```csharp
 var loginResult = await client.Auth.LoginWithPasswordAsync(new PasswordLoginRequest(
     Email: "john@example.com",
@@ -73,7 +70,6 @@ if (loginResult.IsSuccess && loginResult.Value.Status == PasswordLoginStatus.Suc
 ```
 
 ### Handle MFA
-
 ```csharp
 if (loginResult.Value.Status == PasswordLoginStatus.MfaRequired)
 {
@@ -98,7 +94,6 @@ if (loginResult.Value.Status == PasswordLoginStatus.MfaRequired)
 ```
 
 ### Refresh Token
-
 ```csharp
 var refreshResult = await client.Auth.RefreshTokenAsync(new RefreshTokenRequest(
     RefreshToken: "rt_abc123..."
@@ -111,7 +106,6 @@ if (refreshResult.IsSuccess)
 ```
 
 ### Switch Organization
-
 ```csharp
 var switchResult = await client.Auth.SwitchOrganizationAsync(new SwitchOrganizationRequest(
     OrganizationId: "org_def456"
@@ -123,7 +117,6 @@ var switchResult = await client.Auth.SwitchOrganizationAsync(new SwitchOrganizat
 ## User Operations
 
 ### Get Profile
-
 ```csharp
 var userResult = await client.Users.GetCurrentUserAsync();
 
@@ -136,7 +129,6 @@ if (userResult.IsSuccess)
 ```
 
 ### Update Profile
-
 ```csharp
 var updateResult = await client.Users.UpdateCurrentUserAsync(new UpdateUserRequest(
     Name: "John D. Doe",
@@ -145,7 +137,6 @@ var updateResult = await client.Users.UpdateCurrentUserAsync(new UpdateUserReque
 ```
 
 ### Update Preferences
-
 ```csharp
 var prefsResult = await client.Users.UpdatePreferencesAsync(new UpdateUserPreferencesRequest(
     Theme: "dark",
@@ -159,7 +150,6 @@ var prefsResult = await client.Users.UpdatePreferencesAsync(new UpdateUserPrefer
 ## Organization Operations
 
 ### Create Organization
-
 ```csharp
 var createOrgResult = await client.Organizations.CreateAsync(new CreateOrganizationRequest(
     Name: "Acme Corporation",
@@ -169,7 +159,6 @@ var createOrgResult = await client.Organizations.CreateAsync(new CreateOrganizat
 ```
 
 ### List Organizations
-
 ```csharp
 var listResult = await client.Organizations.ListAsync();
 
@@ -180,7 +169,6 @@ foreach (var org in listResult.Value.Organizations)
 ```
 
 ### Manage Members
-
 ```csharp
 // List members
 var membersResult = await client.Organizations.ListMembersAsync("org_abc123");
@@ -204,7 +192,6 @@ var removeResult = await client.Organizations.RemoveMemberAsync("org_abc123", "u
 ## Database Operations
 
 ### Create Database
-
 ```csharp
 var createResult = await client.Databases.CreateAsync(new CreateDatabaseRequest(
     Name: "my-production-db",
@@ -218,7 +205,6 @@ if (createResult.IsSuccess)
 ```
 
 ### List Databases
-
 ```csharp
 var listResult = await client.Databases.ListAsync();
 
@@ -229,7 +215,6 @@ foreach (var db in listResult.Value.Databases)
 ```
 
 ### Delete Database
-
 ```csharp
 var deleteResult = await client.Databases.DeleteAsync("db_abc123");
 ```
@@ -239,7 +224,6 @@ var deleteResult = await client.Databases.DeleteAsync("db_abc123");
 ## API Key Operations
 
 ### Create API Key
-
 ```csharp
 var createResult = await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(
     Name: "Production API Key",
@@ -255,7 +239,6 @@ if (createResult.IsSuccess)
 ```
 
 ### List API Keys
-
 ```csharp
 var listResult = await client.ApiKeys.ListAsync();
 
@@ -266,7 +249,6 @@ foreach (var key in listResult.Value.Keys)
 ```
 
 ### Revoke API Key
-
 ```csharp
 var revokeResult = await client.ApiKeys.RevokeAsync("key_abc123");
 ```
@@ -276,7 +258,6 @@ var revokeResult = await client.ApiKeys.RevokeAsync("key_abc123");
 ## Payment Operations
 
 ### Get Subscription Info
-
 ```csharp
 var paymentInfo = await client.Payment.GetPaymentInfoAsync();
 
@@ -288,7 +269,6 @@ if (paymentInfo.IsSuccess)
 ```
 
 ### Get Usage
-
 ```csharp
 var usageResult = await client.Payment.GetUsageAsync();
 
@@ -301,7 +281,6 @@ if (usageResult.IsSuccess)
 ```
 
 ### Create Checkout
-
 ```csharp
 var checkoutResult = await client.Payment.CreateCheckoutAsync(new CreateCheckoutRequest("pro"));
 
@@ -313,7 +292,6 @@ if (checkoutResult.IsSuccess)
 ```
 
 ### Get Billing Portal
-
 ```csharp
 var portalResult = await client.Payment.GetPortalUrlAsync();
 
@@ -328,7 +306,6 @@ if (portalResult.IsSuccess)
 ## Plans Operations
 
 ### List Plans
-
 ```csharp
 var plansResult = await client.Plans.ListAsync();
 
@@ -346,7 +323,6 @@ if (plansResult.IsSuccess)
 ```
 
 ### Get Plan Details
-
 ```csharp
 var planResult = await client.Plans.GetAsync("plan_pro");
 ```
@@ -354,7 +330,6 @@ var planResult = await client.Plans.GetAsync("plan_pro");
 ---
 
 ## Complete Login Example
-
 ```csharp
 using TerraScale.Management.Client;
 
@@ -418,6 +393,6 @@ await client.DisposeAsync();
 
 ## Next Steps
 
-- [C# Database Client](/guides/SDKs/csharp/) - Database operations
+- [C# Database Client](/guides/sdks/csharp/) - Database operations
 - [Organizations](/reference/organizations/) - Organization management
 - [Billing](/reference/billing/) - Subscription details

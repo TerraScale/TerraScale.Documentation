@@ -38,7 +38,6 @@ Rate limits depend on your plan tier:
 ## Rate Limit Response
 
 When rate limited, the API returns HTTP 429:
-
 ```http
 HTTP/1.1 429 Too Many Requests
 Retry-After: 5
@@ -98,7 +97,6 @@ Content-Type: application/json
 ## Handling Rate Limits
 
 ### Retry with Exponential Backoff
-
 ```csharp
 async Task<Result<T>> ExecuteWithRetry<T>(Func<Task<Result<T>>> operation)
 {
@@ -127,7 +125,6 @@ async Task<Result<T>> ExecuteWithRetry<T>(Func<Task<Result<T>>> operation)
 ### Client SDK Automatic Retry
 
 The TerraScale SDK handles rate limits automatically:
-
 ```csharp
 var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 {
@@ -150,7 +147,6 @@ var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 ### Batch Operations
 
 Instead of many small requests, use batch operations:
-
 ```csharp
 // Bad: Many individual requests
 foreach (var key in keys)
@@ -165,7 +161,6 @@ await client.BatchGetAsync(keys);
 ### Request Queuing
 
 For high-volume applications, implement a request queue:
-
 ```csharp
 var semaphore = new SemaphoreSlim(100); // Max concurrent requests
 
@@ -186,7 +181,6 @@ async Task<T> ExecuteWithThrottle<T>(Func<Task<T>> operation)
 ### Monitor Usage
 
 Track your usage to stay within limits:
-
 ```csharp
 var usage = await client.Payment.GetUsageAsync();
 

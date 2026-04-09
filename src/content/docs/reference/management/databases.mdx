@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Manage databases through the Management API. Requires JWT authentication (dashboard access).
 
@@ -140,62 +140,7 @@ Each database includes usage statistics:
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Create database
-    var createResult = await client.Databases.CreateAsync(new CreateDatabaseRequest(
-        Name: "my-production-db",
-        Region: "us-east-1"
-    ));
-
-    if (createResult.IsSuccess)
-    {
-        Console.WriteLine($"Database created: {createResult.Value.DatabaseId}");
-    }
-
-    // List databases
-    var listResult = await client.Databases.ListAsync();
-
-    foreach (var db in listResult.Value.Databases)
-    {
-        Console.WriteLine($"{db.Name} - {db.Status}");
-        Console.WriteLine($"  Items: {db.Usage?.ItemCount}");
-        Console.WriteLine($"  Storage: {db.Usage?.StorageBytes / 1024 / 1024} MB");
-    }
-
-    // Get database
-    var dbResult = await client.Databases.GetAsync("db_abc123");
-
-    // Delete database
-    var deleteResult = await client.Databases.DeleteAsync("db_abc123");
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Create database
-    curl -X POST "https://api.terrascale.io/api/v1/management/databases" \
-      -H "Authorization: Bearer eyJhbGci..." \
-      -H "Content-Type: application/json" \
-      -d '{
-        "name": "my-production-db",
-        "region": "us-east-1"
-      }'
-
-    # List databases
-    curl "https://api.terrascale.io/api/v1/management/databases" \
-      -H "Authorization: Bearer eyJhbGci..."
-
-    # Get database
-    curl "https://api.terrascale.io/api/v1/management/databases/db_abc123" \
-      -H "Authorization: Bearer eyJhbGci..."
-
-    # Delete database
-    curl -X DELETE "https://api.terrascale.io/api/v1/management/databases/db_abc123" \
-      -H "Authorization: Bearer eyJhbGci..."
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Create database\n    var createResult = await client.Databases.CreateAsync(new CreateDatabaseRequest(\n        Name: &quot;my-production-db&quot;,\n        Region: &quot;us-east-1&quot;\n    ));\n\n    if (createResult.IsSuccess)\n    {\n        Console.WriteLine($&quot;Database created: {createResult.Value.DatabaseId}&quot;);\n    }\n\n    // List databases\n    var listResult = await client.Databases.ListAsync();\n\n    foreach (var db in listResult.Value.Databases)\n    {\n        Console.WriteLine($&quot;{db.Name} - {db.Status}&quot;);\n        Console.WriteLine($&quot;  Items: {db.Usage?.ItemCount}&quot;);\n        Console.WriteLine($&quot;  Storage: {db.Usage?.StorageBytes / 1024 / 1024} MB&quot;);\n    }\n\n    // Get database\n    var dbResult = await client.Databases.GetAsync(&quot;db_abc123&quot;);\n\n    // Delete database\n    var deleteResult = await client.Databases.DeleteAsync(&quot;db_abc123&quot;);\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create database\n    curl -X POST &quot;https://api.terrascale.io/api/v1/management/databases&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;name&quot;: &quot;my-production-db&quot;,\n        &quot;region&quot;: &quot;us-east-1&quot;\n      }&#39;\n\n    # List databases\n    curl &quot;https://api.terrascale.io/api/v1/management/databases&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Get database\n    curl &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Delete database\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
 
 ---
 

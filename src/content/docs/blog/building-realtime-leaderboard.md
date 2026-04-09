@@ -31,7 +31,6 @@ The tricky part is that these requirements conflict. Score updates need to be fa
 ## The Naive Approach (Don't Do This)
 
 My first instinct was:
-
 ```
 pk: "leaderboard#global"
 sk: "{score}#{player_id}"
@@ -48,7 +47,6 @@ Also, getting a player's rank requires counting all entries with higher scores. 
 After some research, I landed on a bucketed approach:
 
 ### Data Model
-
 ```
 // Player's current score
 pk: "player#{player_id}"
@@ -69,7 +67,6 @@ data: { players: [...] }  // Cached, updated every few seconds
 ### Score Updates
 
 When a player's score changes:
-
 ```csharp
 public async Task UpdateScore(string playerId, int newScore)
 {
@@ -116,7 +113,6 @@ private int GetBucket(int score) => (score / 1000) * 1000;
 ### Getting Player Rank
 
 To find a player's rank, sum up all bucket counts for higher scores:
-
 ```csharp
 public async Task<int> GetPlayerRank(string playerId)
 {
@@ -140,7 +136,6 @@ This requires at most ~100 bucket reads instead of millions of player reads.
 ### Top 100 Leaderboard
 
 For the global top 100, run a background job every 5 seconds:
-
 ```csharp
 public async Task RefreshTop100()
 {
@@ -170,9 +165,9 @@ I load tested this with [k6](https://k6.io/) simulating 10,000 score updates per
 
 | Metric | Target | Actual |
 |--------|--------|--------|
-| Score update latency (p99) | <100ms | 23ms |
-| Top 100 query latency | <50ms | 8ms |
-| Rank query latency | <100ms | 45ms |
+| Score update latency (p99) | &lt;100ms | 23ms |
+| Top 100 query latency | &lt;50ms | 8ms |
+| Rank query latency | &lt;100ms | 45ms |
 | Throughput | 10,000/s | 12,400/s |
 
 Not bad for a side project.

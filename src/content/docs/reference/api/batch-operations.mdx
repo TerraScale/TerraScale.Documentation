@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Batch operations allow you to read or write multiple items in a single request.
 
@@ -61,7 +61,6 @@ Performs batch put/delete operations. Maximum 25 items per request.
 ### Partial Failures
 
 Some items may fail while others succeed:
-
 ```json
 {
   "successCount": 2,
@@ -121,7 +120,6 @@ Gets multiple items by keys. Maximum 100 keys per request.
 ### Unprocessed Keys
 
 If some keys couldn't be processed (e.g., due to throughput limits), they are returned for retry:
-
 ```json
 {
   "items": [...],
@@ -144,86 +142,7 @@ If some keys couldn't be processed (e.g., due to throughput limits), they are re
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Batch Write
-    var writeItems = new List<BatchWriteItem>
-    {
-        new BatchWriteItem
-        {
-            Operation = BatchOperation.Put,
-            PartitionKey = "user#123",
-            SortKey = "profile",
-            Data = new Dictionary<string, object?> { ["name"] = "John" }
-        },
-        new BatchWriteItem
-        {
-            Operation = BatchOperation.Put,
-            PartitionKey = "user#456",
-            SortKey = "profile",
-            Data = new Dictionary<string, object?> { ["name"] = "Jane" }
-        },
-        new BatchWriteItem
-        {
-            Operation = BatchOperation.Delete,
-            PartitionKey = "user#789",
-            SortKey = "profile"
-        }
-    };
-
-    var writeResult = await client.BatchWriteAsync(writeItems);
-    Console.WriteLine($"Success: {writeResult.Value.SuccessCount}");
-
-    // Batch Get
-    var keys = new List<ItemKey>
-    {
-        new("user#123", "profile"),
-        new("user#456", "profile")
-    };
-
-    var getResult = await client.BatchGetAsync(keys);
-    foreach (var item in getResult.Value.Items)
-    {
-        Console.WriteLine($"{item.PartitionKey}: {item.GetAttribute<string>("name")}");
-    }
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Batch Write
-    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/batch/write" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "items": [
-          {
-            "operation": "Put",
-            "pk": "user#123",
-            "sk": "profile",
-            "data": { "name": "John" }
-          },
-          {
-            "operation": "Delete",
-            "pk": "user#789",
-            "sk": "profile"
-          }
-        ]
-      }'
-
-    # Batch Get
-    curl -X POST "https://api.terrascale.io/api/v1/databases/my-db/items/batch/get" \
-      -H "Authorization: Bearer ts_live_your_api_key" \
-      -H "Content-Type: application/json" \
-      -d '{
-        "keys": [
-          { "pk": "user#123", "sk": "profile" },
-          { "pk": "user#456", "sk": "profile" }
-        ]
-      }'
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Batch Write\n    var writeItems = new List&lt;BatchWriteItem&gt;\n    {\n        new BatchWriteItem\n        {\n            Operation = BatchOperation.Put,\n            PartitionKey = &quot;user#123&quot;,\n            SortKey = &quot;profile&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;name&quot;] = &quot;John&quot; }\n        },\n        new BatchWriteItem\n        {\n            Operation = BatchOperation.Put,\n            PartitionKey = &quot;user#456&quot;,\n            SortKey = &quot;profile&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;name&quot;] = &quot;Jane&quot; }\n        },\n        new BatchWriteItem\n        {\n            Operation = BatchOperation.Delete,\n            PartitionKey = &quot;user#789&quot;,\n            SortKey = &quot;profile&quot;\n        }\n    };\n\n    var writeResult = await client.BatchWriteAsync(writeItems);\n    Console.WriteLine($&quot;Success: {writeResult.Value.SuccessCount}&quot;);\n\n    // Batch Get\n    var keys = new List&lt;ItemKey&gt;\n    {\n        new(&quot;user#123&quot;, &quot;profile&quot;),\n        new(&quot;user#456&quot;, &quot;profile&quot;)\n    };\n\n    var getResult = await client.BatchGetAsync(keys);\n    foreach (var item in getResult.Value.Items)\n    {\n        Console.WriteLine($&quot;{item.PartitionKey}: {item.GetAttribute&lt;string&gt;(&quot;name&quot;)}&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Batch Write\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/batch/write&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;items&quot;: [\n          {\n            &quot;operation&quot;: &quot;Put&quot;,\n            &quot;pk&quot;: &quot;user#123&quot;,\n            &quot;sk&quot;: &quot;profile&quot;,\n            &quot;data&quot;: { &quot;name&quot;: &quot;John&quot; }\n          },\n          {\n            &quot;operation&quot;: &quot;Delete&quot;,\n            &quot;pk&quot;: &quot;user#789&quot;,\n            &quot;sk&quot;: &quot;profile&quot;\n          }\n        ]\n      }&#39;\n\n    # Batch Get\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/batch/get&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;keys&quot;: [\n          { &quot;pk&quot;: &quot;user#123&quot;, &quot;sk&quot;: &quot;profile&quot; },\n          { &quot;pk&quot;: &quot;user#456&quot;, &quot;sk&quot;: &quot;profile&quot; }\n        ]\n      }&#39;\n</code></pre>"}]} />
 
 ---
 
@@ -232,7 +151,6 @@ If some keys couldn't be processed (e.g., due to throughput limits), they are re
 ### Chunk Large Batches
 
 If you have more than 25 items to write, split them into chunks:
-
 ```csharp
 var allItems = GetLargeListOfItems(); // 100 items
 var chunks = allItems.Chunk(25);
@@ -246,7 +164,6 @@ foreach (var chunk in chunks)
 ### Handle Partial Failures
 
 Always check for and retry failed items:
-
 ```csharp
 var result = await client.BatchWriteAsync(items);
 
@@ -262,7 +179,6 @@ if (result.Value.FailedCount > 0)
 ### Use Batch Get for Multiple Items
 
 Instead of multiple individual Gets:
-
 ```csharp
 // Inefficient: Multiple requests
 var item1 = await client.GetItemAsync("user#1", "profile");

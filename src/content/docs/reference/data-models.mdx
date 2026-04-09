@@ -12,7 +12,6 @@ Data structures and types used in the TerraScale C# SDK.
 ## DatabaseItem
 
 Represents a raw database item with dynamic attributes.
-
 ```csharp
 public sealed record DatabaseItem
 {
@@ -29,7 +28,6 @@ public sealed record DatabaseItem
 ```
 
 ### Usage
-
 ```csharp
 var item = new DatabaseItem
 {
@@ -53,7 +51,6 @@ var age = item.GetAttribute<int>("age", defaultValue: 0);
 ## QueryFilter
 
 Filter conditions for query operations.
-
 ```csharp
 public sealed record QueryFilter
 {
@@ -65,7 +62,6 @@ public sealed record QueryFilter
 ```
 
 ### Usage
-
 ```csharp
 var filter = new QueryFilter
 {
@@ -79,7 +75,6 @@ var filter = new QueryFilter
 ## SortKeyCondition
 
 Sort key comparison operators.
-
 ```csharp
 public sealed record SortKeyCondition
 {
@@ -101,7 +96,6 @@ public enum SortKeyOperator
 ```
 
 ### Factory Methods
-
 ```csharp
 // Exact match
 SortKeyCondition.Equal("profile")
@@ -124,7 +118,6 @@ SortKeyCondition.GreaterThanOrEquals("2024-01-01")
 ## PaginationOptions
 
 Options for paginated requests.
-
 ```csharp
 public record PaginationOptions
 {
@@ -139,7 +132,6 @@ public record PaginationOptions
 ## QueryOptions
 
 Extended options for query operations.
-
 ```csharp
 public sealed record QueryOptions : PaginationOptions
 {
@@ -150,7 +142,6 @@ public sealed record QueryOptions : PaginationOptions
 ```
 
 ### Usage
-
 ```csharp
 var options = new QueryOptions
 {
@@ -165,7 +156,6 @@ var options = new QueryOptions
 ## PaginatedResult
 
 Paginated response wrapper.
-
 ```csharp
 public sealed record PaginatedResult<T>
 {
@@ -177,7 +167,6 @@ public sealed record PaginatedResult<T>
 ```
 
 ### Pagination Example
-
 ```csharp
 var result = await client.QueryAsync(filter, new QueryOptions { Limit = 50 });
 
@@ -203,7 +192,6 @@ if (result.Value.HasMore)
 ## IEntity / EntityBase
 
 Base interface and class for typed entities.
-
 ```csharp
 public interface IEntity
 {
@@ -224,7 +212,6 @@ public abstract record EntityBase : IEntity
 ```
 
 ### Custom Entity Example
-
 ```csharp
 public record Customer : EntityBase
 {
@@ -250,7 +237,6 @@ public record Order : EntityBase
 ## BatchWriteItem
 
 Item for batch write operations.
-
 ```csharp
 public record BatchWriteItem
 {
@@ -272,7 +258,6 @@ public enum BatchOperation
 ## TransactWriteItem
 
 Item for transactional write operations.
-
 ```csharp
 public record TransactWriteItem
 {
@@ -297,13 +282,11 @@ public enum TransactAction
 ## ItemKey
 
 Simple key reference for batch get operations.
-
 ```csharp
 public record ItemKey(string PartitionKey, string? SortKey = null);
 ```
 
 ### Usage
-
 ```csharp
 var keys = new List<ItemKey>
 {
@@ -319,6 +302,6 @@ var result = await client.BatchGetAsync(keys);
 
 ## Next Steps
 
-- [C# SDK](/guides/SDKs/csharp/) - Full SDK documentation
+- [C# SDK](/guides/sdks/csharp/) - Full SDK documentation
 - [Repository Pattern](/guides/repository/) - Typed entity storage
 - [API Reference](/reference/api/) - API documentation

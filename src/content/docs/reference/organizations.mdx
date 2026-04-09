@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Steps } from '@astrojs/starlight/components';
+import { Steps } from '$lib/mdx';
 
 Organizations are the top-level containers for your resources. All databases, API keys, and team members belong to an organization.
 
@@ -365,7 +365,6 @@ Switches to a different organization. **Requires JWT authentication.**
 ---
 
 ## C# SDK Example
-
 ```csharp
 // Create organization
 var createOrgResult = await client.Organizations.CreateAsync(

@@ -14,7 +14,6 @@ Best practices for building performant, reliable applications with TerraScale.
 ### Use Meaningful Partition Keys
 
 Design partition keys that distribute data evenly and support your access patterns:
-
 ```csharp
 // Good: Distributes data by user
 { "pk": "user#123", "sk": "profile" }
@@ -27,7 +26,6 @@ Design partition keys that distribute data evenly and support your access patter
 ### Leverage Sort Keys for Related Items
 
 Group related items under the same partition key:
-
 ```csharp
 // User and their orders in same partition
 { "pk": "user#123", "sk": "profile" }
@@ -45,7 +43,6 @@ var filter = new QueryFilter
 ### Avoid Hot Partitions
 
 Distribute writes across partition keys:
-
 ```csharp
 // Bad: All writes to one partition
 { "pk": "orders", "sk": "order#12345" }
@@ -62,7 +59,6 @@ Distribute writes across partition keys:
 ### Use Query Instead of Scan
 
 Queries are efficient; scans read everything:
-
 ```csharp
 // Good: Query by partition key
 var result = await client.QueryAsync(new QueryFilter
@@ -77,7 +73,6 @@ var result = await client.ScanAsync(new PaginationOptions());
 ### Limit Result Sizes
 
 Always specify reasonable limits:
-
 ```csharp
 var result = await client.QueryAsync(filter, new QueryOptions
 {
@@ -88,7 +83,6 @@ var result = await client.QueryAsync(filter, new QueryOptions
 ### Use Projection Expressions
 
 Return only needed attributes:
-
 ```csharp
 var options = new QueryOptions
 {
@@ -99,7 +93,6 @@ var options = new QueryOptions
 ### Design for Access Patterns
 
 Structure keys to support your queries:
-
 ```csharp
 // Access pattern: Get user's orders by date
 { "pk": "user#123", "sk": "order#2024-01-15#001" }
@@ -115,7 +108,6 @@ SortKeyCondition.Between("order#2024-01-01", "order#2024-01-31")
 ### Always Check Results
 
 Never assume operations succeed:
-
 ```csharp
 var result = await client.GetItemAsync("user#123");
 
@@ -131,7 +123,6 @@ return result.Value;
 ### Implement Retry Logic
 
 Handle transient failures gracefully:
-
 ```csharp
 var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 {
@@ -147,7 +138,6 @@ var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 ### Log Errors with Context
 
 Include operation details for debugging:
-
 ```csharp
 if (result.IsFailed)
 {
@@ -165,7 +155,6 @@ if (result.IsFailed)
 ### Use Transactions Only When Needed
 
 Transactions have higher latency than batch operations:
-
 ```csharp
 // Use batch for independent writes
 await client.BatchWriteAsync(items);
@@ -177,7 +166,6 @@ await client.TransactWriteAsync(items);
 ### Keep Transactions Small
 
 Fewer items = faster execution:
-
 ```csharp
 // Good: Small, focused transaction
 var items = new List<TransactWriteItem>
@@ -192,7 +180,6 @@ var items = new List<TransactWriteItem>
 ### Use Idempotency Tokens
 
 Prevent duplicate operations on retry:
-
 ```csharp
 var result = await client.TransactWriteAsync(
     items,
@@ -207,7 +194,6 @@ var result = await client.TransactWriteAsync(
 ### Use Batch Operations
 
 Reduce network round trips:
-
 ```csharp
 // Bad: Many individual requests
 foreach (var key in keys)
@@ -222,7 +208,6 @@ await client.BatchGetAsync(keys);
 ### Parallel Processing
 
 Process independent operations concurrently:
-
 ```csharp
 var tasks = partitions.Select(pk =>
     client.QueryAsync(new QueryFilter { PartitionKey = pk })
@@ -234,7 +219,6 @@ var results = await Task.WhenAll(tasks);
 ### Connection Pooling
 
 Reuse client instances:
-
 ```csharp
 // Good: Create once, reuse
 public class MyService
@@ -257,7 +241,6 @@ public class MyService
 ### Use Specific Scopes
 
 Grant minimum necessary permissions:
-
 ```csharp
 // Good: Specific permissions
 { "scopes": ["database:read", "repository:read"] }
@@ -269,7 +252,6 @@ Grant minimum necessary permissions:
 ### Rotate API Keys
 
 Set expiration and rotate regularly:
-
 ```csharp
 await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(
     Name: "Production Key",
@@ -285,7 +267,6 @@ Protect accounts with two-factor authentication.
 ### Store Secrets Securely
 
 Never commit API keys to source control:
-
 ```csharp
 // Good: Environment variable
 var apiKey = Environment.GetEnvironmentVariable("TERRASCALE_API_KEY");
@@ -304,7 +285,6 @@ var apiKey = "ts_live_abc123...";
 ### Use Repositories for Domain Entities
 
 Typed entities with schema validation:
-
 ```csharp
 public record Customer : EntityBase
 {
@@ -318,7 +298,6 @@ var customers = client.GetRepository<Customer>("customers");
 ### Use Raw Items for Flexible Data
 
 Dynamic attributes without schema:
-
 ```csharp
 var item = new DatabaseItem
 {
@@ -330,7 +309,6 @@ var item = new DatabaseItem
 ### Denormalize for Read Performance
 
 Store data in the shape you read it:
-
 ```csharp
 // Instead of joining user and address
 { "pk": "user#123", "sk": "profile", "data": {
@@ -349,7 +327,6 @@ Store data in the shape you read it:
 ### Track Usage
 
 Monitor your usage against plan limits:
-
 ```csharp
 var usage = await client.Payment.GetUsageAsync();
 
@@ -362,7 +339,6 @@ if (usage.Value.TotalRequests > warningThreshold)
 ### Use Health Endpoints
 
 Monitor API availability:
-
 ```bash
 curl https://api.terrascale.io/health
 ```

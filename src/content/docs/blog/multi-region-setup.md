@@ -40,7 +40,6 @@ Three main reasons:
 That's it. Existing data starts syncing immediately.
 
 ### Via SDK
-
 ```csharp
 await client.Management.Databases.AddRegionAsync("my-database", new AddRegionRequest
 {
@@ -49,7 +48,6 @@ await client.Management.Databases.AddRegionAsync("my-database", new AddRegionReq
 ```
 
 ### Via API
-
 ```bash
 POST /api/v1/management/databases/my-database/regions
 {
@@ -65,7 +63,6 @@ When you write to TerraScale:
 2. It's acknowledged as soon as it's durable there
 3. Asynchronously, the data is replicated to other regions
 4. Replication typically completes in 100-500ms
-
 ```
 Write in us-east-1 → Durable in us-east-1 (12ms) → Response to client
                    → Async replicate to eu-west-1 (~200ms)
@@ -75,14 +72,12 @@ Write in us-east-1 → Durable in us-east-1 (12ms) → Response to client
 ## Reading from Replicas
 
 By default, reads go to the nearest region:
-
 ```csharp
 var result = await client.GetItemAsync("user#123", "profile");
 // Automatically routes to nearest region
 ```
 
 If you need the absolute latest data, use a consistent read:
-
 ```csharp
 var result = await client.GetItemAsync("user#123", "profile", new GetOptions
 {
@@ -146,7 +141,6 @@ TerraScale uses last-writer-wins based on timestamp. The write with the later ti
 For most use cases, this is fine. Users rarely update the same item from different continents at the exact same moment.
 
 If you need stronger consistency, designate writes to go to your primary region:
-
 ```csharp
 var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 {
@@ -172,7 +166,6 @@ The latency improvement is usually worth it for user-facing applications.
 ## Removing a Region
 
 If you no longer need a region:
-
 ```csharp
 await client.Management.Databases.RemoveRegionAsync("my-database", new RemoveRegionRequest
 {

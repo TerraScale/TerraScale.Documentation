@@ -5,7 +5,7 @@ sidebar:
   order: 6
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import { Card, CardGrid } from '$lib/mdx';
 
 TerraScale offers multiple subscription plans to fit your needs.
 
@@ -97,32 +97,7 @@ Lists all available subscription plans. **No authentication required.**
 
 ## Plan Comparison
 
-<CardGrid>
-  <Card title="Free" icon="star">
-    **$0/month**
-    - 3 Databases
-    - 100MB Storage
-    - 10K Requests/month
-    - Community Support
-  </Card>
-  <Card title="Pro" icon="rocket">
-    **$29/month**
-    - 10 Databases
-    - 10GB Storage
-    - 1M Requests/month
-    - Email Support
-    - Team Members
-  </Card>
-  <Card title="Enterprise" icon="seti:config">
-    **Custom**
-    - Unlimited Databases
-    - Unlimited Storage
-    - Unlimited Requests
-    - Priority Support
-    - Custom SLAs
-    - SSO / SAML
-  </Card>
-</CardGrid>
+<CardGrid items={[{"title":"Free","icon":"star","content":"<p><strong>$0/month</strong>\n    - 3 Databases\n    - 100MB Storage\n    - 10K Requests/month\n    - Community Support</p>"},{"title":"Pro","icon":"rocket","content":"<p><strong>$29/month</strong>\n    - 10 Databases\n    - 10GB Storage\n    - 1M Requests/month\n    - Email Support\n    - Team Members</p>"},{"title":"Enterprise","icon":"seti:config","content":"<p><strong>Custom</strong>\n    - Unlimited Databases\n    - Unlimited Storage\n    - Unlimited Requests\n    - Priority Support\n    - Custom SLAs\n    - SSO / SAML</p>"}]} />
 
 ---
 
@@ -158,7 +133,6 @@ To upgrade your plan:
 2. Redirect user to the returned `checkoutUrl`
 3. User completes payment
 4. Subscription is updated automatically
-
 ```json
 // Upgrade to Pro
 POST /api/v1/payment/checkout
@@ -201,7 +175,6 @@ For Enterprise pricing and custom requirements:
 ---
 
 ## Code Example
-
 ```csharp
 // List available plans
 var plansResult = await client.Plans.ListAsync();

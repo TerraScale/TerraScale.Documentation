@@ -5,7 +5,7 @@ sidebar:
   order: 6
 ---
 
-import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
 
 Manage your TerraScale subscription, monitor usage, and handle billing through the dashboard.
 
@@ -21,20 +21,7 @@ Navigate to **Payments** in the sidebar to access billing and subscription manag
 
 The Payments page shows:
 
-<CardGrid>
-  <Card title="Current Plan" icon="star">
-    Your active subscription tier and status.
-  </Card>
-  <Card title="Usage" icon="chart">
-    Current usage against plan limits.
-  </Card>
-  <Card title="Next Invoice" icon="document">
-    Upcoming charge amount and date.
-  </Card>
-  <Card title="Payment Method" icon="credit-card">
-    Default payment method on file.
-  </Card>
-</CardGrid>
+<CardGrid items={[{"title":"Current Plan","icon":"star","content":"<p>Your active subscription tier and status.</p>"},{"title":"Usage","icon":"chart","content":"<p>Current usage against plan limits.</p>"},{"title":"Next Invoice","icon":"document","content":"<p>Upcoming charge amount and date.</p>"},{"title":"Payment Method","icon":"credit-card","content":"<p>Default payment method on file.</p>"}]} />
 
 ---
 
@@ -52,20 +39,7 @@ View your subscription details:
 
 ### Plan Status
 
-<Tabs>
-  <TabItem label="Active">
-    Your subscription is current and fully functional.
-  </TabItem>
-  <TabItem label="Trialing">
-    You're in a free trial period. Add a payment method before the trial ends to continue.
-  </TabItem>
-  <TabItem label="Past Due">
-    Payment failed. Update your payment method to restore full access.
-  </TabItem>
-  <TabItem label="Cancelled">
-    Subscription cancelled. Access continues until the end of the billing period.
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Active","content":"<p>Your subscription is current and fully functional.</p>"},{"label":"Trialing","content":"<p>You&#39;re in a free trial period. Add a payment method before the trial ends to continue.</p>"},{"label":"Past Due","content":"<p>Payment failed. Update your payment method to restore full access.</p>"},{"label":"Cancelled","content":"<p>Subscription cancelled. Access continues until the end of the billing period.</p>"}]} />
 
 ---
 

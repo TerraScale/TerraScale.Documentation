@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 TerraScale is available in 19 regions worldwide, allowing you to deploy databases close to your users for optimal performance.
 
@@ -75,44 +75,13 @@ For high availability, deploy in multiple regions and use automatic failover.
 
 ## Setting the Default Region
 
-<Tabs>
-  <TabItem label="Dashboard">
-    1. Go to **Settings > Preferences**
-    2. Select your **Default Region** from the dropdown
-    3. Click **Save**
-
-    New databases will use this region by default.
-  </TabItem>
-  <TabItem label="C# SDK">
-    ```csharp
-    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
-    {
-        ApiKey = "ts_live_your_api_key",
-        Endpoint = "https://api.terrascale.io",
-        Region = "us-east",  // Default region
-        DefaultDatabase = "my-database"
-    });
-    ```
-  </TabItem>
-  <TabItem label="API">
-    When creating a database, specify the region:
-
-    ```json
-    POST /api/v1/management/databases
-    {
-      "name": "my-production-db",
-      "region": "eu-west"
-    }
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Dashboard","content":"<ol>\n<li><p>Go to <strong>Settings &gt; Preferences</strong></p>\n<ol start=\"2\">\n<li>Select your <strong>Default Region</strong> from the dropdown</li>\n<li>Click <strong>Save</strong></li>\n</ol>\n<p> New databases will use this region by default.</p>\n</li>\n</ol>"},{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions\n    {\n        ApiKey = &quot;ts_live_your_api_key&quot;,\n        Endpoint = &quot;https://api.terrascale.io&quot;,\n        Region = &quot;us-east&quot;,  // Default region\n        DefaultDatabase = &quot;my-database&quot;\n    });\n</code></pre>"},{"label":"API","content":"<p>When creating a database, specify the region:</p>\n<pre><code class=\"language-json\">    POST /api/v1/management/databases\n    {\n      &quot;name&quot;: &quot;my-production-db&quot;,\n      &quot;region&quot;: &quot;eu-west&quot;\n    }\n</code></pre>"}]} />
 
 ---
 
 ## Regional Endpoints
 
 TerraScale uses intelligent routing to automatically direct requests to the optimal region. You can use the global endpoint:
-
 ```
 https://api.terrascale.io
 ```

@@ -25,7 +25,6 @@ So C# it was.
 ## What's In the Box
 
 ### Installation
-
 ```bash
 dotnet add package TerraScale.Client
 ```
@@ -33,7 +32,6 @@ dotnet add package TerraScale.Client
 That's it. No native dependencies, no complex setup. Works on .NET 6, 7, and 8.
 
 ### Basic Usage
-
 ```csharp
 using TerraScale;
 
@@ -63,7 +61,6 @@ if (result.IsSuccess)
 ### The Repository Pattern
 
 Raw dictionaries are fine for prototyping, but production code deserves better:
-
 ```csharp
 public record User : EntityBase
 {
@@ -89,7 +86,6 @@ Console.WriteLine(retrieved.Value.Name); // Mario
 ### Result Types
 
 Every SDK operation returns a `Result<T>` type. No exceptions for expected failures:
-
 ```csharp
 var result = await client.GetItemAsync("user#123", "profile");
 
@@ -104,7 +100,6 @@ var message = result switch
 ### Retry Policies
 
 Transient failures are handled automatically:
-
 ```csharp
 var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 {
@@ -138,8 +133,7 @@ var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 
 ## Getting Started
 
-The [SDK documentation](/guides/SDKs/csharp/) has everything you need. But honestly, just install the package and start coding.
-
+The [SDK documentation](/guides/sdks/csharp/) has everything you need. But honestly, just install the package and start coding.
 ```bash
 dotnet add package TerraScale.Client
 ```

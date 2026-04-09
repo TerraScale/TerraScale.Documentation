@@ -5,7 +5,7 @@ sidebar:
   order: 9
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 All client operations return `Result<T>` or `Result` objects for safe error handling.
 
@@ -29,7 +29,6 @@ All client operations return `Result<T>` or `Result` objects for safe error hand
 ---
 
 ## Error Response Format
-
 ```json
 {
   "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
@@ -45,7 +44,6 @@ All client operations return `Result<T>` or `Result` objects for safe error hand
 ## Result Pattern (C# SDK)
 
 ### Checking Results
-
 ```csharp
 var result = await client.GetItemAsync("user#123");
 
@@ -65,49 +63,13 @@ else if (result.IsFailed)
 
 ### Common Patterns
 
-<Tabs>
-  <TabItem label="Try-Get Pattern">
-    ```csharp
-    var result = await client.GetItemAsync("user#123");
-
-    if (result.IsFailed)
-    {
-        // Handle error
-        logger.LogError("Failed to get item: {Error}", result.Errors.First().Message);
-        return null;
-    }
-
-    return result.Value;
-    ```
-  </TabItem>
-  <TabItem label="Throw on Failure">
-    ```csharp
-    // Throws if result is failed
-    var item = result.ValueOrThrow();
-    ```
-  </TabItem>
-  <TabItem label="Default Value">
-    ```csharp
-    // Returns default if failed
-    var item = result.ValueOr(defaultItem);
-    ```
-  </TabItem>
-  <TabItem label="Match Pattern">
-    ```csharp
-    result.Match(
-        onSuccess: item => Console.WriteLine($"Found: {item.PartitionKey}"),
-        onFailure: errors => Console.WriteLine($"Error: {errors.First().Message}")
-    );
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Try-Get Pattern","content":"<pre><code class=\"language-csharp\">    var result = await client.GetItemAsync(&quot;user#123&quot;);\n\n    if (result.IsFailed)\n    {\n        // Handle error\n        logger.LogError(&quot;Failed to get item: {Error}&quot;, result.Errors.First().Message);\n        return null;\n    }\n\n    return result.Value;\n</code></pre>"},{"label":"Throw on Failure","content":"<pre><code class=\"language-csharp\">    // Throws if result is failed\n    var item = result.ValueOrThrow();\n</code></pre>"},{"label":"Default Value","content":"<pre><code class=\"language-csharp\">    // Returns default if failed\n    var item = result.ValueOr(defaultItem);\n</code></pre>"},{"label":"Match Pattern","content":"<pre><code class=\"language-csharp\">    result.Match(\n        onSuccess: item =&gt; Console.WriteLine($&quot;Found: {item.PartitionKey}&quot;),\n        onFailure: errors =&gt; Console.WriteLine($&quot;Error: {errors.First().Message}&quot;)\n    );\n</code></pre>"}]} />
 
 ---
 
 ## Common Error Scenarios
 
 ### Item Not Found
-
 ```csharp
 var result = await client.GetItemAsync("nonexistent");
 
@@ -118,7 +80,6 @@ if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("not found")))
 ```
 
 ### Authentication Error
-
 ```csharp
 var result = await client.GetItemAsync("user#123");
 
@@ -129,7 +90,6 @@ if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("unauthorized")
 ```
 
 ### Rate Limiting
-
 ```csharp
 var result = await client.GetItemAsync("user#123");
 
@@ -142,7 +102,6 @@ if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("rate limit")))
 ```
 
 ### Condition Check Failed
-
 ```csharp
 var result = await client.TransactWriteAsync(items);
 
@@ -155,7 +114,6 @@ if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("condition")))
 ---
 
 ## Transaction Errors
-
 ```json
 {
   "successCount": 0,
@@ -202,7 +160,6 @@ The SDK automatically retries transient failures:
 - 409 (Conflict)
 
 ### Configure Retry Policy
-
 ```csharp
 var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 {
@@ -221,7 +178,6 @@ var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 ---
 
 ## Logging Errors
-
 ```csharp
 var result = await client.GetItemAsync("user#123");
 

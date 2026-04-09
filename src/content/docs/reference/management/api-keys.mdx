@@ -5,7 +5,7 @@ sidebar:
   order: 3
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Manage API keys through the Management API. Requires JWT authentication.
 
@@ -100,7 +100,6 @@ Revokes an API key. The key will immediately stop working.
 | `*` | Full access to all operations |
 
 ### Scope Combinations
-
 ```json
 // Read-only access
 { "scopes": ["database:read", "repository:read"] }
@@ -125,64 +124,7 @@ Revokes an API key. The key will immediately stop working.
 
 ## Code Examples
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // Create API key
-    var createResult = await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(
-        Name: "Production API Key",
-        Scopes: new[] { "database:read", "database:write" },
-        ExpiresAt: DateTime.UtcNow.AddYears(1)
-    ));
-
-    if (createResult.IsSuccess)
-    {
-        // Important: Save this key - it's only shown once!
-        Console.WriteLine($"API Key: {createResult.Value.ApiKey}");
-        Console.WriteLine($"Key ID: {createResult.Value.KeyId}");
-    }
-
-    // List API keys
-    var listResult = await client.ApiKeys.ListAsync();
-
-    foreach (var key in listResult.Value.Keys)
-    {
-        var status = key.Revoked ? "Revoked" :
-                     key.ExpiresAt < DateTime.UtcNow ? "Expired" : "Active";
-        Console.WriteLine($"{key.Name} ({key.KeyPrefix}...) - \{status\}");
-    }
-
-    // Revoke API key
-    var revokeResult = await client.ApiKeys.RevokeAsync("key_abc123");
-
-    if (revokeResult.IsSuccess)
-    {
-        Console.WriteLine("API key revoked");
-    }
-    ```
-  </TabItem>
-  <TabItem label="cURL">
-    ```bash
-    # Create API key
-    curl -X POST "https://api.terrascale.io/api/v1/management/apikeys" \
-      -H "Authorization: Bearer eyJhbGci..." \
-      -H "Content-Type: application/json" \
-      -d '{
-        "name": "Production API Key",
-        "scopes": ["database:read", "database:write"],
-        "expiresAt": "2025-01-15T00:00:00Z"
-      }'
-
-    # List API keys
-    curl "https://api.terrascale.io/api/v1/management/apikeys" \
-      -H "Authorization: Bearer eyJhbGci..."
-
-    # Revoke API key
-    curl -X DELETE "https://api.terrascale.io/api/v1/management/apikeys/key_abc123" \
-      -H "Authorization: Bearer eyJhbGci..."
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Create API key\n    var createResult = await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(\n        Name: &quot;Production API Key&quot;,\n        Scopes: new[] { &quot;database:read&quot;, &quot;database:write&quot; },\n        ExpiresAt: DateTime.UtcNow.AddYears(1)\n    ));\n\n    if (createResult.IsSuccess)\n    {\n        // Important: Save this key - it&#39;s only shown once!\n        Console.WriteLine($&quot;API Key: {createResult.Value.ApiKey}&quot;);\n        Console.WriteLine($&quot;Key ID: {createResult.Value.KeyId}&quot;);\n    }\n\n    // List API keys\n    var listResult = await client.ApiKeys.ListAsync();\n\n    foreach (var key in listResult.Value.Keys)\n    {\n        var status = key.Revoked ? &quot;Revoked&quot; :\n                     key.ExpiresAt &lt; DateTime.UtcNow ? &quot;Expired&quot; : &quot;Active&quot;;\n        Console.WriteLine($&quot;{key.Name} ({key.KeyPrefix}...) - \\{status\\}&quot;);\n    }\n\n    // Revoke API key\n    var revokeResult = await client.ApiKeys.RevokeAsync(&quot;key_abc123&quot;);\n\n    if (revokeResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;API key revoked&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create API key\n    curl -X POST &quot;https://api.terrascale.io/api/v1/management/apikeys&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;name&quot;: &quot;Production API Key&quot;,\n        &quot;scopes&quot;: [&quot;database:read&quot;, &quot;database:write&quot;],\n        &quot;expiresAt&quot;: &quot;2025-01-15T00:00:00Z&quot;\n      }&#39;\n\n    # List API keys\n    curl &quot;https://api.terrascale.io/api/v1/management/apikeys&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Revoke API key\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/management/apikeys/key_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
 
 ---
 
@@ -191,7 +133,6 @@ Revokes an API key. The key will immediately stop working.
 ### Use Specific Scopes
 
 Only grant permissions your application needs:
-
 ```json
 // Good: Specific scopes
 { "scopes": ["database:read"] }
@@ -203,7 +144,6 @@ Only grant permissions your application needs:
 ### Set Expiration Dates
 
 Set reasonable expiration for security:
-
 ```json
 {
   "name": "Temporary Key",

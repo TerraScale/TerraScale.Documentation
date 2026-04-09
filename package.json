@@ -1,25 +1,45 @@
 {
   "name": "terrascale-documentation",
+  "private": true,
+  "version": "1.0.0",
   "type": "module",
-  "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "dev": "vite dev",
+    "build": "vite build && pagefind --site build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+    "test:e2e": "playwright test",
+    "icons:sync": "node scripts/icons-sync.mjs"
   },
   "dependencies": {
-    "@astrojs/starlight": "^0.37.1",
-    "@astrojs/starlight-tailwind": "^4.0.2",
     "@fontsource/quantico": "^5.2.7",
+    "@sveltejs/adapter-static": "^3.0.8",
+    "@sveltejs/kit": "^2.39.5",
+    "clsx": "^2.1.1",
+    "github-slugger": "^2.0.0",
+    "gray-matter": "^4.0.3",
+    "marked": "^16.4.0",
+    "mdsvex": "^0.12.6",
+    "minisearch": "^7.2.0",
+    "reading-time": "^1.5.0",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
+    "remark-directive": "^4.0.0",
+    "remark-gfm": "^4.0.1",
+    "svelte": "^5.43.2",
+    "tailwindcss": "^4.1.18",
+    "unist-util-visit": "^5.0.0",
+    "yaml": "^2.8.1"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.399",
+    "@playwright/test": "^1.55.0",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "@tailwindcss/vite": "^4.1.18",
-    "astro": "^5.16.6",
-    "sharp": "^0.34.5",
-    "starlight-blog": "^0.24.3",
-    "starlight-heading-badges": "^0.6.1",
-    "starlight-links-validator": "^0.17.2",
-    "starlight-openapi": "^0.21.1",
-    "tailwindcss": "^4.1.18"
+    "@tsconfig/svelte": "^5.0.4",
+    "pagefind": "^1.4.0",
+    "svelte-check": "^4.3.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.7"
   }
 }

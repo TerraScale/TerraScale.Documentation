@@ -17,7 +17,6 @@ Transactions are one of TerraScale's most powerful features - and one of the mos
 ## What Are Transactions?
 
 A transaction lets you perform multiple operations that either all succeed or all fail. There's no middle ground.
-
 ```csharp
 await client.TransactWriteAsync(new[]
 {
@@ -49,7 +48,6 @@ Moving money between accounts is the classic example. You need both the debit an
 ### Inventory Management
 
 Decrementing stock and creating an order should be atomic:
-
 ```csharp
 await client.TransactWriteAsync(new[]
 {
@@ -74,7 +72,6 @@ await client.TransactWriteAsync(new[]
 ### Cross-Entity Consistency
 
 When two entities must stay in sync:
-
 ```csharp
 // User joins a team - update both user and team
 await client.TransactWriteAsync(new[]
@@ -102,7 +99,6 @@ await client.TransactWriteAsync(new[]
 ### Independent Operations
 
 If operations don't depend on each other, use batch writes instead:
-
 ```csharp
 // These are independent - use BatchWrite, not Transaction
 await client.BatchWriteAsync(new[]
@@ -118,7 +114,6 @@ BatchWrite is faster and cheaper than TransactWrite.
 ### Single Item Updates
 
 For a single item, a regular PutItem or UpdateItem with a condition expression is sufficient:
-
 ```csharp
 await client.UpdateItemAsync("account#123", "balance",
     "SET balance = balance - 100",
@@ -129,7 +124,6 @@ await client.UpdateItemAsync("account#123", "balance",
 ### Read-Only Operations
 
 For reading multiple items, use BatchGet or parallel queries:
-
 ```csharp
 var items = await client.BatchGetAsync(keys);
 ```
@@ -152,7 +146,6 @@ If you need more than 25 items, you'll need to restructure your operation or acc
 ## Condition Expressions
 
 The real power of transactions comes from condition expressions:
-
 ```csharp
 new TransactWriteItem
 {
@@ -170,7 +163,6 @@ If the condition fails, the entire transaction is cancelled. This prevents race 
 ## Handling Transaction Failures
 
 Transactions can fail for several reasons:
-
 ```csharp
 var result = await client.TransactWriteAsync(items);
 
@@ -196,7 +188,6 @@ if (result.IsFailed)
 ## Idempotency Tokens
 
 For critical transactions, use idempotency tokens to prevent duplicate execution:
-
 ```csharp
 var result = await client.TransactWriteAsync(
     items,
@@ -219,7 +210,6 @@ Use them when you need atomicity, not as a default.
 ## A Real Example
 
 Here's a complete example of a purchase transaction:
-
 ```csharp
 public async Task<Result> ProcessPurchase(string userId, string productId, int quantity)
 {

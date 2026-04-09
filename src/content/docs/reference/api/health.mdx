@@ -83,7 +83,6 @@ Use this endpoint for:
 ## Usage Examples
 
 ### Kubernetes Configuration
-
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -105,14 +104,12 @@ spec:
 ```
 
 ### Load Balancer Health Check
-
 ```bash
 # Check if API is ready for traffic
 curl -f https://api.terrascale.io/health/ready || exit 1
 ```
 
 ### Monitoring Script
-
 ```bash
 #!/bin/bash
 # Simple uptime check

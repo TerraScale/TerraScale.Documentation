@@ -86,7 +86,6 @@ Since dual write is the safest approach for most production systems, here's how 
 Create your database and generate an API key. Make sure your table structure matches DynamoDB.
 
 ### Step 2: Implement Dual Write
-
 ```csharp
 public class DualWriteRepository
 {
@@ -117,7 +116,6 @@ public class DualWriteRepository
 ### Step 3: Backfill Historical Data
 
 Use DynamoDB Streams or a batch export to sync existing data:
-
 ```csharp
 public async Task BackfillFromDynamoDB()
 {
@@ -152,7 +150,6 @@ public async Task BackfillFromDynamoDB()
 ### Step 4: Shift Read Traffic
 
 Use a feature flag to gradually shift reads:
-
 ```csharp
 public async Task<Item?> GetItemAsync(string pk, string sk)
 {
@@ -188,7 +185,6 @@ Once 100% of reads are on TerraScale and you're confident in the data:
 ## Using the DynamoDB-Compatible API
 
 TerraScale offers a DynamoDB-compatible endpoint. This means you can use your existing AWS SDK code with minimal changes:
-
 ```csharp
 // Before: DynamoDB
 var dynamoClient = new AmazonDynamoDBClient();
@@ -218,7 +214,6 @@ This compatibility layer supports:
 ### Timestamps
 
 DynamoDB often stores timestamps as numbers (Unix epoch). TerraScale's SDK prefers ISO 8601 strings. Be explicit about your format:
-
 ```csharp
 // Works in both
 ["createdAt"] = DateTime.UtcNow.ToString("O")

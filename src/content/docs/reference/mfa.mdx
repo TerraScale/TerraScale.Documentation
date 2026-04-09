@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '$lib/mdx';
 
 Add an extra layer of security to your account with Multi-Factor Authentication (MFA).
 
@@ -138,7 +138,6 @@ Removing all MFA factors disables multi-factor authentication on your account.
 When MFA is enabled and you log in, you'll receive an `MfaRequired` status with available factors.
 
 ### Login Response with MFA
-
 ```json
 {
   "status": "MfaRequired",
@@ -223,77 +222,7 @@ Verifies the MFA code during login to complete authentication.
 
 ## Complete MFA Login Flow
 
-<Tabs>
-  <TabItem label="C# SDK">
-    ```csharp
-    // 1. Attempt login
-    var loginResult = await client.Auth.LoginWithPasswordAsync(
-        new PasswordLoginRequest(
-            Email: "john@example.com",
-            Password: "SecurePassword123!"
-        )
-    );
-
-    if (loginResult.Value.Status == PasswordLoginStatus.MfaRequired)
-    {
-        var pendingInfo = loginResult.Value.PendingInfo!;
-
-        // 2. Get the code from user's authenticator app
-        Console.Write("Enter MFA code: ");
-        var code = Console.ReadLine();
-
-        // 3. Verify MFA
-        var mfaResult = await client.Auth.VerifyMfaAsync(
-            new MfaVerifyRequest(
-                PendingAuthenticationToken: pendingInfo.PendingAuthenticationToken,
-                ChallengeId: pendingInfo.Challenge!.Id,
-                Code: code
-            )
-        );
-
-        if (mfaResult.IsSuccess)
-        {
-            client.SetAccessToken(mfaResult.Value.AccessToken);
-            Console.WriteLine("Login successful!");
-        }
-    }
-    ```
-  </TabItem>
-  <TabItem label="JavaScript">
-    ```javascript
-    async function loginWithMfa(email, password) {
-      // 1. Attempt login
-      const loginResponse = await fetch('https://api.terrascale.io/auth/password', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const loginData = await loginResponse.json();
-
-      if (loginData.status === 'MfaRequired') {
-        // 2. Prompt user for MFA code
-        const code = prompt('Enter your MFA code:');
-
-        // 3. Verify MFA
-        const mfaResponse = await fetch('https://api.terrascale.io/auth/mfa/verify', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            pendingAuthenticationToken: loginData.pendingInfo.pendingAuthenticationToken,
-            challengeId: loginData.pendingInfo.challenge.id,
-            code: code
-          })
-        });
-
-        return await mfaResponse.json();
-      }
-
-      return loginData.authResponse;
-    }
-    ```
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // 1. Attempt login\n    var loginResult = await client.Auth.LoginWithPasswordAsync(\n        new PasswordLoginRequest(\n            Email: &quot;john@example.com&quot;,\n            Password: &quot;SecurePassword123!&quot;\n        )\n    );\n\n    if (loginResult.Value.Status == PasswordLoginStatus.MfaRequired)\n    {\n        var pendingInfo = loginResult.Value.PendingInfo!;\n\n        // 2. Get the code from user&#39;s authenticator app\n        Console.Write(&quot;Enter MFA code: &quot;);\n        var code = Console.ReadLine();\n\n        // 3. Verify MFA\n        var mfaResult = await client.Auth.VerifyMfaAsync(\n            new MfaVerifyRequest(\n                PendingAuthenticationToken: pendingInfo.PendingAuthenticationToken,\n                ChallengeId: pendingInfo.Challenge!.Id,\n                Code: code\n            )\n        );\n\n        if (mfaResult.IsSuccess)\n        {\n            client.SetAccessToken(mfaResult.Value.AccessToken);\n            Console.WriteLine(&quot;Login successful!&quot;);\n        }\n    }\n</code></pre>"},{"label":"JavaScript","content":"<pre><code class=\"language-javascript\">    async function loginWithMfa(email, password) {\n      // 1. Attempt login\n      const loginResponse = await fetch(&#39;https://api.terrascale.io/auth/password&#39;, {\n        method: &#39;POST&#39;,\n        headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },\n        body: JSON.stringify({ email, password })\n      });\n\n      const loginData = await loginResponse.json();\n\n      if (loginData.status === &#39;MfaRequired&#39;) {\n        // 2. Prompt user for MFA code\n        const code = prompt(&#39;Enter your MFA code:&#39;);\n\n        // 3. Verify MFA\n        const mfaResponse = await fetch(&#39;https://api.terrascale.io/auth/mfa/verify&#39;, {\n          method: &#39;POST&#39;,\n          headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },\n          body: JSON.stringify({\n            pendingAuthenticationToken: loginData.pendingInfo.pendingAuthenticationToken,\n            challengeId: loginData.pendingInfo.challenge.id,\n            code: code\n          })\n        });\n\n        return await mfaResponse.json();\n      }\n\n      return loginData.authResponse;\n    }\n</code></pre>"}]} />
 
 ---
 

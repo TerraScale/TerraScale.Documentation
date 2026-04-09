@@ -43,7 +43,6 @@ This typically adds 1-3ms to a request, but it saves much more. A TLS handshake 
 ## The Query Path
 
 Let's trace a simple read request:
-
 ```
 User in Tokyo → Edge (Tokyo) → Coordinator (ap-northeast-1) → Storage → Response
 ```
@@ -51,7 +50,6 @@ User in Tokyo → Edge (Tokyo) → Coordinator (ap-northeast-1) → Storage → 
 Total: ~8ms
 
 Now let's trace a write:
-
 ```
 User in Tokyo → Edge (Tokyo) → Coordinator (ap-northeast-1) → Storage (write locally)
                                                             → Async replication to other regions
@@ -68,7 +66,6 @@ This async replication means TerraScale offers eventual consistency for cross-re
 For most applications, this is fine. User profiles, product catalogs, session data - a few hundred milliseconds of staleness doesn't matter.
 
 But sometimes you need strong consistency:
-
 ```csharp
 var result = await client.GetItemAsync("user#123", "profile", new ReadOptions
 {

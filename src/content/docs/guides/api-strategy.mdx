@@ -5,7 +5,7 @@ sidebar:
   order: 2
 ---
 
-import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
 
 TerraScale provides three API access patterns. Each serves different use cases and offers different tradeoffs.
 
@@ -24,7 +24,6 @@ The TerraScale Custom API is the **preferred method** for accessing your databas
 - Building new applications on TerraScale
 - You want the best performance and developer experience
 - You need access to all TerraScale features
-
 ```csharp
 // Example: Using the Custom API
 var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
@@ -109,7 +108,6 @@ The SQL API provides a familiar interface but is a **minimal SQL subset**. Best 
 - **Exploratory** - Good for ad-hoc queries and schema exploration
 
 ### Supported Statements
-
 ```sql
 -- Data Manipulation (DML)
 SELECT columns FROM table WHERE conditions [ORDER BY] [LIMIT]
@@ -159,17 +157,7 @@ DROP INDEX name
 
 ## Choosing the Right API
 
-<CardGrid>
-  <Card title="New Projects" icon="rocket">
-    **Use Custom API** from day one for best performance and full feature access.
-  </Card>
-  <Card title="AWS Migration" icon="right-arrow">
-    **Start with DynamoDB API**, then migrate to Custom API over time.
-  </Card>
-  <Card title="SQL Background" icon="document">
-    **Use SQL API** for exploration, **Custom API** for production.
-  </Card>
-</CardGrid>
+<CardGrid items={[{"title":"New Projects","icon":"rocket","content":"<p><strong>Use Custom API</strong> from day one for best performance and full feature access.</p>"},{"title":"AWS Migration","icon":"right-arrow","content":"<p><strong>Start with DynamoDB API</strong>, then migrate to Custom API over time.</p>"},{"title":"SQL Background","icon":"document","content":"<p><strong>Use SQL API</strong> for exploration, <strong>Custom API</strong> for production.</p>"}]} />
 
 ### Recommendation
 
@@ -183,6 +171,6 @@ DROP INDEX name
 
 ## Next Steps
 
-- [C# SDK Guide](/guides/SDKs/csharp/) - Learn the Custom API with the C# SDK
+- [C# SDK Guide](/guides/sdks/csharp/) - Learn the Custom API with the C# SDK
 - [API Reference](/reference/api/) - Complete API documentation
 - [SQL API Reference](/reference/api/sql-api/) - SQL statement reference

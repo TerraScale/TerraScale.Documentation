@@ -5,7 +5,7 @@ sidebar:
   order: 5
 ---
 
-import { Tabs, TabItem, Card, CardGrid } from '@astrojs/starlight/components';
+import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
 
 Protect your TerraScale account with two-factor authentication and other security settings.
 
@@ -112,14 +112,7 @@ To remove a 2FA method:
 
 We recommend having multiple 2FA methods:
 
-<CardGrid>
-  <Card title="Primary: Authenticator" icon="approve-check">
-    Fast and works offline. Use as your primary method.
-  </Card>
-  <Card title="Backup: Email" icon="email">
-    Works if you lose your phone. Add as a backup.
-  </Card>
-</CardGrid>
+<CardGrid items={[{"title":"Primary: Authenticator","icon":"approve-check","content":"<p>Fast and works offline. Use as your primary method.</p>"},{"title":"Backup: Email","icon":"email","content":"<p>Works if you lose your phone. Add as a backup.</p>"}]} />
 
 ---
 
@@ -133,24 +126,7 @@ Enter your email and password as usual.
 
 ### Step 2: Enter Verification Code
 
-<Tabs>
-  <TabItem label="Authenticator">
-    1. Open your authenticator app
-    2. Find your TerraScale entry
-    3. Enter the current 6-digit code
-    4. Click **"Verify"**
-
-    Codes refresh every 30 seconds. If the code is about to expire, wait for the next one.
-  </TabItem>
-  <TabItem label="Email">
-    1. Click **"Send Code"** on the verification screen
-    2. Check your email for the code
-    3. Enter the 6-digit code
-    4. Click **"Verify"**
-
-    Email codes expire after 10 minutes.
-  </TabItem>
-</Tabs>
+<Tabs items={[{"label":"Authenticator","content":"<ol>\n<li><p>Open your authenticator app</p>\n<ol start=\"2\">\n<li>Find your TerraScale entry</li>\n<li>Enter the current 6-digit code</li>\n<li>Click <strong>&quot;Verify&quot;</strong></li>\n</ol>\n<p> Codes refresh every 30 seconds. If the code is about to expire, wait for the next one.</p>\n</li>\n</ol>"},{"label":"Email","content":"<ol>\n<li><p>Click <strong>&quot;Send Code&quot;</strong> on the verification screen</p>\n<ol start=\"2\">\n<li>Check your email for the code</li>\n<li>Enter the 6-digit code</li>\n<li>Click <strong>&quot;Verify&quot;</strong></li>\n</ol>\n<p> Email codes expire after 10 minutes.</p>\n</li>\n</ol>"}]} />
 
 ---
 
