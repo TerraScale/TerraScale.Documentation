@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('homepage renders key TerraScale navigation', async ({ page, isMobile }) => {
 	await page.goto('/');
-	await expect(page.getByRole('heading', { name: /Prerendered docs/i })).toBeVisible();
+	await expect(page.getByRole('heading', { name: /TerraScale Documentation/i })).toBeVisible();
 	await expect(page.getByRole('link', { name: /Get Started/i }).first()).toBeVisible();
 	if (!isMobile) {
 		await expect(page.getByLabel('Primary').getByRole('link', { name: 'Blog' })).toBeVisible();
@@ -41,7 +41,7 @@ test('mobile navigation opens and closes', async ({ page, isMobile }) => {
 	await page.getByRole('button', { expanded: false }).click();
 	await expect(page.getByRole('link', { name: 'Docs' })).toBeVisible();
 	await page.getByRole('link', { name: 'Docs' }).click();
-	await expect(page).toHaveURL(/\/guides\/getting-started\/?$/);
+	await expect(page).toHaveURL(/\/reference\/api\/?$/);
 });
 
 test('mobile search is reachable through the menu', async ({ page, isMobile }) => {

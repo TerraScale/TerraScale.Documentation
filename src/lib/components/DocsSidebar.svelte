@@ -12,7 +12,7 @@
 	}
 </script>
 
-<aside class="docs-sidebar ts-glass">
+<aside class="docs-sidebar">
 	{#each items as item}
 		<section>
 			<h2>{item.label}</h2>

@@ -45,14 +45,13 @@
 	</div>
 	</section>
 {:else}
-	<section class="shell docs-shell">
+	<section class="shell docs-shell docs-page">
 		<DocsSidebar items={data.sidebar} />
-		<div class="article-main ts-glass">
+		<div class="article-main docs-article">
 			<div class="article-header">
-				<p class="eyebrow">Documentation</p>
 				<h1>{data.entry.title}</h1>
 				{#if data.entry.description}
-					<p>{data.entry.description}</p>
+					<p class="article-description">{data.entry.description}</p>
 				{/if}
 			</div>
 			<article class="prose-shell">

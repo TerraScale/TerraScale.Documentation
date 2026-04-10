@@ -5,7 +5,7 @@
 </script>
 
 {#if items.length}
-	<aside class="toc ts-glass">
+	<aside class="toc">
 		<h2>On This Page</h2>
 		<ul>
 			{#each items as item}

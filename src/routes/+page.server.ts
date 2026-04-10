@@ -1,8 +1,7 @@
-import { getBlogHighlights, getHomeEntry } from '$lib/content';
+import { getHomeEntry } from '$lib/content';
 
 export function load() {
 	return {
-		entry: getHomeEntry(),
-		blogHighlights: getBlogHighlights(3)
+		entry: getHomeEntry()
 	};
 }
