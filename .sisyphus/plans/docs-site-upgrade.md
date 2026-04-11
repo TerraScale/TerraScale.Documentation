@@ -749,10 +749,10 @@ Wave 3: specialized surfaces and polish
 > **Do NOT auto-proceed after verification. Wait for user's explicit approval before marking work complete.**
 > **Never mark F1-F4 as checked before getting user's okay.** Rejection or user feedback -> fix -> re-run -> present again -> wait for okay.
 > Curl-first matrix is mandatory here: home, key docs pages, key blog pages, API reference, deferred explorer shell, pagefind assets, fonts, sitemap/robots/llms outputs, redirects/canonical surfaces, and draft exclusion checks.
-- [ ] F1. Plan Compliance Audit — oracle
-- [ ] F2. Code Quality Review — unspecified-high
-- [ ] F3. Real Manual QA — unspecified-high (+ curl-first; browser only for interaction-only checks)
-- [ ] F4. Scope Fidelity Check — deep
+- [x] F1. Plan Compliance Audit — oracle
+- [x] F2. Code Quality Review — unspecified-high
+- [x] F3. Real Manual QA — unspecified-high (+ curl-first; browser only for interaction-only checks)
+- [x] F4. Scope Fidelity Check — deep
 
 ## Commit Strategy
 - Commit 1: `refactor(content): adopt mdsvex pipeline and metadata contract`

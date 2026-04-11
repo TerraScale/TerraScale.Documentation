@@ -2,10 +2,22 @@
   "active_plan": "/var/home/mariogk/Projects/TerraScale.Documentation/.sisyphus/plans/docs-site-upgrade.md",
   "started_at": "2026-04-11T19:34:28.597Z",
   "session_ids": [
-    "ses_2820f3f2effeYd5grR2wdSJPxF"
+    "ses_2820f3f2effeYd5grR2wdSJPxF",
+    "ses_281ab016cffewMwSt0CwoW041v",
+    "ses_281aaffeeffeiXe05cvkiPltnw",
+    "ses_281aafe8bffeex1cHK4YCXB5KQ",
+    "ses_281aafd64ffe58BsTCil2nAzEY",
+    "ses_2819d2dadffeMKkKOO5vzg32ZC",
+    "ses_2819d2c20ffebX947QSQ4Fak8F"
   ],
   "session_origins": {
-    "ses_2820f3f2effeYd5grR2wdSJPxF": "direct"
+    "ses_2820f3f2effeYd5grR2wdSJPxF": "direct",
+    "ses_281ab016cffewMwSt0CwoW041v": "appended",
+    "ses_281aaffeeffeiXe05cvkiPltnw": "appended",
+    "ses_281aafe8bffeex1cHK4YCXB5KQ": "appended",
+    "ses_281aafd64ffe58BsTCil2nAzEY": "appended",
+    "ses_2819d2dadffeMKkKOO5vzg32ZC": "appended",
+    "ses_2819d2c20ffebX947QSQ4Fak8F": "appended"
   },
   "plan_name": "docs-site-upgrade",
   "agent": "atlas",
@@ -72,6 +84,15 @@
       "agent": "Sisyphus-Junior",
       "category": "unspecified-high",
       "updated_at": "2026-04-11T20:52:11.719Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "Plan Compliance Audit — oracle",
+      "session_id": "ses_2819d2c20ffebX947QSQ4Fak8F",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-11T21:13:31.353Z"
     }
   }
 }
