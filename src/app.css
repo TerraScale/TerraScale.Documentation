@@ -192,7 +192,8 @@ svg {
 }
 
 .shell {
-	width: min(1440px, calc(100% - 2rem));
+	width: calc(100% - 3rem);
+	max-width: none;
 	margin: 0 auto;
 }
 
@@ -678,7 +679,7 @@ svg {
 }
 
 .article-shell-blog {
-	max-width: 980px;
+	max-width: none;
 }
 
 .article-header {
@@ -1054,7 +1055,8 @@ body {
 }
 
 .shell {
-	width: min(1080px, calc(100% - 3rem));
+	width: calc(100% - 3rem);
+	max-width: none;
 }
 
 .site-header {
@@ -1681,14 +1683,14 @@ body {
 }
 
 .docs-page .article-description {
-	max-width: 42rem;
+	max-width: none;
 	color: #94a3b8;
 	font-size: 0.95rem;
 	line-height: 1.7;
 }
 
 .docs-page .prose-shell {
-	max-width: 45rem;
+	max-width: none;
 }
 
 .docs-page .prose-shell p,
@@ -1710,7 +1712,7 @@ body {
 
 .docs-page .prose-shell pre,
 .docs-page .prev-next {
-	max-width: 45rem;
+	max-width: none;
 }
 
 .docs-page .docs-sidebar h2,
@@ -1949,7 +1951,8 @@ body {
 
 @media (max-width: 640px) {
 	.shell {
-		width: min(100% - 1.25rem, 1080px);
+		width: calc(100% - 1.25rem);
+		max-width: none;
 	}
 
 	.hero-panel,
