@@ -1,1 +1,2 @@
 - Residual rendered-content selectors remain intentionally in `src/app.css` because generated HTML from mdsvex/Shiki cannot receive Tailwind classes at build time yet.
+- `lsp_diagnostics` reports non-blocking Biome noise on Svelte/Tailwind-authored files here, so `npm run check` remains the reliable verification source for actual type/Svelte correctness.

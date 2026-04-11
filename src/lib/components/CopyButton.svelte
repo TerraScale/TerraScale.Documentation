@@ -21,7 +21,7 @@
 </script>
 
 <button
-	class="copy-button"
+	data-copy-button
 	onclick={copy}
 	aria-label="Copy code to clipboard"
 	title="Copy code"
@@ -60,7 +60,7 @@
 </button>
 
 <style>
-	.copy-button {
+	[data-copy-button] {
 		position: absolute;
 		top: 0.5rem;
 		right: 0.5rem;
@@ -80,12 +80,12 @@
 		z-index: 10;
 	}
 
-	:global(.prose-shell pre:hover) .copy-button,
-	.copy-button:focus-visible {
+	:global([data-code-block]:hover) [data-copy-button],
+	[data-copy-button]:focus-visible {
 		opacity: 1;
 	}
 
-	.copy-button:hover {
+	[data-copy-button]:hover {
 		background: rgba(255, 255, 255, 0.1);
 		color: #f8fafc;
 	}

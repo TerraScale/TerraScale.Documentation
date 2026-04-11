@@ -109,7 +109,7 @@ svg {
 	.prose-shell h3,
 	.prose-shell .admonition-title,
 	.prose-shell .ts-badge,
-	.prose-shell .code-title {
+	.prose-shell [data-code-title] {
 		font-family: var(--font-display);
 		color: #f8fafc;
 	}
@@ -201,16 +201,16 @@ svg {
 		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 	}
 
-	.prose-shell .code-block-wrapper {
+	.prose-shell [data-code-wrapper] {
 		position: relative;
 		margin: 1.5rem 0;
 	}
 
-	.prose-shell .code-block-wrapper pre {
+	.prose-shell [data-code-wrapper] pre {
 		margin: 0;
 	}
 
-	.prose-shell .code-title {
+	.prose-shell [data-code-title] {
 		display: inline-block;
 		margin-bottom: 0;
 		padding: 0.5rem 1rem;

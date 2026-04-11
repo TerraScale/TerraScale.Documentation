@@ -47,6 +47,12 @@ export async function shikiHighlighter(code, lang, meta) {
 				transformerNotationHighlight(),
 				transformerMetaHighlight(),
 				{
+					name: 'add-code-block-attr',
+					pre(node) {
+						node.properties['data-code-block'] = '';
+					}
+				},
+				{
 					name: 'add-title',
 					pre(node) {
 						delete node.properties.tabindex;

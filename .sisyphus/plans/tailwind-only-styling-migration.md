@@ -130,7 +130,7 @@ Wave 3: converge and close
 
 ## TODOs
 
-- [ ] 1. Establish Tailwind v4 foundation and residual CSS contract
+- [x] 1. Establish Tailwind v4 foundation and residual CSS contract
 
   **What to do**: Reduce `src/app.css` to the approved residual CSS only: Tailwind import, token declarations via `@theme` / CSS variables, `@font-face`, and minimal base rules. Document the exact residual CSS contract at the top of the file so future contributors cannot re-expand it. Do not migrate selectors into another CSS file.
   **Must NOT do**: Do not introduce `tailwind.config.*`, `@apply`, `@utility`, CSS modules, or a new semantic helper stylesheet.
@@ -170,7 +170,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(styling): establish tailwind v4 foundation` | Files: `src/app.css`, optional config/doc comments only
 
-- [ ] 2. Canonicalize the token namespace and migration map
+- [x] 2. Canonicalize the token namespace and migration map
 
   **What to do**: Choose one canonical namespace for active styling tokens and migrate all active app surfaces to it. `--ts-*` should remain canonical unless a stronger reason is documented. Replace active `--color-*` usage in `ApiExplorer.svelte` and remove lingering `--sl-*` styling dependencies from active content/surfaces. If temporary aliases are needed, document them and remove them by Task 10.
   **Must NOT do**: Do not leave multiple active token namespaces in finished app code.
@@ -210,7 +210,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(theme): canonicalize styling tokens` | Files: `src/app.css`, `src/lib/components/ApiExplorer.svelte`, affected content/components
 
-- [ ] 3. Replace runtime style hooks with explicit behavior contracts
+- [x] 3. Replace runtime style hooks with explicit behavior contracts
 
   **What to do**: Audit and replace style-coupled runtime hooks with `data-*` attributes or lockstep markup updates. Priority contracts: code-block wrappers and copy-button mounting in `src/routes/[...slug]/+page.svelte`, heading-anchor stripping in `src/lib/content/index.ts`, and any hover/focus behavior in `CopyButton.svelte`. Keep behavior stable while decoupling it from semantic styling selectors.
   **Must NOT do**: Do not keep JS querying old style-only classes as a permanent solution.

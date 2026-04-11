@@ -36,11 +36,11 @@
 
 	$effect(() => {
 		// This runs whenever data.entry.html changes and the DOM is updated
-		const preElements = document.querySelectorAll('.prose-shell pre');
+		const preElements = document.querySelectorAll('[data-code-block]');
 		const mountedButtons: Record<string, ReturnType<typeof mount>> = {};
 		
 		preElements.forEach((pre, index) => {
-			if (pre.querySelector('.copy-button')) return;
+			if (pre.querySelector('[data-copy-button]')) return;
 
 			const codeElement = pre.querySelector('code');
 			const text = codeElement ? codeElement.textContent || '' : pre.textContent || '';
@@ -53,13 +53,13 @@
 			mountedButtons[index] = instance;
 
 			const title = pre.getAttribute('data-title');
-			if (title && !pre.parentElement?.classList.contains('code-block-wrapper')) {
+			if (title && !pre.parentElement?.hasAttribute('data-code-wrapper')) {
 				const titleDiv = document.createElement('div');
-				titleDiv.className = 'code-title';
+				titleDiv.setAttribute('data-code-title', '');
 				titleDiv.textContent = title;
 				
 				const wrapper = document.createElement('div');
-				wrapper.className = 'code-block-wrapper';
+				wrapper.setAttribute('data-code-wrapper', '');
 				pre.parentNode?.insertBefore(wrapper, pre);
 				wrapper.appendChild(titleDiv);
 				wrapper.appendChild(pre);
