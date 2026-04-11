@@ -27,6 +27,15 @@
       "agent": "Sisyphus-Junior",
       "category": "deep",
       "updated_at": "2026-04-11T19:54:24.503Z"
+    },
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "Replace custom markdown renderer with mdsvex rendering pipeline",
+      "session_id": "ses_281e04ea9ffeQ12CwNTlNC5Of2",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-11T20:06:26.888Z"
     }
   }
 }

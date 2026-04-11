@@ -1,20 +1,28 @@
-import matter from 'gray-matter';
 import GithubSlugger from 'github-slugger';
-import { marked } from 'marked';
 import readingTime from 'reading-time';
-import { getIconMarkup } from '$lib/icons';
-import { contentIconMap } from '$lib/ui/icons';
+import { render } from 'svelte/server';
+import type { Component } from 'svelte';
 import type { ContentEntry, ContentMetadata, HeadingLink, SidebarNode } from './types';
 
 type FrontmatterData = Record<string, unknown>;
 
-const rawMap = import.meta.glob('/src/content/docs/**/*.{md,mdx,svx}', {
+type CompiledContentModule = {
+	default: Component;
+	metadata?: FrontmatterData;
+	headings?: unknown;
+};
+
+const moduleMap = import.meta.glob('/src/content/docs/**/*.{md,svx}', {
+	eager: true
+}) as Record<string, CompiledContentModule>;
+
+const sourceMap = import.meta.glob('/src/content/docs/**/*.{md,svx}', {
 	eager: true,
 	query: '?raw',
 	import: 'default'
 }) as Record<string, string>;
 
-const IGNORED_SOURCE_PATHS = new Set(['/src/content/docs/reference/api.mdx']);
+const IGNORED_SOURCE_PATHS = new Set(['/src/content/docs/reference/api.md']);
 
 const SECTION_LABELS = {
 	guides: 'Guides',
@@ -52,7 +60,7 @@ function titleCase(value: string) {
 }
 
 function deriveTitle(rawSegments: string[], sourcePath: string) {
-	const fileName = sourcePath.replace(/^.*\//, '').replace(/\.(md|mdx|svx)$/, '');
+	const fileName = sourcePath.replace(/^.*\//, '').replace(/\.(md|svx)$/, '');
 	const candidate = rawSegments.at(-1) ?? (fileName === 'index' ? rawSegments.at(-2) : fileName) ?? 'untitled';
 	return titleCase(candidate);
 }
@@ -221,7 +229,7 @@ function getContentMetadata(data: FrontmatterData, rawSegments: string[], source
 }
 
 function routeFromFile(filePath: string) {
-	const rel = filePath.replace('/src/content/docs/', '').replace(/\.(md|mdx|svx)$/, '');
+	const rel = filePath.replace('/src/content/docs/', '').replace(/\.(md|svx)$/, '');
 	const rawSegments = rel === 'index' ? [] : rel.replace(/\/index$/, '').split('/');
 	const normalizedSegments = rawSegments.filter(Boolean).map((segment) => segment.toLowerCase());
 	const route = normalizedSegments.length ? `/${normalizedSegments.join('/')}/` : '/';
@@ -234,148 +242,78 @@ function routeFromFile(filePath: string) {
 	};
 }
 
-function stripMarkdown(text: string) {
-	return text
-		.replace(/^import\s.+$/gm, '')
-		.replace(/<style[\s\S]*?<\/style>/g, ' ')
-		.replace(/```[\s\S]*?```/g, ' ')
-		.replace(/`([^`]+)`/g, '$1')
-		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-		.replace(/<[^>]+>/g, ' ')
-		.replace(/^:::.+$/gm, ' ')
-		.replace(/^---$/gm, ' ')
-		.replace(/[*_>#-]/g, ' ')
-		.replace(/\s+/g, ' ')
-		.trim();
-}
-
-function escapeHtml(text: string) {
-	return text
-		.replaceAll('&', '&amp;')
-		.replaceAll('<', '&lt;')
-		.replaceAll('>', '&gt;')
-		.replaceAll('"', '&quot;');
-}
-
-function parseExpression<T>(expression: string): T {
-	return Function(`return (${expression});`)() as T;
-}
-
-function renderStaticTabs(expression: string) {
-	const items = parseExpression<Array<{ label: string; content: string }>>(expression);
-	const group = `group-${Math.random().toString(36).slice(2)}`;
-	return `<div class="ts-tabs-static">${items
-		.map(
-			(item, index) =>
-				`<button type="button" class="ts-tabs-static-trigger${index === 0 ? ' active' : ''}" data-tab-group="${group}" data-tab-index="${index}">${escapeHtml(item.label)}</button>`
-		)
-		.join('')}<div class="ts-tabs-static-panels" data-tab-group="${group}">${items
-		.map(
-			(item, index) =>
-				`<section class="ts-tabs-static-panel${index === 0 ? ' active' : ''}" data-tab-index="${index}">${item.content}</section>`
-		)
-		.join('')}</div></div>`;
-}
-
-function renderStaticCardGrid(expression: string) {
-	const items = parseExpression<Array<{ title: string; icon: string; content: string }>>(expression);
-	return `<div class="ts-card-grid">${items
-		.map(
-			(item) => {
-				const content = item.content.replace(
-					/<pre><code>\[([^\]]+)\]\(([^)]+)\)\s*<\/code><\/pre>/g,
-					'<p><a href="$2">$1</a></p>'
-				);
-				return `<article class="ts-card"><header><div class="ts-card-icon">${getIconMarkup(contentIconMap[item.icon] ?? 'file-text')}</div><h3>${escapeHtml(item.title)}</h3></header><div class="ts-card-body">${content}</div></article>`;
-			}
-		)
-		.join('')}</div>`;
-}
-
-function renderFeatureGrid(expression: string) {
-	const items = parseExpression<Array<{ icon: string; title: string; description: string }>>(expression);
-	return `<div class="feature-grid">${items
-		.map(
-			(item) =>
-				`<article class="feature-card"><div class="feature-icon">${getIconMarkup(contentIconMap[item.icon] ?? 'database')}</div><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.description)}</p></article>`
-		)
-		.join('')}</div>`;
-}
-
-function createBlockToken(index: number) {
-	return `TS_BLOCK_${index}__`;
-}
-
-function transformMarkdown(content: string) {
-	let next = content.replace(/^import\s.+$/gm, '').replace(/<style[\s\S]*?<\/style>/g, '');
-	const blocks: string[] = [];
-	const addBlock = (html: string) => {
-		const token = createBlockToken(blocks.length);
-		blocks.push(html);
-		return token;
-	};
-
-	next = next.replace(/<Tabs items=\{([\s\S]*?)\}\s*\/>/g, (_, expression) =>
-		addBlock(renderStaticTabs(expression))
-	);
-	next = next.replace(/<CardGrid items=\{([\s\S]*?)\}\s*\/>/g, (_, expression) =>
-		addBlock(renderStaticCardGrid(expression))
-	);
-	next = next.replace(/<FeatureGrid features=\{([\s\S]*?)\}\s*\/>/g, (_, expression) =>
-		addBlock(renderFeatureGrid(expression))
-	);
-	next = next.replace(/:::([a-z]+)(?:\[([^\]]+)\])?\n([\s\S]*?)\n:::/g, (_, kind, title, body) => {
-		const html = String(marked.parse(body.trim(), { gfm: true })).trim();
-		return `<div class="admonition admonition-${kind}"><p class="admonition-title">${escapeHtml(title || kind)}</p>${html}</div>`;
-	});
-
-	return { markdown: next, blocks };
-}
-
-function renderMarkdown(content: string) {
-	const slugger = new GithubSlugger();
-	const renderer = new marked.Renderer();
-
-	renderer.heading = ({ tokens, depth }) => {
-		const raw = tokens.map((token) => token.raw).join('');
-		const text = raw.replace(/<[^>]+>/g, '').replace(/[*_`[\]]/g, '').trim();
-		const slug = slugger.slug(text);
-		const html = marked.parseInline(raw);
-		return `<h${depth} id="${slug}">${html}<a aria-label="Link to section" class="heading-anchor" href="#${slug}">#</a></h${depth}>`;
-	};
-
-	renderer.link = ({ href, title, tokens }) => {
-		const text = marked.parseInline(tokens.map((token) => token.raw).join(''));
-		const attrs = title ? ` title="${escapeHtml(title)}"` : '';
-		return `<a href="${href ?? '#'}"${attrs}>${text}</a>`;
-	};
-
-	const transformed = transformMarkdown(content);
-	let html = marked.parse(transformed.markdown, {
-		gfm: true,
-		renderer
-	}) as string;
-
-	for (const [index, block] of transformed.blocks.entries()) {
-		const token = createBlockToken(index);
-		html = html.replace(new RegExp(`<p>${token}</p>`, 'g'), block).replace(new RegExp(token, 'g'), block);
+function extractBodySource(rawSource: string) {
+	if (!rawSource.startsWith('---')) {
+		return rawSource.trim();
 	}
 
-	return html;
+	const match = rawSource.match(/^---\s*\n[\s\S]*?\n---\s*\n?/);
+	return (match ? rawSource.slice(match[0].length) : rawSource).trim();
 }
 
-function extractHeadings(markdown: string): HeadingLink[] {
+function decodeHtmlEntities(text: string) {
+	return text
+		.replaceAll('&nbsp;', ' ')
+		.replaceAll('&amp;', '&')
+		.replaceAll('&lt;', '<')
+		.replaceAll('&gt;', '>')
+		.replaceAll('&quot;', '"')
+		.replaceAll('&#39;', "'");
+}
+
+function stripHtml(html: string) {
+	return decodeHtmlEntities(html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+}
+
+function normalizeHeadingText(value: unknown) {
+	return typeof value === 'string' ? stripHtml(value) : undefined;
+}
+
+function normalizeHeadingExport(value: unknown): HeadingLink[] {
+	if (!Array.isArray(value)) {
+		return [];
+	}
+
 	const slugger = new GithubSlugger();
+
+	return value
+		.map((heading) => {
+			if (!isRecord(heading)) {
+				return undefined;
+			}
+
+			const depth = getNumber(heading.depth) ?? getNumber(heading.level);
+			const text =
+				normalizeHeadingText(heading.text) ??
+				normalizeHeadingText(heading.title) ??
+				normalizeHeadingText(heading.value);
+
+			if (!depth || !text || depth < 2 || depth > 3) {
+				return undefined;
+			}
+
+			return {
+				depth,
+				slug: getString(heading.slug) ?? getString(heading.id) ?? slugger.slug(text),
+				text
+			};
+		})
+		.filter((heading): heading is HeadingLink => Boolean(heading));
+}
+
+function extractHeadingsFromHtml(html: string): HeadingLink[] {
 	const headings: HeadingLink[] = [];
 
-	for (const match of markdown.matchAll(/^(#{2,3})\s+(.+)$/gm)) {
-		const depth = match[1].length;
-		const text = match[2].replace(/<[^>]+>/g, '').replace(/[*_`[\]]/g, '').trim();
-		headings.push({
-			depth,
-			slug: slugger.slug(text),
-			text
-		});
+	for (const match of html.matchAll(/<h([23])\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/gi)) {
+		const depth = Number(match[1]);
+		const slug = match[2];
+		const text = stripHtml(match[3].replace(/<a\b[^>]*class="[^"]*heading-anchor[^"]*"[^>]*>[\s\S]*?<\/a>/gi, ''));
+
+		if (!text) {
+			continue;
+		}
+
+		headings.push({ depth, slug, text });
 	}
 
 	return headings;
@@ -418,7 +356,7 @@ function createSidebarLeaf(entry: ContentEntry): SidebarNode {
 function getFilesystemGroupPath(entry: ContentEntry) {
 	const sourceSegments = entry.sourcePath
 		.replace('/src/content/docs/', '')
-		.replace(/\.(md|mdx|svx)$/, '')
+		.replace(/\.(md|svx)$/, '')
 		.split('/');
 
 	return sourceSegments.slice(1, -1).map((segment) => titleCase(segment));
@@ -468,13 +406,24 @@ function createSidebarItems(entries: ContentEntry[], fallbackSection?: string) {
 	return nodes;
 }
 
-const entries = Object.entries(rawMap)
+const entries = Object.entries(moduleMap)
 	.filter(([sourcePath]) => !IGNORED_SOURCE_PATHS.has(sourcePath))
-	.map(([sourcePath, raw]) => {
-		const { data, content } = matter(raw);
+	.map(([sourcePath, module]) => {
+		const raw = sourceMap[sourcePath];
+		if (typeof raw !== 'string') {
+			throw new Error(`Missing raw source for ${sourcePath}`);
+		}
+
 		const { route, rawSegments, normalizedSegments, directory } = routeFromFile(sourcePath);
-		const metadata = getContentMetadata((isRecord(data) ? data : {}) as FrontmatterData, rawSegments, sourcePath);
+		const metadata = getContentMetadata(
+			isRecord(module.metadata) ? module.metadata : {},
+			rawSegments,
+			sourcePath
+		);
+		const content = extractBodySource(raw);
 		const kind = route.startsWith('/blog/') ? 'blog' : 'docs';
+		const html = render(module.default).body;
+		const headings = normalizeHeadingExport(module.headings);
 
 		return {
 			id: route === '/' ? 'home' : route.replaceAll('/', '-').replace(/^-|-$/g, ''),
@@ -506,9 +455,9 @@ const entries = Object.entries(rawMap)
 			metadata,
 			raw,
 			content,
-			html: renderMarkdown(content),
-			plainText: stripMarkdown(content),
-			headings: extractHeadings(content),
+			html,
+			plainText: stripHtml(html),
+			headings: headings.length > 0 ? headings : extractHeadingsFromHtml(html),
 			readingTime: readingTime(content).text
 		} satisfies ContentEntry;
 	})
@@ -600,7 +549,7 @@ export function getEntryByRoute(route: string) {
 		return routeMap.get(route);
 	}
 
-	const normalized = `/${route.replace(/^\/|\/$/g, '')}/`.replace(/\/\/+/g, '/');
+	const normalized = `/${route.replace(/^\/|\/$/g, '')}/`.replace(/\/\/+/, '/');
 	return routeMap.get(normalized);
 }
 

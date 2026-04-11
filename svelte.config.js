@@ -7,13 +7,45 @@ import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
 import { directiveAdmonitions } from './scripts/mdsvex/directive-admonitions.mjs';
 
+const CONTENT_EXTENSIONS_RE = /\.(md|svx)$/;
+const FRONTMATTER_RE = /^---\s*\n[\s\S]*?\n---\s*\n?/;
+const LEADING_IMPORTS_RE = /^(?:\s*import[^\n]+\n)+/;
+
+function liftMdxImports() {
+	return {
+		markup({ content, filename }) {
+			if (!filename || !CONTENT_EXTENSIONS_RE.test(filename)) {
+				return;
+			}
+
+			const normalizedContent = content.replace(/\\\{([^{}\n]+)\\\}/g, '`{$1}`');
+
+			const frontmatter = normalizedContent.match(FRONTMATTER_RE)?.[0] ?? '';
+			const remainder = normalizedContent.slice(frontmatter.length);
+			const imports = remainder.match(LEADING_IMPORTS_RE)?.[0];
+
+			if (!imports) {
+				return {
+					code: normalizedContent
+				};
+			}
+
+			const body = remainder.slice(imports.length).replace(/^\s+/, '');
+
+			return {
+				code: `${frontmatter}<script>\n${imports.trim()}\n<\/script>\n\n${body}`
+			};
+		}
+	};
+}
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	extensions: ['.svelte', '.md', '.mdx', '.svx'],
+	extensions: ['.svelte', '.md', '.svx'],
 	preprocess: [
-		vitePreprocess(),
+		liftMdxImports(),
 		mdsvex({
-			extensions: ['.md', '.mdx', '.svx'],
+			extensions: ['.md', '.svx'],
 			remarkPlugins: [remarkGfm, remarkDirective, directiveAdmonitions],
 			rehypePlugins: [
 				rehypeSlug,
@@ -32,7 +64,8 @@ const config = {
 					}
 				]
 			]
-		})
+		}),
+		vitePreprocess()
 	],
 	kit: {
 		adapter: adapter({

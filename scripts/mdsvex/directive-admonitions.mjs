@@ -24,32 +24,19 @@ export function directiveAdmonitions() {
 
 			const title = node.attributes?.label || node.label || name;
 			const children = node.children || [];
-			parent.children[index] = {
-				type: 'mdxJsxFlowElement',
-				name: 'div',
-				attributes: [
-					{
-						type: 'mdxJsxAttribute',
-						name: 'class',
-						value: `admonition admonition-${name}`
-					}
-				],
-				children: [
-					{
-						type: 'mdxJsxFlowElement',
-						name: 'p',
-						attributes: [
-							{
-								type: 'mdxJsxAttribute',
-								name: 'class',
-								value: 'admonition-title'
-							}
-						],
-						children: [{ type: 'text', value: String(title) }]
-					},
-					...children
-				]
-			};
+			parent.children.splice(
+				index,
+				1,
+				{
+					type: 'html',
+					value: `<div class="admonition admonition-${name}"><p class="admonition-title">${String(title)}</p>`
+				},
+				...children,
+				{
+					type: 'html',
+					value: '</div>'
+				}
+			);
 		});
 	};
 }

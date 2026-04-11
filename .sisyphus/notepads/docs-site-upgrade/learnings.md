@@ -7,3 +7,4 @@
 * Draft entries should be filtered at the content index boundary, while unlisted entries should stay routable/prerendered but drop out of listed collections such as sidebar and search data.
 * The docs sidebar can stay fully automatic by ordering listed sidebar-visible docs per top-level section and deriving nested groups from relative source directories before layering on optional `section` and `sidebar.group` metadata.
 * MDX-to-Markdown migration can stay purely at the filesystem layer: using `git mv` to swap extensions preserves routes as long as each basename stays the same; in this pass, 31 component/admonition pages became `.svx` and 30 prose pages became `.md`.
+* mdsvex migration needed a lightweight source normalization step before compilation: convert top-level MDX-style import lines into a Svelte <script> block and wrap escaped route placeholders like \{databaseId\} in inline code so Svelte does not treat them as expressions during SSR rendering.

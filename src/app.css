@@ -32,6 +32,7 @@
 	--ts-color-text-muted: #94a3b8;
 	--ts-color-divider: #1a1a24;
 	--ts-font-display: 'Quantico', system-ui, sans-serif;
+	--ts-font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 	--ts-shadow-brutal: 4px 4px 0 rgba(0, 0, 0, 0.6);
 	--ts-shadow-brutal-blue: 4px 4px 0 rgba(37, 99, 235, 0.35);
 	--ts-shadow-soft: 0 14px 40px rgba(0, 0, 0, 0.35);
@@ -52,7 +53,7 @@ html {
 
 body {
 	margin: 0;
-	font-family: var(--ts-font-display);
+	font-family: var(--ts-font-body);
 	background:
 		radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 30%),
 		radial-gradient(circle at top right, rgba(8, 145, 178, 0.12), transparent 25%),
@@ -61,6 +62,24 @@ body {
 	color: var(--ts-color-text);
 	min-height: 100vh;
 	overflow-x: clip;
+}
+
+h1, h2, h3, h4, h5, h6,
+.brand-wordmark,
+.brand-wordmark-footer,
+.site-title,
+.hero-title,
+.section-heading,
+.admonition-title,
+.ts-stats-card strong,
+.ts-btn-primary,
+.ts-btn-glass,
+.icon-button,
+.btn-gradient,
+.btn-outline,
+.ts-badge,
+.hero-badge {
+	font-family: var(--ts-font-display);
 }
 
 a {
@@ -604,6 +623,7 @@ svg {
 
 .prose-shell {
 	color: #e2e8f0;
+	font-family: var(--ts-font-body);
 }
 
 .prose-shell p,

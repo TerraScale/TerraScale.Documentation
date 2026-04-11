@@ -339,7 +339,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `refactor(content): migrate mdx sources to md and svx` | Files: `src/content/docs/**`, mdsvex import/component support files
 
-- [ ] 6. Replace custom markdown renderer with mdsvex rendering pipeline
+- [x] 6. Replace custom markdown renderer with mdsvex rendering pipeline
 
   **What to do**: Remove the current `gray-matter` + `marked` + string-transform render path from `src/lib/content/index.ts` and replace it with mdsvex-driven compilation/rendering. Preserve route derivation, heading extraction, reading time, and content metadata, but stop rendering HTML strings from a custom parser. The end state should treat docs/blog/API source files as mdsvex content modules rather than raw text blobs.
   **Must NOT do**: Must not leave the old custom renderer active for public docs routes. Must not perform runtime markdown transformation in the browser.
@@ -501,7 +501,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(shell): improve header sidebar mobile nav and announcements` | Files: `src/routes/+layout.svelte`, `src/lib/components/Header.svelte`, `src/lib/components/DocsSidebar.svelte`, site-data files, global styles
 
-- [ ] 10. Tighten typography, Quantico loading, and performance budgets
+- [x] 10. Tighten typography, Quantico loading, and performance budgets
 
   **What to do**: Keep Quantico as the display/system brand font while restoring readability for dense documentation body copy through a balanced typographic stack. Preload only the required Quantico weights, keep `font-display: swap`, reduce oversized decorative effects where they hurt paint cost, trim unused CSS/JS, and set explicit budgets: avoid adding client-side libraries unless they are lazy-loaded, keep critical font payload to the two existing WOFF2 files, and avoid blocking scripts for search/API explorer/code UX.
   **Must NOT do**: Must not replace Quantico with another branding font. Must not expand font inventory or add runtime font packages.
