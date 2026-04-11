@@ -18,27 +18,26 @@ hero:
 import { Card, CardGrid, LinkCard, Tabs, TabItem } from '$lib/mdx';
 import { FeatureGrid } from '$lib/mdx';
 
-<div class="hero-wrapper">
-  <div class="hero-glow hero-glow-1"></div>
-  <div class="hero-glow hero-glow-2"></div>
-  <div class="hero-grid"></div>
-  <div class="hero-content">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
+<div class="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
+  <div class="pointer-events-none absolute left-1/2 top-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle,rgba(37,99,235,0.15)_0,transparent_60%)]"></div>
+  <div class="pointer-events-none absolute right-0 top-1/2 h-[600px] w-[600px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0,transparent_60%)]"></div>
+  <div class="relative z-10 flex flex-col items-center">
+    <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300">
+      <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
       <span>Now in Public Beta</span>
     </div>
-    <h1 class="hero-title">
-      Scale Your <span class="gradient-text">Database</span><br/>Effortlessly
+    <h1 class="font-[var(--font-display)] text-5xl leading-[1.1] tracking-tight text-slate-50 sm:text-6xl">
+      Scale Your <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Database</span><br/>Effortlessly
     </h1>
-    <p class="hero-description">
+    <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
       The most advanced database platform for modern applications.<br/>
       Deploy globally. Scale infinitely. Build faster.
     </p>
-    <div class="hero-actions">
-      <a href="/guides/getting-started/" class="btn-gradient">
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
         Get Started Free
       </a>
-      <a href="/reference/authentication/" class="btn-outline">
+      <a href="/reference/authentication/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
         View Documentation
       </a>
     </div>
@@ -47,7 +46,7 @@ import { FeatureGrid } from '$lib/mdx';
 
 ---
 
-## Why Choose <span class="gradient-text">TerraScale</span>
+## Why Choose <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">TerraScale</span>
 
 Built for developers, trusted by enterprises. Experience the next generation of database infrastructure.
 
@@ -96,10 +95,10 @@ Simple APIs, powerful features. Deploy your database with just a few lines of co
     Join thousands of developers building scalable, reliable applications with TerraScale.
   </p>
   <div class="flex flex-wrap justify-center gap-4">
-    <a href="/guides/getting-started/" class="btn-gradient">
+    <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
       Start Building Today
     </a>
-    <a href="https://terrascale.tech/pricing" class="btn-outline">
+    <a href="https://terrascale.tech/pricing" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
       View Pricing
     </a>
   </div>

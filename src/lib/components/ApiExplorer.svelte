@@ -367,7 +367,7 @@
 														<tr>
 															<td class="border-b border-white/8 px-3 py-[0.65rem] align-top">
 																<code class="text-[0.85rem]">{parameter.name}</code>
-																{#if parameter.description}<div class="muted">{parameter.description}</div>{/if}
+													{#if parameter.description}<div class="text-sm text-slate-400 mt-1">{parameter.description}</div>{/if}
 															</td>
 															<td class="border-b border-white/8 px-3 py-[0.65rem] align-top">{parameter.in}</td>
 															<td class="border-b border-white/8 px-3 py-[0.65rem] align-top">{summarizeSchema(parameter.schema, spec)}</td>
