@@ -250,7 +250,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(content): replace runtime style hooks with data contracts` | Files: `src/routes/[...slug]/+page.svelte`, `src/lib/content/index.ts`, `src/lib/components/CopyButton.svelte`, related helpers
 
-- [ ] 4. Migrate rendered-content styling to Tailwind wrapper patterns
+- [x] 4. Migrate rendered-content styling to Tailwind wrapper patterns
 
   **What to do**: Replace `.prose-shell`, admonition, heading-anchor, code-title, code-wrapper, table, and descendant content selectors with Tailwind-native wrapper strategies. Use wrapper markup and arbitrary variants in route/component templates rather than a global prose stylesheet. Do not add the typography plugin unless a concrete blocker is documented and approved.
   **Must NOT do**: Do not preserve descendant selector styling in `src/app.css` as the finished solution.

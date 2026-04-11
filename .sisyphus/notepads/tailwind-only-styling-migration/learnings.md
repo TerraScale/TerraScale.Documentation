@@ -3,3 +3,5 @@
 - Semantic app-level classes were moved into direct utility usage in route/component markup, while existing component-scoped style blocks can remain for later cleanup work.
 - Code block runtime contracts now use `data-code-block`, `data-copy-button`, `data-code-wrapper`, and `data-code-title`, which keeps JS/CSS hooks explicit without touching residual `.prose-shell` content styling yet.
 - Shiki can stamp stable DOM contracts on generated `<pre>` elements via a lightweight transformer, avoiding ad hoc client-side hook assignment.
+- Tailwind v4 arbitrary descendant variants on `<article data-prose>` wrappers can fully replace the temporary `@layer components` prose stylesheet, including Shiki line states, admonitions, tables, static tabs, and heading-anchor hover behavior.
+- Keeping the generated-content contract on `data-prose` wrappers lets mdsvex output remain untouched while `src/app.css` stays limited to tokens, base rules, and reduced-motion handling.
