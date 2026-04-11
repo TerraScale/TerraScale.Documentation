@@ -13,3 +13,6 @@
 - Replaced `.article-authors` and related classes with Tailwind flexbox and typography utilities.
 - Shared shell/navigation surfaces verified clean: `+layout`, `Header`, `SearchOverlay`, `DocsSidebar`, `Footer`, `TableOfContents`, and `PrevNextNav` are utility-only, contain no scoped `<style>` blocks, and do not reference `--sl-*` tokens.
 - `Toast.svelte` intentionally still owns its scoped style block and semantic classes; leave it untouched for the later T10 cleanup pass.
+- Final cleanup can keep `src/app.css` restricted to tokens/base rules by treating code-block copy-button visibility as a minimal global interaction contract: `[data-code-block]:hover [data-copy-button] { opacity: 1; }`.
+- `CopyButton.svelte` and `Toast.svelte` both migrate cleanly to Tailwind-only styling with direct utility classes, including exact arbitrary values for translucent surfaces, shadows, blur, and radii, so the last scoped `<style>` blocks in `src/` are removable without visual regressions.
+- The legacy `src/lib/styles/reference-theme.css`, `reference-print.css`, and `reference-expressive.css` assets were orphaned and could be deleted safely once grep confirmed zero imports/usages in `src/`.

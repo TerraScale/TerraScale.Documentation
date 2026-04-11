@@ -25,10 +25,10 @@
 	});
 </script>
 
-<div class="toast-container">
+<div class="pointer-events-none fixed right-6 bottom-6 z-[100] flex flex-col gap-2">
 	{#each toasts as toast (toast.id)}
 		<div
-			class="toast toast-{toast.type}"
+			class="pointer-events-auto flex items-center gap-3 rounded-lg border border-white/10 bg-[rgba(12,12,16,0.95)] px-4 py-3 text-sm text-slate-50 shadow-[0_10px_25px_rgba(0,0,0,0.5)] backdrop-blur-[8px]"
 			in:fly={{ y: prefersReducedMotion ? 0 : 20, duration: prefersReducedMotion ? 1 : 300 }}
 			out:fly={{ y: prefersReducedMotion ? 0 : -20, duration: prefersReducedMotion ? 1 : 300, opacity: prefersReducedMotion ? 1 : 0 }}
 			role="alert"
@@ -44,6 +44,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
+					class="text-emerald-500"
 				>
 					<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
 					<polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -59,6 +60,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
+					class="text-rose-500"
 				>
 					<circle cx="12" cy="12" r="10"></circle>
 					<line x1="15" y1="9" x2="9" y2="15"></line>
@@ -75,6 +77,7 @@
 					stroke-width="2"
 					stroke-linecap="round"
 					stroke-linejoin="round"
+					class="text-blue-500"
 				>
 					<circle cx="12" cy="12" r="10"></circle>
 					<line x1="12" y1="16" x2="12" y2="12"></line>
@@ -82,7 +85,11 @@
 				</svg>
 			{/if}
 			<span>{toast.message}</span>
-			<button class="close-btn" onclick={() => removeToast(toast.id)} aria-label="Close">
+			<button
+				class="ml-2 flex items-center justify-center rounded bg-transparent p-1 text-slate-400 transition-all duration-200 hover:bg-white/10 hover:text-slate-50"
+				onclick={() => removeToast(toast.id)}
+				aria-label="Close"
+			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="14"
@@ -101,62 +108,3 @@
 		</div>
 	{/each}
 </div>
-
-<style>
-	.toast-container {
-		position: fixed;
-		bottom: 1.5rem;
-		right: 1.5rem;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		z-index: 100;
-		pointer-events: none;
-	}
-
-	.toast {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.75rem 1rem;
-		background: rgba(12, 12, 16, 0.95);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 0.5rem;
-		color: #f8fafc;
-		font-size: 0.875rem;
-		box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-		backdrop-filter: blur(8px);
-		pointer-events: auto;
-	}
-
-	.toast-success svg:first-child {
-		color: #10b981;
-	}
-
-	.toast-error svg:first-child {
-		color: #f43f5e;
-	}
-
-	.toast-info svg:first-child {
-		color: #3b82f6;
-	}
-
-	.close-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: transparent;
-		border: none;
-		color: #94a3b8;
-		cursor: pointer;
-		padding: 0.25rem;
-		margin-left: 0.5rem;
-		border-radius: 0.25rem;
-		transition: all 0.2s;
-	}
-
-	.close-btn:hover {
-		background: rgba(255, 255, 255, 0.1);
-		color: #f8fafc;
-	}
-</style>

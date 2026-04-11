@@ -492,7 +492,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(api): migrate explorer styling to tailwind` | Files: explorer component/route and token consumers
 
-- [ ] 10. Remove remaining scoped styles, semantic styling selectors, and orphan CSS assets
+- [x] 10. Remove remaining scoped styles, semantic styling selectors, and orphan CSS assets
 
   **What to do**: After Waves 1-2 land, delete all remaining route/component `<style>` blocks, remove style-only semantic selectors from `src/app.css`, and delete orphan style assets only after proving zero references. This includes evaluating and removing `src/lib/styles/reference-theme.css`, `reference-print.css`, and `reference-expressive.css` if unused.
   **Must NOT do**: Do not delete assets without proving zero references via grep/glob; do not leave temporary token shims or old selectors in place.

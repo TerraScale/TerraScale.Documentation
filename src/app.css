@@ -87,6 +87,10 @@ svg {
 	border: 0;
 }
 
+[data-code-block]:hover [data-copy-button] {
+	opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	html {
 		scroll-behavior: auto;

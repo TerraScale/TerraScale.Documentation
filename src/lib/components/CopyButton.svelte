@@ -3,8 +3,10 @@
 
 	let { text = '' } = $props<{ text: string }>();
 
+	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	let copied = $state(false);
 
+	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	async function copy() {
 		try {
 			await navigator.clipboard.writeText(text);
@@ -25,6 +27,7 @@
 	onclick={copy}
 	aria-label="Copy code to clipboard"
 	title="Copy code"
+	class="absolute top-2 right-2 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-[0.35rem] border border-white/10 bg-white/5 p-0 text-slate-400 opacity-0 transition-all duration-200 ease-in-out hover:bg-white/10 hover:text-slate-50 focus-visible:opacity-100"
 >
 	{#if copied}
 		<svg
@@ -37,7 +40,7 @@
 			stroke-width="2"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-			class="icon-success"
+			class="text-emerald-500"
 		>
 			<polyline points="20 6 9 17 4 12"></polyline>
 		</svg>
@@ -58,39 +61,3 @@
 		</svg>
 	{/if}
 </button>
-
-<style>
-	[data-copy-button] {
-		position: absolute;
-		top: 0.5rem;
-		right: 0.5rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
-		background: rgba(255, 255, 255, 0.05);
-		border: 1px solid rgba(255, 255, 255, 0.1);
-		border-radius: 0.35rem;
-		color: #94a3b8;
-		cursor: pointer;
-		opacity: 0;
-		transition: all 0.2s ease;
-		z-index: 10;
-	}
-
-	:global([data-code-block]:hover) [data-copy-button],
-	[data-copy-button]:focus-visible {
-		opacity: 1;
-	}
-
-	[data-copy-button]:hover {
-		background: rgba(255, 255, 255, 0.1);
-		color: #f8fafc;
-	}
-
-	.icon-success {
-		color: #10b981;
-	}
-</style>
