@@ -54,6 +54,24 @@
       "agent": "Sisyphus-Junior",
       "category": "unspecified-high",
       "updated_at": "2026-04-11T22:31:33.492Z"
+    },
+    "todo:10": {
+      "task_key": "todo:10",
+      "task_label": "10",
+      "task_title": "Remove remaining scoped styles, semantic styling selectors, and orphan CSS assets",
+      "session_id": "ses_2815106a1ffeDlSvyCNYDUR1C4",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-04-11T22:38:36.515Z"
+    },
+    "todo:11": {
+      "task_key": "todo:11",
+      "task_label": "11",
+      "task_title": "Update styling documentation and policy files",
+      "session_id": "ses_2814b3249ffe2CXe0npy3RF9tc",
+      "agent": "Sisyphus-Junior",
+      "category": "writing",
+      "updated_at": "2026-04-11T22:44:15.968Z"
     }
   }
 }

@@ -1,8 +1,17 @@
 ## Stack
 
-- **Only SvelteKit** is allowed for all UI and application work in this repository. Do not use Astro, Next.js, Remix, or any other framework.
+- **Only SvelteKit** is allowed for all UI and application work in this repository. Do not use any other framework (e.g., Next.js, Remix).
 - Use Svelte 5 with TypeScript. Runes syntax (`$state`, `$derived`, `$effect`, etc.) is the default.
-- Do not introduce Astro, React, Vue, or any non-Svelte framework under any circumstances.
+- Do not introduce any non-Svelte framework under any circumstances.
+
+## Styling Policy
+
+- **Tailwind-only**: Use Tailwind CSS v4 for all styling.
+- **No Scoped Styles**: Do not use `<style>` blocks in Svelte components.
+- **No Custom CSS**: Do not use `@apply`, `@utility`, or custom CSS selectors.
+- **CSS-First Config**: All theme tokens live in the `@theme` block in `src/app.css`. Do not create a `tailwind.config.*` file.
+- **Residual CSS**: Custom CSS in `src/app.css` is restricted to the `@theme` block, `@font-face`, base element resets, and essential utilities like `.sr-only`.
+- **Generated Content**: Style Markdown-generated content using the `data-prose` attribute wrapper and Tailwind arbitrary variants (e.g., `[data-prose]:[&_h1]:text-3xl`).
 
 ## Deployment
 

@@ -1,8 +1,6 @@
 # TerraScale Documentation
 
-[![Built with Starlight](https://astro.badg.es/v2/built-with-starlight/tiny.svg)](https://starlight.astro.build)
-
-Official documentation for TerraScale, available at [docs.terrascale.tech](https://docs.terrascale.tech).
+Official documentation for TerraScale, built with SvelteKit and Tailwind CSS v4.
 
 ## Getting Started
 
@@ -23,24 +21,23 @@ npm run dev      # Start the dev server
 ## Project Structure
 
 ```
-src/content/docs/
-├── guides/      # Getting started, SDKs, querying
-├── reference/   # API, pricing, regions, comparisons
-├── dashboard/   # Dashboard documentation
-├── roadmap/     # Product roadmap
-├── about/       # About section
-└── blog/        # Blog posts
+src/
+├── content/docs/ # Markdown/MDX documentation files
+├── lib/          # Shared components and utilities
+├── routes/       # SvelteKit routes and pages
+└── app.css       # Tailwind v4 theme and global styles
 ```
 
-Documentation is written in `.md` or `.mdx` files in `src/content/docs/`. Each file becomes a route based on its filename.
+Documentation is written in `.md` or `.svx` files in `src/content/docs/`.
+
+## Styling
+
+This project uses **Tailwind CSS v4** with a CSS-first configuration. All theme tokens and global styles are defined in `src/app.css`. Scoped styles and custom CSS selectors are forbidden.
+
+See [THEME.md](./THEME.md) for the full styling policy and token reference.
 
 ## Configuration
 
-- `astro.config.mjs` - Starlight config and sidebar structure
-- `src/content.config.ts` - Content collections schema
-- `src/styles/global.css` - Tailwind CSS customizations
-
-## Resources
-
-- [Starlight Documentation](https://starlight.astro.build/)
-- [Astro Documentation](https://docs.astro.build)
+- `svelte.config.js` - SvelteKit configuration
+- `vite.config.ts` - Vite configuration
+- `src/app.css` - Tailwind v4 theme and tokens

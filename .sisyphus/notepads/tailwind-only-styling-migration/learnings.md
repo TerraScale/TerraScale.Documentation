@@ -16,3 +16,4 @@
 - Final cleanup can keep `src/app.css` restricted to tokens/base rules by treating code-block copy-button visibility as a minimal global interaction contract: `[data-code-block]:hover [data-copy-button] { opacity: 1; }`.
 - `CopyButton.svelte` and `Toast.svelte` both migrate cleanly to Tailwind-only styling with direct utility classes, including exact arbitrary values for translucent surfaces, shadows, blur, and radii, so the last scoped `<style>` blocks in `src/` are removable without visual regressions.
 - The legacy `src/lib/styles/reference-theme.css`, `reference-print.css`, and `reference-expressive.css` assets were orphaned and could be deleted safely once grep confirmed zero imports/usages in `src/`.
+Updated THEME.md, README.md, and AGENTS.md to reflect the Tailwind v4 CSS-first architecture. Removed all stale Astro/Starlight references. Verified that no stale references remain and the styling policy is explicitly documented.

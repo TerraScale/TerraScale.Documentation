@@ -538,7 +538,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `chore(styling): remove legacy css and scoped styles` | Files: `src/app.css`, all scoped-style files, orphan CSS assets
 
-- [ ] 11. Update styling documentation and policy files
+- [x] 11. Update styling documentation and policy files
 
   **What to do**: Rewrite `THEME.md`, `README.md`, and `AGENTS.md` so they accurately describe the SvelteKit + Tailwind v4 CSS-first architecture, allowed residual CSS, canonical token source of truth, and contributor rules banning custom selectors/scoped styles. Update `src/content/docs/dashboard/why-open-source.md` if its Tailwind wording or styling guidance is now inaccurate.
   **Must NOT do**: Do not leave stale Astro/Starlight paths or old CSS design-system guidance in docs.
