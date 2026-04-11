@@ -42,27 +42,38 @@
 		document.addEventListener('click', handler);
 		return () => document.removeEventListener('click', handler);
 	});
+
+	const announcementToneClasses = {
+		info: 'border-b border-white/8 bg-linear-to-r from-blue-500/15 to-cyan-500/15 text-blue-200',
+		warning: 'border-b border-white/8 bg-linear-to-r from-amber-500/15 to-orange-600/15 text-amber-200',
+		success: 'border-b border-white/8 bg-linear-to-r from-emerald-500/15 to-emerald-600/15 text-emerald-200'
+	} as const;
+
+	function getAnnouncementTone(variant?: string) {
+		return announcementToneClasses[(variant as keyof typeof announcementToneClasses) ?? 'info'] ?? announcementToneClasses.info;
+	}
 </script>
 
 <svelte:head>
 	<link rel="alternate" type="application/rss+xml" title="TerraScale Blog RSS Feed" href="/blog/rss.xml" />
 </svelte:head>
 
-<div class="site-shell">
-	<div class="site-atmosphere"></div>
+
+<div class="relative min-h-screen overflow-x-clip bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_24rem),radial-gradient(circle_at_bottom_right,rgba(139,92,246,0.08),transparent_26rem)]">
+	<div class="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_24rem),radial-gradient(circle_at_80%_78%,rgba(139,92,246,0.08),transparent_24rem)]"></div>
 	{#if activeAnnouncement && !announcementDismissed}
-		<div class="announcement-bar announcement-{activeAnnouncement.variant || 'info'}">
-			<div class="shell announcement-shell">
-				<div class="announcement-content">
+		<div class={getAnnouncementTone(activeAnnouncement.variant)}>
+			<div class="mx-auto flex min-h-10 w-[calc(100%-1.25rem)] max-w-none items-center justify-center px-4 py-1 sm:w-[calc(100%-3rem)]">
+				<div class="flex flex-1 justify-center text-center text-[0.85rem] font-medium">
 					{#if activeAnnouncement.link}
-						<a href={activeAnnouncement.link}>{activeAnnouncement.text}</a>
+						<a class="underline decoration-white/30 underline-offset-2 transition-colors hover:text-white hover:decoration-white/60 focus-visible:rounded-xs focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400" href={activeAnnouncement.link}>{activeAnnouncement.text}</a>
 					{:else}
 						<span>{activeAnnouncement.text}</span>
 					{/if}
 				</div>
 				<button 
 					type="button" 
-					class="announcement-close" 
+					class="flex size-6 items-center justify-center rounded-sm bg-transparent opacity-70 transition-[opacity,background-color] hover:bg-white/10 hover:opacity-100 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400" 
 					aria-label="Dismiss announcement"
 					onclick={() => announcementDismissed = true}
 				>
@@ -72,7 +83,7 @@
 		</div>
 	{/if}
 	<Header openSearch={() => (searchOpen = true)} />
-	<main>
+	<main class="relative z-10 pt-16 sm:pt-[4.2rem]">
 		{@render children()}
 	</main>
 	<Footer />

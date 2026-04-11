@@ -6,23 +6,23 @@
 </script>
 
 {#if items.length}
-	<div class="ts-card-grid">
+	<div class="my-6 grid grid-cols-4 gap-4 max-[640px]:grid-cols-1">
 		{#each items as item}
-			<article class="ts-card">
-				<header>
-					<div class="ts-card-icon">
+			<article class="rounded-[0.45rem] border border-white/6 bg-white/4 p-4">
+				<header class="flex items-center gap-3">
+					<div class="inline-flex size-8 items-center justify-center rounded-[0.4rem] border border-blue-300/22 bg-blue-500/15">
 						<Icon name={contentIconMap[item.icon] ?? 'file-text'} size={18} />
 					</div>
-					<h3>{item.title}</h3>
+					<h3 class="m-0 text-base">{item.title}</h3>
 				</header>
-				<div class="ts-card-body">
+				<div class="text-[0.9rem] leading-[1.65] text-slate-400 [&_p]:text-[0.9rem] [&_p]:leading-[1.65] [&_p]:text-slate-400">
 					{@html item.content}
 				</div>
 			</article>
 		{/each}
 	</div>
 {:else}
-	<div class="ts-card-grid">
+	<div class="my-6 grid grid-cols-4 gap-4 max-[640px]:grid-cols-1">
 		<slot />
 	</div>
 {/if}

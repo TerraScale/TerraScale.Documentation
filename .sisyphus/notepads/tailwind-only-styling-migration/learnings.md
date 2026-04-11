@@ -1,0 +1,3 @@
+- Tailwind v4 CSS-first works cleanly here with `@theme` in `src/app.css`; no `tailwind.config.*` is needed when tokens stay in CSS.
+- Rendered mdsvex/Shiki output still needs a temporary residual CSS contract (`.prose-shell`, admonitions, static tabs, code-block wrappers, legacy `.ts-badge`) until wrapper-based content styling lands.
+- Semantic app-level classes were moved into direct utility usage in route/component markup, while existing component-scoped style blocks can remain for later cleanup work.

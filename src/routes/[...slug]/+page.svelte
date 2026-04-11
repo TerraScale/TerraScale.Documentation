@@ -14,7 +14,14 @@
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function getBadgeClass(badge?: BadgeMeta) {
-		return badge?.variant ? `ts-badge ts-badge-${badge.variant}` : 'ts-badge ts-badge-secondary';
+		const tones = {
+			primary: 'bg-blue-500/16 text-blue-200',
+			secondary: 'bg-emerald-500/16 text-emerald-200',
+			accent: 'bg-cyan-500/16 text-cyan-200'
+		} as const;
+
+		const tone = tones[(badge?.variant as keyof typeof tones) ?? 'secondary'] ?? tones.secondary;
+		return `inline-flex items-center rounded-full px-[0.65rem] py-[0.35rem] font-[var(--font-display)] text-[0.72rem] uppercase tracking-[0.08em] ${tone}`;
 	}
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
@@ -87,15 +94,15 @@
 </svelte:head>
 
 {#if data.entry.kind === 'blog'}
-	<section class="shell article-shell article-shell-blog">
-		<div class="article-main ts-glass">
-			<div class="article-header">
-				<p class="eyebrow">Blog</p>
+	<section class="mx-auto w-[calc(100%-1.25rem)] max-w-none px-0 pb-16 pt-7 sm:w-[calc(100%-3rem)] md:pb-20">
+		<div class="rounded-2xl border border-white/10 bg-white/6 p-7 shadow-[0_14px_40px_rgba(0,0,0,0.35)] backdrop-blur-[14px] max-[640px]:p-5">
+			<div class="mb-6 border-b border-white/6 pb-5">
+				<p class="mb-[0.85rem] text-[0.8rem] uppercase tracking-[0.16em] text-blue-300">Blog</p>
 				<h1>{data.entry.title}</h1>
 				{#if data.entry.description}
-					<p class="article-description">{data.entry.description}</p>
+					<p class="m-0 text-[0.95rem] leading-7 text-slate-400">{data.entry.description}</p>
 				{/if}
-				<div class="article-meta">
+				<div class="mt-4 flex flex-wrap items-center gap-3 text-[0.8rem] uppercase tracking-[0.08em] text-slate-300">
 					<time datetime={data.entry.date}>{formatDate(data.entry.date)}</time>
 					<span class="meta-separator">•</span>
 					<span>{data.entry.readingTime}</span>
@@ -128,10 +135,10 @@
 		</div>
 	</section>
 {:else}
-	<section class="shell docs-shell docs-page">
+	<section class="mx-auto grid w-[calc(100%-1.25rem)] max-w-none grid-cols-[16rem_minmax(0,1fr)_14rem] items-start gap-0 px-0 pb-16 pt-0 sm:w-[calc(100%-3rem)] md:pb-20 max-[1100px]:grid-cols-[14rem_minmax(0,1fr)] max-[860px]:grid-cols-1">
 		<DocsSidebar items={data.sidebar} />
-		<div class="article-main docs-article">
-			<div class="article-header">
+		<div class="min-w-0 px-8 pb-8 pt-6 max-[860px]:px-0 max-[860px]:pt-5">
+			<div class="mb-5">
 				<h1>
 					<span>{data.entry.title}</span>
 					{#if data.entry.headingBadge}
@@ -139,7 +146,7 @@
 					{/if}
 				</h1>
 				{#if data.entry.description}
-					<p class="article-description">{data.entry.description}</p>
+					<p class="text-[0.95rem] leading-7 text-slate-400">{data.entry.description}</p>
 				{/if}
 			</div>
 			<article class="prose-shell">
@@ -179,7 +186,7 @@
 
 	.author-name {
 		font-weight: 600;
-		color: var(--ts-color-text);
+		color: var(--color-ts-text);
 	}
 
 	.author-name a {
@@ -189,11 +196,11 @@
 
 	.author-name a:hover {
 		text-decoration: underline;
-		color: var(--ts-color-primary-light);
+		color: var(--color-ts-primary-light);
 	}
 
 	.author-title {
 		font-size: 0.875rem;
-		color: var(--ts-color-text-muted);
+		color: var(--color-ts-text-muted);
 	}
 </style>

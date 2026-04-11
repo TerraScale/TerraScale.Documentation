@@ -18,49 +18,23 @@
 	/>
 </svelte:head>
 
-<section class="shell docs-shell docs-page explorer-page">
-	<div class="article-main docs-article explorer-article">
-		<div class="article-header">
-			<p class="eyebrow">Deferred explorer</p>
+<section class="mx-auto block w-[calc(100%-1.25rem)] max-w-none px-0 pb-16 pt-7 sm:w-[calc(100%-3rem)] md:pb-20">
+	<div class="w-full max-w-[min(1100px,100%)] px-8 pb-8 pt-6 max-[860px]:px-0 max-[860px]:pt-5">
+		<div class="mb-5">
+			<p class="mb-[0.85rem] text-[0.8rem] uppercase tracking-[0.16em] text-blue-300">Deferred explorer</p>
 			<h1>API Explorer</h1>
-			<p class="article-description">
+			<p class="text-[0.95rem] leading-7 text-slate-400">
 				Interactive OpenAPI browser for the checked-in TerraScale spec at
 				<code>/openapi/terrascale.yaml</code>.
 			</p>
 		</div>
 
-		<div class="explorer-container">
+		<div class="grid gap-5 pt-1">
 			{#if Explorer}
 				<Explorer />
 			{:else}
-				<p class="explorer-loading">Loading explorer...</p>
+				<p class="m-0 rounded-[0.875rem] border border-white/8 bg-white/4 px-5 py-4 text-slate-400">Loading explorer...</p>
 			{/if}
 		</div>
 	</div>
 </section>
-
-<style>
-	.explorer-page {
-		display: block;
-	}
-
-	.explorer-article {
-		max-width: min(1100px, 100%);
-		width: 100%;
-	}
-
-	.explorer-container {
-		display: grid;
-		gap: 1.25rem;
-		padding-top: 0.25rem;
-	}
-
-	.explorer-loading {
-		margin: 0;
-		padding: 1rem 1.25rem;
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 0.875rem;
-		background: rgba(255, 255, 255, 0.04);
-		color: var(--ts-color-text-muted);
-	}
-</style>

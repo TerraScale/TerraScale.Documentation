@@ -24,12 +24,12 @@
 </script>
 
 {#if items.length}
-	<div class="ts-tabs">
-		<div class="ts-tabs-list" role="tablist" aria-label="Tabbed code and examples">
+	<div class="my-6">
+		<div class="mb-3 flex flex-wrap gap-3 border-b border-white/6 pb-2" role="tablist" aria-label="Tabbed code and examples">
 			{#each items as item, index}
 				<button
 					type="button"
-					class:active={$active === item.label || (!$active && index === 0)}
+					class={`cursor-pointer border-0 bg-transparent px-0 py-[0.15rem] text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${$active === item.label || (!$active && index === 0) ? 'text-blue-500' : ''}`}
 					on:click={() => active.set(item.label)}
 					role="tab"
 					aria-selected={$active === item.label || (!$active && index === 0)}
@@ -38,11 +38,10 @@
 				</button>
 			{/each}
 		</div>
-		<div class="ts-tabs-panels">
+		<div>
 			{#each items as item, index}
 				<section
-					class:active={$active === item.label || (!$active && index === 0)}
-					class="ts-tab-panel"
+					class={$active === item.label || (!$active && index === 0) ? 'block' : 'hidden'}
 					role="tabpanel"
 				>
 					{@html item.content}
@@ -51,12 +50,12 @@
 		</div>
 	</div>
 {:else}
-	<div class="ts-tabs">
-		<div class="ts-tabs-list" role="tablist" aria-label="Tabbed code and examples">
+	<div class="my-6">
+		<div class="mb-3 flex flex-wrap gap-3 border-b border-white/6 pb-2" role="tablist" aria-label="Tabbed code and examples">
 			{#each $tabs as tab}
 				<button
 					type="button"
-					class:active={$active === tab.id}
+					class={`cursor-pointer border-0 bg-transparent px-0 py-[0.15rem] text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${$active === tab.id ? 'text-blue-500' : ''}`}
 					on:click={() => active.set(tab.id)}
 					role="tab"
 					aria-selected={$active === tab.id}
@@ -65,7 +64,7 @@
 				</button>
 			{/each}
 		</div>
-		<div class="ts-tabs-panels">
+		<div>
 			<slot />
 		</div>
 	</div>

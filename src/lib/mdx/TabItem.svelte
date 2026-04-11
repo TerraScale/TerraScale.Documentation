@@ -14,6 +14,6 @@
 	const active = tabsContext.active;
 </script>
 
-<section class:active={$active === id} class="ts-tab-panel" role="tabpanel">
+<section class={$active === id ? 'block' : 'hidden'} role="tabpanel">
 	<slot />
 </section>

@@ -283,18 +283,18 @@
 </script>
 
 {#if loading}
-	<p class="explorer-state">Loading explorer…</p>
+	<p class="rounded-[0.875rem] border border-white/10 bg-white/6 px-5 py-4">Loading explorer…</p>
 {:else if error}
-	<p class="explorer-state explorer-state-error">{error}</p>
+	<p class="rounded-[0.875rem] border border-white/10 bg-white/6 px-5 py-4 text-red-400">{error}</p>
 {:else if spec}
-	<div class="explorer-shell">
-		<section class="explorer-intro ts-glass">
+	<div class="grid gap-6">
+		<section class="grid gap-4 rounded-2xl border border-white/10 bg-white/6 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.35)] backdrop-blur-[14px]">
 			<div>
-				<p class="eyebrow">OpenAPI source</p>
+				<p class="mb-[0.85rem] text-[0.8rem] uppercase tracking-[0.16em] text-blue-300">OpenAPI source</p>
 				<h2>{spec.info?.title}</h2>
 				<p>{spec.info?.description}</p>
 			</div>
-			<div class="explorer-meta">
+			<div class="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-3">
 				<div>
 					<span>Version</span>
 					<strong>{spec.info?.version ?? '—'}</strong>
@@ -311,35 +311,35 @@
 		</section>
 
 		{#each groupedOperations as group}
-			<section class="explorer-group">
+			<section class="grid gap-3.5">
 				<header>
 					<h3>{group.tag}</h3>
 					{#if group.description}<p>{group.description}</p>{/if}
 				</header>
-				<div class="explorer-operations">
+				<div class="grid gap-3.5">
 					{#each group.items as operation}
-						<article class="operation-card ts-glass">
-							<button class="operation-summary" type="button" onclick={() => (expanded[operation.id] = !expanded[operation.id])}>
-								<div class="operation-heading">
+						<article class="rounded-[0.875rem] border border-white/10 bg-[color-mix(in_oklab,var(--color-ts-surface)_88%,transparent)]">
+							<button class="flex w-full items-center justify-between gap-4 px-[1.125rem] py-4 text-left text-inherit" type="button" onclick={() => (expanded[operation.id] = !expanded[operation.id])}>
+								<div class="flex items-start gap-3.5 max-[768px]:flex-col">
 									<span class={`method-badge ${methodTone(operation.method)}`}>{operation.method}</span>
 									<div>
 										<h4>{operation.summary}</h4>
 										<code>{operation.path}</code>
 									</div>
 								</div>
-								<span class="expand-indicator">{expanded[operation.id] ? '−' : '+'}</span>
+								<span class="text-2xl leading-none text-slate-400">{expanded[operation.id] ? '−' : '+'}</span>
 							</button>
 
 							{#if expanded[operation.id]}
-								<div class="operation-details">
+								<div class="grid gap-4 px-[1.125rem] pb-[1.125rem]">
 									{#if operation.description}<p>{operation.description}</p>{/if}
-									<p class="security-line">
+									<p class="text-[0.925rem] text-slate-400">
 										<strong>Auth:</strong>
 										{operation.security?.length === 0 ? 'None' : 'Bearer token'}
 									</p>
 
 									{#if operation.parameters.length > 0}
-										<div class="detail-block">
+										<div class="grid gap-[0.6rem]">
 											<h5>Parameters</h5>
 											<table>
 												<thead>
@@ -363,11 +363,11 @@
 									{/if}
 
 									{#if operation.requestBody}
-										<div class="detail-block">
+										<div class="grid gap-[0.6rem]">
 											<h5>Request body</h5>
-											<p class="muted">{operation.requestBody.required ? 'Required' : 'Optional'} · {summarizeSchema(operation.requestBody.schema, spec)}</p>
+											<p class="text-[0.925rem] text-slate-400">{operation.requestBody.required ? 'Required' : 'Optional'} · {summarizeSchema(operation.requestBody.schema, spec)}</p>
 											{#if getSchemaFields(operation.requestBody.schema, spec).length > 0}
-												<ul class="field-list">
+												<ul class="m-0 pl-[1.1rem]">
 													{#each getSchemaFields(operation.requestBody.schema, spec) as field}
 														<li><code>{field.name}</code> — {field.type}{field.required ? ' · required' : ''}</li>
 													{/each}
@@ -376,9 +376,9 @@
 										</div>
 									{/if}
 
-									<div class="detail-block">
+									<div class="grid gap-[0.6rem]">
 										<h5>Responses</h5>
-										<ul class="response-list">
+										<ul class="m-0 pl-[1.1rem]">
 											{#each operation.responses as response}
 												<li>
 													<strong>{response.status}</strong>
@@ -399,98 +399,20 @@
 {/if}
 
 <style>
-	.explorer-shell {
-		display: grid;
-		gap: 1.5rem;
-	}
-
-	.explorer-intro {
-		display: grid;
-		gap: 1rem;
-		padding: 1.5rem;
-		border-radius: 1rem;
-	}
-
-	.explorer-intro h2 {
-		margin: 0.25rem 0 0.5rem;
-	}
-
-	.explorer-meta {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-		gap: 0.75rem;
-	}
-
-	.explorer-meta div,
-	.operation-card {
-		background: color-mix(in oklab, var(--color-surface) 88%, transparent);
-		border: 1px solid var(--color-border);
-		border-radius: 0.875rem;
-	}
-
-	.explorer-meta div {
-		padding: 0.875rem 1rem;
-	}
-
-	.explorer-meta span,
-	.muted,
-	.security-line {
-		color: var(--color-text-muted);
-		font-size: 0.925rem;
-	}
-
-	.explorer-group {
-		display: grid;
-		gap: 0.875rem;
-	}
-
-	.explorer-group header h3,
-	.operation-heading h4,
-	.detail-block h5 {
+	h2,
+	h3,
+	h4,
+	h5 {
 		margin: 0;
 	}
 
-	.explorer-group header p {
+	header p {
 		margin: 0.35rem 0 0;
-		color: var(--color-text-muted);
+		color: var(--color-ts-text-muted);
 	}
 
-	.explorer-operations {
-		display: grid;
-		gap: 0.875rem;
-	}
-
-	.operation-summary {
-		width: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 1rem;
-		padding: 1rem 1.125rem;
-		background: transparent;
-		border: 0;
-		color: inherit;
-		text-align: left;
-		cursor: pointer;
-	}
-
-	.operation-heading {
-		display: flex;
-		align-items: flex-start;
-		gap: 0.875rem;
-	}
-
-	.operation-heading code,
-	.response-list code,
-	.field-list code,
 	table code {
 		font-size: 0.85rem;
-	}
-
-	.expand-indicator {
-		font-size: 1.5rem;
-		line-height: 1;
-		color: var(--color-text-muted);
 	}
 
 	.method-badge {
@@ -511,17 +433,6 @@
 	.method-badge.delete { background: rgba(239, 68, 68, 0.18); color: rgb(248, 113, 113); }
 	.method-badge.neutral { background: rgba(148, 163, 184, 0.18); color: rgb(203, 213, 225); }
 
-	.operation-details {
-		display: grid;
-		gap: 1rem;
-		padding: 0 1.125rem 1.125rem;
-	}
-
-	.detail-block {
-		display: grid;
-		gap: 0.6rem;
-	}
-
 	table {
 		width: 100%;
 		border-collapse: collapse;
@@ -531,46 +442,19 @@
 	th,
 	td {
 		padding: 0.65rem 0.75rem;
-		border-bottom: 1px solid var(--color-border);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 		vertical-align: top;
 	}
 
 	th {
 		text-align: left;
-		color: var(--color-text-muted);
+		color: var(--color-ts-text-muted);
 		font-weight: 600;
 	}
 
-	.field-list,
-	.response-list {
-		margin: 0;
-		padding-left: 1.1rem;
-	}
-
-	.response-list li {
+	ul li {
 		display: grid;
 		gap: 0.25rem;
 		margin-bottom: 0.5rem;
-	}
-
-	.explorer-state {
-		padding: 1rem 1.25rem;
-		border: 1px solid var(--color-border);
-		border-radius: 0.875rem;
-		background: color-mix(in oklab, var(--color-surface) 88%, transparent);
-	}
-
-	.explorer-state-error {
-		color: rgb(248, 113, 113);
-	}
-
-	@media (max-width: 768px) {
-		.operation-heading {
-			flex-direction: column;
-		}
-
-		.operation-summary {
-			align-items: flex-start;
-		}
 	}
 </style>
