@@ -15,7 +15,7 @@ hero:
       variant: minimal
 ---
 
-import { Card, CardGrid, LinkCard, Tabs, TabItem } from '$lib/mdx';
+import { CardGrid, Tabs } from '$lib/mdx';
 import { FeatureGrid } from '$lib/mdx';
 
 <div class="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
