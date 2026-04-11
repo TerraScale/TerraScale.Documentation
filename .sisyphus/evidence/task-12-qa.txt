@@ -1,0 +1,163 @@
+=== npm run check ===
+
+> terrascale-documentation@1.0.0 check
+> svelte-kit sync && svelte-check --tsconfig ./tsconfig.json
+
+Loading svelte-check in workspace: /var/home/mariogk/Projects/TerraScale.Documentation
+Getting Svelte diagnostics...
+
+/var/home/mariogk/Projects/TerraScale.Documentation/src/lib/mdx/TabItem.svelte:17:2
+Warn: Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated (svelte)
+<section class={isActive ? 'block' : 'hidden'} role="tabpanel">
+	<slot />
+</section>
+
+/var/home/mariogk/Projects/TerraScale.Documentation/src/lib/mdx/Tabs.svelte:78:4
+Warn: Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated (svelte)
+		<div>
+			<slot />
+		</div>
+
+====================================
+svelte-check found 0 errors and 2 warnings in 2 files
+=== npm run build ===
+
+> terrascale-documentation@1.0.0 build
+> vite build && pagefind --site build
+
+vite v8.0.8 building ssr environment for production...
+[2Ktransforming...7:46:40 PM [vite-plugin-svelte] src/lib/mdx/TabItem.svelte:17:1 Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated
+15: 
+16: <section class={isActive ? 'block' : 'hidden'} role="tabpanel">
+17:   <slot />
+              ^
+18: </section>
+19: 
+7:46:40 PM [vite-plugin-svelte] src/lib/mdx/Tabs.svelte:78:3 Using `<slot>` to render parent content is deprecated. Use `{@render ...}` tags instead
+https://svelte.dev/e/slot_element_deprecated
+76:     </div>
+77:     <div>
+78:       <slot />
+                  ^
+79:     </div>
+80:   </div>
+✓ 327 modules transformed.
+rendering chunks...
+vite v8.0.8 building client environment for production...
+[2Ktransforming...✓ 249 modules transformed.
+rendering chunks...
+computing gzip size...
+.svelte-kit/output/client/_app/version.json                         0.02 kB │ gzip:  0.04 kB
+.svelte-kit/output/client/.vite/manifest.json                       4.75 kB │ gzip:  0.78 kB
+.svelte-kit/output/client/_app/immutable/assets/0.CUGS3CCx.css     70.30 kB │ gzip: 11.48 kB
+.svelte-kit/output/client/_app/immutable/chunks/B4O-Q6CX.js         0.03 kB │ gzip:  0.05 kB
+.svelte-kit/output/client/_app/immutable/chunks/Cfug8aQt.js         0.06 kB │ gzip:  0.08 kB
+.svelte-kit/output/client/_app/immutable/entry/start.CWBxSaCW.js    0.07 kB │ gzip:  0.08 kB
+.svelte-kit/output/client/_app/immutable/chunks/gwrPashc.js         0.15 kB │ gzip:  0.15 kB
+.svelte-kit/output/client/_app/immutable/chunks/DqEmYzjn.js         0.97 kB │ gzip:  0.47 kB
+.svelte-kit/output/client/_app/immutable/chunks/B0BvW1x3.js         1.20 kB │ gzip:  0.68 kB
+.svelte-kit/output/client/_app/immutable/nodes/1.D2j4MIbB.js        1.64 kB │ gzip:  0.79 kB
+.svelte-kit/output/client/_app/immutable/nodes/5.4Um-WN9Z.js        1.68 kB │ gzip:  0.93 kB
+.svelte-kit/output/client/_app/immutable/entry/app.BvSZIZCO.js      3.25 kB │ gzip:  1.40 kB
+.svelte-kit/output/client/_app/immutable/nodes/4.O0TkUY8s.js        3.67 kB │ gzip:  1.67 kB
+.svelte-kit/output/client/_app/immutable/nodes/2.BXfoOAsx.js        7.90 kB │ gzip:  2.30 kB
+.svelte-kit/output/client/_app/immutable/chunks/CgWgQP96.js         9.25 kB │ gzip:  3.50 kB
+.svelte-kit/output/client/_app/immutable/chunks/B1qLCtKW.js        12.21 kB │ gzip:  3.19 kB
+.svelte-kit/output/client/_app/immutable/nodes/0.CxcuKx9m.js       19.17 kB │ gzip:  6.24 kB
+.svelte-kit/output/client/_app/immutable/nodes/3.CWwWE4Sg.js       19.88 kB │ gzip:  5.62 kB
+.svelte-kit/output/client/_app/immutable/chunks/BrSyTVJQ.js        30.81 kB │ gzip: 11.79 kB
+.svelte-kit/output/client/_app/immutable/chunks/6gAhKB8_.js        50.74 kB │ gzip: 19.67 kB
+.svelte-kit/output/client/_app/immutable/chunks/CPN1AnW6.js       102.82 kB │ gzip: 31.59 kB
+
+✓ built in 642ms
+computing gzip size...
+.svelte-kit/output/server/.vite/manifest.json                                          6.07 kB │ gzip:   0.79 kB
+.svelte-kit/output/server/_app/immutable/assets/_layout.Rh1d46UW.css                  68.75 kB │ gzip:  11.37 kB
+.svelte-kit/output/server/entries/pages/reference/api/explorer/_page.server.ts.js      0.11 kB │ gzip:   0.10 kB
+.svelte-kit/output/server/entries/pages/_layout.ts.js                                  0.13 kB │ gzip:   0.12 kB
+.svelte-kit/output/server/entries/pages/_page.server.ts.js                             0.18 kB │ gzip:   0.15 kB
+.svelte-kit/output/server/entries/pages/blog/_page.server.ts.js                        0.19 kB │ gzip:   0.15 kB
+.svelte-kit/output/server/internal.js                                                  0.40 kB │ gzip:   0.20 kB
+.svelte-kit/output/server/entries/pages/_...slug_/_page.server.ts.js                   0.52 kB │ gzip:   0.33 kB
+.svelte-kit/output/server/entries/endpoints/sitemap.xml/_server.ts.js                  0.57 kB │ gzip:   0.39 kB
+.svelte-kit/output/server/entries/endpoints/blog/rss.xml/_server.ts.js                 1.25 kB │ gzip:   0.65 kB
+.svelte-kit/output/server/chunks/environment.js                                        1.31 kB │ gzip:   0.56 kB
+.svelte-kit/output/server/entries/pages/reference/api/explorer/_page.svelte.js         1.37 kB │ gzip:   0.69 kB
+.svelte-kit/output/server/entries/pages/_error.svelte.js                               1.72 kB │ gzip:   0.80 kB
+.svelte-kit/output/server/entries/endpoints/llms.txt/_server.ts.js                     1.81 kB │ gzip:   0.68 kB
+.svelte-kit/output/server/entries/pages/blog/_page.svelte.js                           4.58 kB │ gzip:   1.70 kB
+.svelte-kit/output/server/chunks/index-server.js                                       4.60 kB │ gzip:   1.70 kB
+.svelte-kit/output/server/chunks/toast.svelte.js                                       5.35 kB │ gzip:   2.00 kB
+.svelte-kit/output/server/entries/pages/_page.svelte.js                                8.23 kB │ gzip:   2.23 kB
+.svelte-kit/output/server/chunks/shared.js                                            10.18 kB │ gzip:   3.32 kB
+.svelte-kit/output/server/chunks/exports.js                                           11.22 kB │ gzip:   3.50 kB
+.svelte-kit/output/server/chunks/Icon.js                                              13.26 kB │ gzip:   3.27 kB
+.svelte-kit/output/server/entries/pages/_layout.svelte.js                             18.87 kB │ gzip:   5.00 kB
+.svelte-kit/output/server/chunks/internal.js                                          20.61 kB │ gzip:   6.38 kB
+.svelte-kit/output/server/entries/pages/_...slug_/_page.svelte.js                     21.15 kB │ gzip:   4.46 kB
+.svelte-kit/output/server/chunks/utils.js                                             28.76 kB │ gzip:   8.35 kB
+.svelte-kit/output/server/remote-entry.js                                             35.25 kB │ gzip:   7.98 kB
+.svelte-kit/output/server/index.js                                                   119.58 kB │ gzip:  30.49 kB
+.svelte-kit/output/server/chunks/dev.js                                              123.90 kB │ gzip:  32.17 kB
+.svelte-kit/output/server/chunks/content.js                                        1,635.76 kB │ gzip: 236.04 kB
+
+[33m[PLUGIN_TIMINGS] Warning:[0m Your build spent significant time in plugins. Here is a breakdown:
+  - vite-plugin-sveltekit-guard (33%)
+  - vite:asset (31%)
+  - vite-plugin-svelte:compile (15%)
+  - vite-plugin-svelte:preprocess (15%)
+  - vite-plugin-sveltekit-virtual-modules (5%)
+See https://rolldown.rs/options/checks#plugintimings for more details.
+
+✓ built in 9.51s
+
+Run npm run preview to preview your production build locally.
+
+> Using @sveltejs/adapter-static
+  Wrote site to "build"
+  ✔ done
+
+Running Pagefind v1.5.0 (Extended)
+Running from: "/var/home/mariogk/Projects/TerraScale.Documentation"
+Source:       "build"
+Output:       "build/pagefind"
+
+[Walking source directory]
+Found 150 files matching **/*.{html}
+
+[Parsing files]
+Did not find a data-pagefind-body element on the site.
+↳ Indexing all <body> elements on the site.
+
+[Reading languages]
+Discovered 1 language: en
+
+[Building search indexes]
+Total: 
+  Indexed 1 language
+  Indexed 149 pages
+  Indexed 3804 words
+  Indexed 0 filters
+  Indexed 0 sorts
+
+Finished in 12.730 seconds
+=== Scoped style blocks ===
+PASS: No scoped style blocks found
+=== @apply / @utility ===
+PASS: No @apply/@utility found
+=== Stale docs references ===
+PASS: No stale references
+=== No tailwind.config ===
+PASS: No tailwind config
+=== @layer components ===
+PASS: No @layer components
+=== .prose-shell class ===
+PASS: No prose-shell references
+=== Orphan CSS ===
+ls: cannot access 'src/lib/styles/': No such file or directory
+PASS: No styles directory
+=== app.css line count ===
+105 src/app.css

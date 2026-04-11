@@ -580,7 +580,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `docs(styling): codify tailwind-only architecture` | Files: `THEME.md`, `README.md`, `AGENTS.md`, related docs content
 
-- [ ] 12. Run repo-wide hygiene and functional QA gates
+- [x] 12. Run repo-wide hygiene and functional QA gates
 
   **What to do**: Run the full migration proof set: `npm run check`, `npm run build`, grep hygiene checks, curl checks against the built site, and Playwright flows for homepage, docs code-copy/TOC, and API explorer. Capture all evidence and fix any leftover styling regressions before final verification.
   **Must NOT do**: Do not mark the migration complete while any scoped style, stale doc ref, semantic style class, or failing QA gate remains.

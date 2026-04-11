@@ -72,6 +72,15 @@
       "agent": "Sisyphus-Junior",
       "category": "writing",
       "updated_at": "2026-04-11T22:44:15.968Z"
+    },
+    "todo:12": {
+      "task_key": "todo:12",
+      "task_label": "12",
+      "task_title": "Run repo-wide hygiene and functional QA gates",
+      "session_id": "ses_28146bf03ffe5i2rJ68gxjZwa9",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-04-11T22:48:16.554Z"
     }
   }
 }
