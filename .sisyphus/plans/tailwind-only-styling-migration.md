@@ -290,7 +290,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(content): migrate rendered surfaces to tailwind wrappers` | Files: route templates, mdsvex helper outputs, minimal residual CSS
 
-- [ ] 5. Migrate MDX primitives and docs widgets to Tailwind
+- [x] 5. Migrate MDX primitives and docs widgets to Tailwind
 
   **What to do**: Convert `src/lib/mdx/*` components (`Card`, `CardGrid`, `FeatureGrid`, `Tabs`, `TabItem`, `Steps`, `LinkCard`) to Tailwind utility styling and remove their dependency on global semantic classes or global CSS descendant styling. Ensure tabs/interactions continue to work with class/state hooks updated to data attributes if needed.
   **Must NOT do**: Do not solve MDX component styling by leaving the old semantic classes in place.
@@ -333,7 +333,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(mdx): migrate docs widgets to tailwind` | Files: `src/lib/mdx/*`
 
-- [ ] 6. Migrate homepage and docs landing content to Tailwind-native markup
+- [x] 6. Migrate homepage and docs landing content to Tailwind-native markup
 
   **What to do**: Convert `src/content/docs/index.svx` and `src/routes/+page.svelte` away from presentational classes and inline styles. Replace `hero-*`, `btn-gradient`, `btn-outline`, `gradient-text`, `sl-link-button`, and lingering Starlight token usage with Tailwind utility strings or small reusable Svelte wrappers already established in the migration.
   **Must NOT do**: Do not keep inline `style=` attributes or `--sl-*` references in content as a permanent solution.
@@ -372,7 +372,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(home): migrate landing surfaces to tailwind` | Files: `src/content/docs/index.svx`, `src/routes/+page.svelte`, reused wrappers/components
 
-- [ ] 7. Migrate shared shell, navigation, search, sidebar, footer, and layout surfaces
+- [x] 7. Migrate shared shell, navigation, search, sidebar, footer, and layout surfaces
 
   **What to do**: Convert shared route/component surfaces to Tailwind utilities: `src/routes/+layout.svelte`, `src/lib/components/Header.svelte`, `SearchOverlay.svelte`, `DocsSidebar.svelte`, `Footer.svelte`, and any related announcement/mobile-nav markup. Preserve focus states, reduced-motion behavior, and search overlay interactions.
   **Must NOT do**: Do not leave shared shells styled by legacy `.site-*`, `.docs-*`, `.search-*`, or similar semantic selectors.
@@ -414,7 +414,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(shell): migrate shared app chrome to tailwind` | Files: layout/header/search/sidebar/footer components
 
-- [ ] 8. Migrate blog surfaces to Tailwind-only styling
+- [x] 8. Migrate blog surfaces to Tailwind-only styling
 
   **What to do**: Convert `src/routes/blog/+page.svelte` and the blog-rendering branch of `src/routes/[...slug]/+page.svelte` to Tailwind utilities. Remove route-scoped `<style>` rules and preserve blog metadata presentation, canonical tags, author blocks, cards, and RSS-related markup assumptions.
   **Must NOT do**: Do not leave blog card/article styles in route-scoped CSS or `src/app.css`.
@@ -453,7 +453,7 @@ Wave 3: converge and close
 
   **Commit**: YES | Message: `refactor(blog): migrate blog surfaces to tailwind` | Files: blog route files and any reused components
 
-- [ ] 9. Migrate API explorer and related route surfaces to Tailwind-only styling
+- [x] 9. Migrate API explorer and related route surfaces to Tailwind-only styling
 
   **What to do**: Convert `src/lib/components/ApiExplorer.svelte` and `src/routes/reference/api/explorer/+page.svelte` to Tailwind utilities, remove scoped CSS, and normalize the explorer onto the canonical token namespace. Preserve deferred loading behavior, operation expansion, response rendering, and mobile responsiveness.
   **Must NOT do**: Do not leave explorer styling in scoped CSS or keep the secondary token family.

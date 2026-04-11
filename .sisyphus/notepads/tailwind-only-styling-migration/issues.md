@@ -3,3 +3,4 @@
 - `lsp_diagnostics` still reports a false parse error on `src/app.css` because Biome in this workspace does not understand Tailwind v4 CSS directives like `@theme`; route-level arbitrary-variant classes verify correctly through `npm run check` and `npm run build` instead.
 - `npm run check` is green for the MDX primitives, but Svelte 5 still emits deprecation warnings for `<slot>` usage in `Tabs.svelte` and `TabItem.svelte`.
 - `npm run check` and `npm run build` still surface the pre-existing Svelte 5 `<slot>` deprecation warnings in `src/lib/mdx/Tabs.svelte` and `src/lib/mdx/TabItem.svelte`; they do not block this API explorer migration.
+- Verification for the shared shell/navigation pass found no in-scope styling regressions; the only remaining scoped styles in the checked set are the expected `Toast.svelte` rules.

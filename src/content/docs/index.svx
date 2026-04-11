@@ -90,12 +90,12 @@ Simple APIs, powerful features. Deploy your database with just a few lines of co
 
 ---
 
-<div style="text-align: center; padding: 3rem 0;">
+<div class="py-12 text-center">
   <h2>Ready to Build the Future?</h2>
-  <p style="color: var(--sl-color-gray-3); margin-bottom: 2rem;">
+  <p class="mb-8 text-slate-400">
     Join thousands of developers building scalable, reliable applications with TerraScale.
   </p>
-  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+  <div class="flex flex-wrap justify-center gap-4">
     <a href="/guides/getting-started/" class="btn-gradient">
       Start Building Today
     </a>

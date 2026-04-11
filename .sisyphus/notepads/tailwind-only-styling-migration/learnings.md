@@ -11,3 +11,5 @@
 - Successfully migrated blog surfaces to Tailwind-only styling by replacing scoped CSS classes with Tailwind utility classes.
 - Replaced `.meta-separator` with `mx-2 opacity-50` in both `src/routes/[...slug]/+page.svelte` and `src/routes/blog/+page.svelte`.
 - Replaced `.article-authors` and related classes with Tailwind flexbox and typography utilities.
+- Shared shell/navigation surfaces verified clean: `+layout`, `Header`, `SearchOverlay`, `DocsSidebar`, `Footer`, `TableOfContents`, and `PrevNextNav` are utility-only, contain no scoped `<style>` blocks, and do not reference `--sl-*` tokens.
+- `Toast.svelte` intentionally still owns its scoped style block and semantic classes; leave it untouched for the later T10 cleanup pass.

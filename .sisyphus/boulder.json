@@ -45,6 +45,15 @@
       "agent": "Sisyphus-Junior",
       "category": "quick",
       "updated_at": "2026-04-11T22:25:45.274Z"
+    },
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "Migrate homepage and docs landing content to Tailwind-native markup",
+      "session_id": "ses_281551e71ffejg9BFEcjQ84JDz",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-04-11T22:31:33.492Z"
     }
   }
 }
