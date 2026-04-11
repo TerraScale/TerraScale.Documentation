@@ -103,7 +103,6 @@
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	let error = $state<string | null>(null);
 
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function methodTone(method: string) {
 		switch (method.toUpperCase()) {
 			case 'GET':
@@ -118,6 +117,24 @@
 				return 'delete';
 			default:
 				return 'neutral';
+		}
+	}
+
+	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
+	function methodBadgeClass(method: string) {
+		switch (methodTone(method)) {
+			case 'get':
+				return 'bg-emerald-500/18 text-emerald-400';
+			case 'post':
+				return 'bg-blue-500/18 text-blue-400';
+			case 'put':
+				return 'bg-amber-500/18 text-amber-400';
+			case 'patch':
+				return 'bg-purple-500/18 text-purple-300';
+			case 'delete':
+				return 'bg-red-500/18 text-red-400';
+			default:
+				return 'bg-slate-400/18 text-slate-300';
 		}
 	}
 
@@ -291,7 +308,7 @@
 		<section class="grid gap-4 rounded-2xl border border-white/10 bg-white/6 p-6 shadow-[0_14px_40px_rgba(0,0,0,0.35)] backdrop-blur-[14px]">
 			<div>
 				<p class="mb-[0.85rem] text-[0.8rem] uppercase tracking-[0.16em] text-blue-300">OpenAPI source</p>
-				<h2>{spec.info?.title}</h2>
+				<h2 class="m-0">{spec.info?.title}</h2>
 				<p>{spec.info?.description}</p>
 			</div>
 			<div class="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-3">
@@ -313,17 +330,17 @@
 		{#each groupedOperations as group}
 			<section class="grid gap-3.5">
 				<header>
-					<h3>{group.tag}</h3>
-					{#if group.description}<p>{group.description}</p>{/if}
+					<h3 class="m-0">{group.tag}</h3>
+					{#if group.description}<p class="mt-[0.35rem] text-[var(--color-ts-text-muted)]">{group.description}</p>{/if}
 				</header>
 				<div class="grid gap-3.5">
 					{#each group.items as operation}
 						<article class="rounded-[0.875rem] border border-white/10 bg-[color-mix(in_oklab,var(--color-ts-surface)_88%,transparent)]">
 							<button class="flex w-full items-center justify-between gap-4 px-[1.125rem] py-4 text-left text-inherit" type="button" onclick={() => (expanded[operation.id] = !expanded[operation.id])}>
 								<div class="flex items-start gap-3.5 max-[768px]:flex-col">
-									<span class={`method-badge ${methodTone(operation.method)}`}>{operation.method}</span>
+									<span class={`inline-flex min-w-[4.5rem] justify-center rounded-full px-[0.6rem] py-[0.35rem] text-[0.75rem] font-bold tracking-[0.06em] ${methodBadgeClass(operation.method)}`}>{operation.method}</span>
 									<div>
-										<h4>{operation.summary}</h4>
+										<h4 class="m-0">{operation.summary}</h4>
 										<code>{operation.path}</code>
 									</div>
 								</div>
@@ -340,21 +357,21 @@
 
 									{#if operation.parameters.length > 0}
 										<div class="grid gap-[0.6rem]">
-											<h5>Parameters</h5>
-											<table>
+											<h5 class="m-0">Parameters</h5>
+											<table class="w-full border-collapse text-[0.925rem]">
 												<thead>
-													<tr><th>Name</th><th>In</th><th>Type</th><th>Required</th></tr>
+													<tr><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">Name</th><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">In</th><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">Type</th><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">Required</th></tr>
 												</thead>
 												<tbody>
 													{#each operation.parameters as parameter}
 														<tr>
-															<td>
-																<code>{parameter.name}</code>
+															<td class="border-b border-white/8 px-3 py-[0.65rem] align-top">
+																<code class="text-[0.85rem]">{parameter.name}</code>
 																{#if parameter.description}<div class="muted">{parameter.description}</div>{/if}
 															</td>
-															<td>{parameter.in}</td>
-															<td>{summarizeSchema(parameter.schema, spec)}</td>
-															<td>{parameter.required ? 'Yes' : 'No'}</td>
+															<td class="border-b border-white/8 px-3 py-[0.65rem] align-top">{parameter.in}</td>
+															<td class="border-b border-white/8 px-3 py-[0.65rem] align-top">{summarizeSchema(parameter.schema, spec)}</td>
+															<td class="border-b border-white/8 px-3 py-[0.65rem] align-top">{parameter.required ? 'Yes' : 'No'}</td>
 														</tr>
 													{/each}
 												</tbody>
@@ -364,10 +381,10 @@
 
 									{#if operation.requestBody}
 										<div class="grid gap-[0.6rem]">
-											<h5>Request body</h5>
+											<h5 class="m-0">Request body</h5>
 											<p class="text-[0.925rem] text-slate-400">{operation.requestBody.required ? 'Required' : 'Optional'} · {summarizeSchema(operation.requestBody.schema, spec)}</p>
 											{#if getSchemaFields(operation.requestBody.schema, spec).length > 0}
-												<ul class="m-0 pl-[1.1rem]">
+												<ul class="m-0 pl-[1.1rem] [&>li]:mb-2 [&>li]:grid [&>li]:gap-1">
 													{#each getSchemaFields(operation.requestBody.schema, spec) as field}
 														<li><code>{field.name}</code> — {field.type}{field.required ? ' · required' : ''}</li>
 													{/each}
@@ -377,8 +394,8 @@
 									{/if}
 
 									<div class="grid gap-[0.6rem]">
-										<h5>Responses</h5>
-										<ul class="m-0 pl-[1.1rem]">
+										<h5 class="m-0">Responses</h5>
+										<ul class="m-0 pl-[1.1rem] [&>li]:mb-2 [&>li]:grid [&>li]:gap-1">
 											{#each operation.responses as response}
 												<li>
 													<strong>{response.status}</strong>
@@ -393,68 +410,7 @@
 						</article>
 					{/each}
 				</div>
-			</section>
+					</section>
 		{/each}
 	</div>
 {/if}
-
-<style>
-	h2,
-	h3,
-	h4,
-	h5 {
-		margin: 0;
-	}
-
-	header p {
-		margin: 0.35rem 0 0;
-		color: var(--color-ts-text-muted);
-	}
-
-	table code {
-		font-size: 0.85rem;
-	}
-
-	.method-badge {
-		display: inline-flex;
-		min-width: 4.5rem;
-		justify-content: center;
-		padding: 0.35rem 0.6rem;
-		border-radius: 999px;
-		font-size: 0.75rem;
-		font-weight: 700;
-		letter-spacing: 0.06em;
-	}
-
-	.method-badge.get { background: rgba(34, 197, 94, 0.18); color: rgb(74, 222, 128); }
-	.method-badge.post { background: rgba(59, 130, 246, 0.18); color: rgb(96, 165, 250); }
-	.method-badge.put { background: rgba(245, 158, 11, 0.18); color: rgb(251, 191, 36); }
-	.method-badge.patch { background: rgba(168, 85, 247, 0.18); color: rgb(196, 181, 253); }
-	.method-badge.delete { background: rgba(239, 68, 68, 0.18); color: rgb(248, 113, 113); }
-	.method-badge.neutral { background: rgba(148, 163, 184, 0.18); color: rgb(203, 213, 225); }
-
-	table {
-		width: 100%;
-		border-collapse: collapse;
-		font-size: 0.925rem;
-	}
-
-	th,
-	td {
-		padding: 0.65rem 0.75rem;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-		vertical-align: top;
-	}
-
-	th {
-		text-align: left;
-		color: var(--color-ts-text-muted);
-		font-weight: 600;
-	}
-
-	ul li {
-		display: grid;
-		gap: 0.25rem;
-		margin-bottom: 0.5rem;
-	}
-</style>

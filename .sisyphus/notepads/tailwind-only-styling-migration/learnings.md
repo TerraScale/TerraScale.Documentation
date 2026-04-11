@@ -5,3 +5,9 @@
 - Shiki can stamp stable DOM contracts on generated `<pre>` elements via a lightweight transformer, avoiding ad hoc client-side hook assignment.
 - Tailwind v4 arbitrary descendant variants on `<article data-prose>` wrappers can fully replace the temporary `@layer components` prose stylesheet, including Shiki line states, admonitions, tables, static tabs, and heading-anchor hover behavior.
 - Keeping the generated-content contract on `data-prose` wrappers lets mdsvex output remain untouched while `src/app.css` stays limited to tokens, base rules, and reduced-motion handling.
+- The MDX primitives in `src/lib/mdx/*.svelte` are now utility-only; no scoped `<style>` blocks or legacy semantic classes remain in that set.
+- Tabs state switching now uses Svelte 5 `$state` plus context helpers, which keeps the active tab logic local without DOM class manipulation.
+- Api explorer cleanup can stay utility-only by replacing method-color CSS classes with a tiny Svelte class mapper and moving table/list descendant rules directly onto the rendered elements via Tailwind utilities and arbitrary variants.
+- Successfully migrated blog surfaces to Tailwind-only styling by replacing scoped CSS classes with Tailwind utility classes.
+- Replaced `.meta-separator` with `mx-2 opacity-50` in both `src/routes/[...slug]/+page.svelte` and `src/routes/blog/+page.svelte`.
+- Replaced `.article-authors` and related classes with Tailwind flexbox and typography utilities.

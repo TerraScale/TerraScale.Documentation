@@ -18,6 +18,33 @@
       "agent": "Sisyphus-Junior",
       "category": "deep",
       "updated_at": "2026-04-11T22:01:51.227Z"
+    },
+    "todo:3": {
+      "task_key": "todo:3",
+      "task_label": "3",
+      "task_title": "Replace runtime style hooks with explicit behavior contracts",
+      "session_id": "ses_2816a5b28ffeQiHNZ1jXxHexa3",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-04-11T22:09:31.754Z"
+    },
+    "todo:4": {
+      "task_key": "todo:4",
+      "task_label": "4",
+      "task_title": "Migrate rendered-content styling to Tailwind wrapper patterns",
+      "session_id": "ses_28164248dffedElebIuLO0ozLr",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-11T22:18:50.892Z"
+    },
+    "todo:5": {
+      "task_key": "todo:5",
+      "task_label": "5",
+      "task_title": "Migrate MDX primitives and docs widgets to Tailwind",
+      "session_id": "ses_2815c3ae1ffeLoOg23QpVxjveR",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-04-11T22:25:45.274Z"
     }
   }
 }

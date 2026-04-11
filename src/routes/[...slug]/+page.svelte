@@ -149,15 +149,15 @@
 				{/if}
 				<div class="mt-4 flex flex-wrap items-center gap-3 text-[0.8rem] uppercase tracking-[0.08em] text-slate-300">
 					<time datetime={data.entry.date}>{formatDate(data.entry.date)}</time>
-					<span class="meta-separator">•</span>
+					<span class="mx-2 opacity-50">•</span>
 					<span>{data.entry.readingTime}</span>
 				</div>
 				{#if data.entry.authors && data.entry.authors.length > 0}
-					<div class="article-authors">
+					<div class="mt-6 flex flex-wrap gap-6 pt-6 border-t border-white/8">
 						{#each data.entry.authors as author}
-							<div class="author-card">
-								<div class="author-info">
-									<span class="author-name">
+							<div class="flex items-center gap-3">
+								<div class="flex flex-col">
+									<span class="font-semibold text-slate-50 [&_a]:text-inherit [&_a]:no-underline [&_a:hover]:underline [&_a:hover]:text-blue-400">
 										{#if author.url}
 											<a href={author.url}>{author.name}</a>
 										{:else}
@@ -165,7 +165,7 @@
 										{/if}
 									</span>
 									{#if author.title}
-										<span class="author-title">{author.title}</span>
+										<span class="text-sm text-slate-400">{author.title}</span>
 									{/if}
 								</div>
 							</div>
@@ -202,50 +202,3 @@
 		<TableOfContents items={data.entry.headings} />
 	</section>
 {/if}
-
-<style>
-	.meta-separator {
-		margin: 0 0.5rem;
-		opacity: 0.5;
-	}
-
-	.article-authors {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 1.5rem;
-		margin-top: 1.5rem;
-		padding-top: 1.5rem;
-		border-top: 1px solid rgba(255, 255, 255, 0.08);
-	}
-
-	.author-card {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-	}
-
-	.author-info {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.author-name {
-		font-weight: 600;
-		color: var(--color-ts-text);
-	}
-
-	.author-name a {
-		color: inherit;
-		text-decoration: none;
-	}
-
-	.author-name a:hover {
-		text-decoration: underline;
-		color: var(--color-ts-primary-light);
-	}
-
-	.author-title {
-		font-size: 0.875rem;
-		color: var(--color-ts-text-muted);
-	}
-</style>

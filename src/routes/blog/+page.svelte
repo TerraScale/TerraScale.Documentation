@@ -37,7 +37,7 @@
 						<div>
 							<div class="mb-4 flex items-center gap-2 text-[0.875rem] text-slate-400">
 								<time datetime={post.date}>{formatDate(post.date)}</time>
-								<span class="meta-separator">•</span>
+								<span class="mx-2 opacity-50">•</span>
 								<span>{post.readingTime}</span>
 							</div>
 

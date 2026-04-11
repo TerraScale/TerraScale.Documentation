@@ -1,3 +1,5 @@
 - Residual rendered-content selectors remain intentionally in `src/app.css` because generated HTML from mdsvex/Shiki cannot receive Tailwind classes at build time yet.
 - `lsp_diagnostics` reports non-blocking Biome noise on Svelte/Tailwind-authored files here, so `npm run check` remains the reliable verification source for actual type/Svelte correctness.
 - `lsp_diagnostics` still reports a false parse error on `src/app.css` because Biome in this workspace does not understand Tailwind v4 CSS directives like `@theme`; route-level arbitrary-variant classes verify correctly through `npm run check` and `npm run build` instead.
+- `npm run check` is green for the MDX primitives, but Svelte 5 still emits deprecation warnings for `<slot>` usage in `Tabs.svelte` and `TabItem.svelte`.
+- `npm run check` and `npm run build` still surface the pre-existing Svelte 5 `<slot>` deprecation warnings in `src/lib/mdx/Tabs.svelte` and `src/lib/mdx/TabItem.svelte`; they do not block this API explorer migration.

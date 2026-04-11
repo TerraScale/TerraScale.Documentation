@@ -1,19 +1,18 @@
 <script lang="ts">
 	import { getContext } from 'svelte';
-	import type { Writable } from 'svelte/store';
 
-	export let label = 'Tab';
+	let { label = 'Tab' } = $props<{ label?: string }>();
 
 	const tabsContext = getContext<{
-		tabs: Writable<Array<{ id: string; label: string }>>;
-		active: Writable<string>;
-		registerTab: (label: string) => string;
+		getActiveTab: () => string;
+		setActiveTab: (value: string) => void;
+		registerTab: (getLabel: () => string) => string;
 	}>('tabs');
 
-	const id = tabsContext.registerTab(label);
-	const active = tabsContext.active;
+	const id = tabsContext.registerTab(() => label);
+	const isActive = $derived(tabsContext.getActiveTab() === id);
 </script>
 
-<section class={$active === id ? 'block' : 'hidden'} role="tabpanel">
+<section class={isActive ? 'block' : 'hidden'} role="tabpanel">
 	<slot />
 </section>
