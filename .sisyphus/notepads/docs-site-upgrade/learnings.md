@@ -5,3 +5,5 @@
 * The raw content loader must include `.svx` everywhere it derives routes from source filenames; updating the `import.meta.glob` pattern alone is not enough without extending the filename-stripping regex too.
 * Content frontmatter parsing is safest when normalized through small typed helpers; that keeps additive metadata fields deterministic without introducing strict runtime validation that can break the build.
 * Draft entries should be filtered at the content index boundary, while unlisted entries should stay routable/prerendered but drop out of listed collections such as sidebar and search data.
+* The docs sidebar can stay fully automatic by ordering listed sidebar-visible docs per top-level section and deriving nested groups from relative source directories before layering on optional `section` and `sidebar.group` metadata.
+* MDX-to-Markdown migration can stay purely at the filesystem layer: using `git mv` to swap extensions preserves routes as long as each basename stays the same; in this pass, 31 component/admonition pages became `.svx` and 30 prose pages became `.md`.

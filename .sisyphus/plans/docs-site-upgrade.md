@@ -259,7 +259,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `refactor(content): define unified metadata contract` | Files: `src/lib/content/types.ts`, content loader/schema files, representative content files
 
-- [ ] 4. Replace manual sidebar definition with content-derived IA
+- [x] 4. Replace manual sidebar definition with content-derived IA
 
   **What to do**: Remove the hard-coded `sidebarDefinition` tree and generate sidebar sections directly from content metadata and filesystem structure. Use the first route segment as the top-level section label map (`guides`, `account`, `reference`, `dashboard`, `roadmap`, `about`), allow nested grouping via `sidebar.group`, sort entries by `sidebar.order`/`order`, place section `index` pages first when present, and exclude `draft`/`unlisted`/`sidebar.hidden` entries. Keep prev/next navigation sourced from the same ordered tree.
   **Must NOT do**: Must not maintain a second manual nav manifest. Must not let blog posts leak into docs sidebar generation.
@@ -299,7 +299,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(nav): derive sidebar and prev-next from content metadata` | Files: `src/lib/content/index.ts`, `src/lib/content/types.ts`, `src/lib/components/DocsSidebar.svelte`, route loaders
 
-- [ ] 5. Plan and execute `.mdx` → `.md` / `.svx` migration rules
+- [x] 5. Plan and execute `.mdx` → `.md` / `.svx` migration rules
 
   **What to do**: Inventory every existing content file under `src/content/docs/**/*.{md,mdx}` and convert it to the new rule set: plain prose pages/posts become `.md`; pages that use embedded UI components, tab sets, cards, feature grids, or custom badges become `.svx`. Replace fragile MDX-only patterns with mdsvex-compatible component imports/usage and remove extension ambiguity from the repo. Keep routes stable by preserving slug paths during renames.
   **Must NOT do**: Must not break existing public routes. Must not leave a mixed `.mdx` estate behind after migration.

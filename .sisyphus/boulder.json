@@ -18,6 +18,15 @@
       "agent": "Sisyphus-Junior",
       "category": "deep",
       "updated_at": "2026-04-11T19:40:11.708Z"
+    },
+    "todo:4": {
+      "task_key": "todo:4",
+      "task_label": "4",
+      "task_title": "Replace manual sidebar definition with content-derived IA",
+      "session_id": "ses_281e6f0d3ffeo2C4F1R7KMnOuB",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-11T19:54:24.503Z"
     }
   }
 }

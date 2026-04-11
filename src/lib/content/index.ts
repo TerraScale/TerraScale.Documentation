@@ -16,30 +16,16 @@ const rawMap = import.meta.glob('/src/content/docs/**/*.{md,mdx,svx}', {
 
 const IGNORED_SOURCE_PATHS = new Set(['/src/content/docs/reference/api.mdx']);
 
-const sidebarDefinition = [
-	{ label: 'Guides', directory: 'guides' },
-	{ label: 'Account', directory: 'account' },
-	{
-		label: 'Reference',
-		items: [
-			{ label: 'Authentication', href: '/reference/authentication/' },
-			{ label: 'Multi-Factor Authentication', href: '/reference/mfa/' },
-			{ label: 'Organizations', href: '/reference/organizations/' },
-			{ label: 'API Reference', directory: 'reference/api' },
-			{ label: 'Management API', directory: 'reference/management' },
-			{ label: 'Regions', href: '/reference/regions/' },
-			{ label: 'Plans', href: '/reference/plans/' },
-			{ label: 'Billing', href: '/reference/billing/' },
-			{ label: 'Rate Limits', href: '/reference/rate-limits/' },
-			{ label: 'Error Handling', href: '/reference/error-handling/' },
-			{ label: 'Data Models', href: '/reference/data-models/' },
-			{ label: 'Best Practices', href: '/reference/best-practices/' }
-		]
-	},
-	{ label: 'Dashboard', directory: 'dashboard' },
-	{ label: 'Roadmap', directory: 'roadmap' },
-	{ label: 'About', directory: 'about' }
-] as const;
+const SECTION_LABELS = {
+	guides: 'Guides',
+	account: 'Account',
+	reference: 'Reference',
+	dashboard: 'Dashboard',
+	roadmap: 'Roadmap',
+	about: 'About'
+} as const;
+
+type SectionKey = keyof typeof SECTION_LABELS;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -395,7 +381,13 @@ function extractHeadings(markdown: string): HeadingLink[] {
 	return headings;
 }
 
-function sortEntries(a: ContentEntry, b: ContentEntry) {
+function sortEntries(a: ContentEntry, b: ContentEntry, indexRoute?: string) {
+	const isIndexA = indexRoute !== undefined && a.route === indexRoute;
+	const isIndexB = indexRoute !== undefined && b.route === indexRoute;
+	if (isIndexA !== isIndexB) {
+		return isIndexA ? -1 : 1;
+	}
+
 	const orderA = a.sidebarOrder ?? a.metadata.order ?? Number.MAX_SAFE_INTEGER;
 	const orderB = b.sidebarOrder ?? b.metadata.order ?? Number.MAX_SAFE_INTEGER;
 	if (orderA !== orderB) {
@@ -423,12 +415,29 @@ function createSidebarLeaf(entry: ContentEntry): SidebarNode {
 	};
 }
 
-function appendSidebarLeaf(nodes: SidebarNode[], entry: ContentEntry, fallbackSection?: string) {
+function getFilesystemGroupPath(entry: ContentEntry) {
+	const sourceSegments = entry.sourcePath
+		.replace('/src/content/docs/', '')
+		.replace(/\.(md|mdx|svx)$/, '')
+		.split('/');
+
+	return sourceSegments.slice(1, -1).map((segment) => titleCase(segment));
+}
+
+function getSidebarGroupPath(entry: ContentEntry, fallbackSection?: string) {
 	const section = entry.metadata.section?.trim();
 	const group = entry.metadata.sidebar?.group?.trim();
-	const groupPath = [section && section !== fallbackSection ? section : undefined, group].filter(
-		(label): label is string => Boolean(label)
-	);
+	const labels = [
+		...getFilesystemGroupPath(entry),
+		section && section !== fallbackSection ? section : undefined,
+		group
+	].filter((label): label is string => Boolean(label));
+
+	return labels.filter((label, index) => label !== labels[index - 1]);
+}
+
+function appendSidebarLeaf(nodes: SidebarNode[], entry: ContentEntry, fallbackSection?: string) {
+	const groupPath = getSidebarGroupPath(entry, fallbackSection);
 
 	if (groupPath.length === 0) {
 		nodes.push(createSidebarLeaf(entry));
@@ -516,50 +525,51 @@ const routeMap = new Map(publicEntries.map((entry) => [entry.route, entry]));
 const docsEntries = listedEntries.filter((entry) => entry.kind === 'docs' && entry.route !== '/');
 const blogEntries = listedEntries.filter((entry) => entry.kind === 'blog');
 
-function listDirectoryEntries(directory: string) {
-	return docsEntries
-		.filter(
-			(entry) =>
-				entry.route.startsWith(`/${directory.toLowerCase()}/`) && isSidebarVisibleEntry(entry)
-		)
-		.sort(sortEntries);
+function getSectionKey(entry: ContentEntry): SectionKey | undefined {
+	const sectionKey = entry.slug[0];
+	if (!sectionKey || !(sectionKey in SECTION_LABELS)) {
+		return undefined;
+	}
+
+	return sectionKey as SectionKey;
 }
 
-function buildSidebarNodes(
-	definition: ReadonlyArray<
-		| { label: string; directory: string }
-		| {
-				label: string;
-				items: ReadonlyArray<{ label: string; href: string } | { label: string; directory: string }>;
-		  }
-	>
-): SidebarNode[] {
-	return definition.map((item) => {
-		if ('directory' in item) {
-			const items = createSidebarItems(listDirectoryEntries(item.directory), item.label);
-			return {
-				label: item.label,
-				items
-			};
+function buildAutoSidebar() {
+	const sectionEntries = docsEntries.reduce<Map<SectionKey, ContentEntry[]>>((map, entry) => {
+		if (!isSidebarVisibleEntry(entry)) {
+			return map;
 		}
 
-		return {
-			label: item.label,
-			items: item.items.map((child) => {
-				if ('directory' in child) {
-					const items = createSidebarItems(listDirectoryEntries(child.directory), child.label);
-					return {
-						label: child.label,
-						items
-					};
-				}
+		const sectionKey = getSectionKey(entry);
+		if (!sectionKey) {
+			return map;
+		}
 
-				return {
-					label: child.label,
-					href: child.href
-				};
-			})
-		};
+		const entries = map.get(sectionKey);
+		if (entries) {
+			entries.push(entry);
+		} else {
+			map.set(sectionKey, [entry]);
+		}
+
+		return map;
+	}, new Map());
+
+	return (Object.entries(SECTION_LABELS) as Array<[SectionKey, string]>).flatMap(([sectionKey, label]) => {
+		const items = sectionEntries
+			.get(sectionKey)
+			?.sort((a, b) => sortEntries(a, b, `/${sectionKey}/`));
+
+		if (!items || items.length === 0) {
+			return [];
+		}
+
+		return [
+			{
+				label,
+				items: createSidebarItems(items, label)
+			}
+		];
 	});
 }
 
@@ -576,7 +586,7 @@ function flattenSidebar(nodes: SidebarNode[]): string[] {
 	return flat;
 }
 
-const sidebarNodes = buildSidebarNodes(sidebarDefinition);
+const sidebarNodes = buildAutoSidebar();
 const orderedDocsRoutes = flattenSidebar(sidebarNodes);
 
 export const allEntries = publicEntries;
