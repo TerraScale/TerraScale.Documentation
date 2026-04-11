@@ -80,6 +80,9 @@
 						href={item.href}
 					>
 						{item.label}
+						{#if isActive(item.href) && !item.primary}
+							<span class="active-indicator" aria-hidden="true"></span>
+						{/if}
 					</a>
 				{/each}
 			</nav>
@@ -111,7 +114,12 @@
 					<span>Search</span>
 				</button>
 				{#each navItems as item}
-					<a class:primary-link={item.primary} href={item.href} on:click={closeMobile}>{item.label}</a>
+					<a class:active={isActive(item.href)} class:primary-link={item.primary} href={item.href} on:click={closeMobile}>
+						{item.label}
+						{#if isActive(item.href) && !item.primary}
+							<span class="active-indicator" aria-hidden="true"></span>
+						{/if}
+					</a>
 				{/each}
 				<div class="mobile-socials">
 					{#each socialLinks as link}

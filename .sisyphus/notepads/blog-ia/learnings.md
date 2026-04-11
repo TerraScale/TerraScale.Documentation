@@ -1,0 +1,4 @@
+- Blog posts are correctly filtered by `kind === 'blog'` and excluded from the docs sidebar.
+- Added `csharp` to Shiki highlighter to support SDK announcement posts.
+- Improved blog index and post rendering with better metadata, canonical links, and author display.
+- Added RSS auto-discovery link to the global layout.

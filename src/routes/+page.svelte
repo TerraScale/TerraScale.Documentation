@@ -1,13 +1,15 @@
 <script lang="ts">
+	// biome-ignore lint/correctness/noUnusedImports: referenced in component markup
 	import Icon from '$lib/components/Icon.svelte';
 
-	export let data: {
+	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
+	let { data }: {
 		entry: {
 			title: string;
 			description: string;
 			html: string;
 		};
-	};
+	} = $props();
 
 </script>
 

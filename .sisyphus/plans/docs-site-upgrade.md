@@ -380,7 +380,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `refactor(content): replace custom markdown renderer with mdsvex` | Files: `src/lib/content/index.ts`, mdsvex config/layout files, docs/blog route loaders and renderers
 
-- [ ] 7. Rebuild heading, badge, TOC, and anchor system
+- [x] 7. Rebuild heading, badge, TOC, and anchor system
 
   **What to do**: Move heading IDs and anchor links to mdsvex-compatible build-time plugins. Keep the existing TOC depth behavior limited to H2/H3 for docs pages, add page-level heading badges from frontmatter, preserve sidebar badges, and support component-driven inline heading badges in `.svx` only. Standardize duplicate-slug handling via GitHub-compatible slugging, and ensure anchor links are present in rendered headings without requiring manual HTML injection.
   **Must NOT do**: Must not rely on fragile regex extraction for headings once mdsvex is in place. Must not expose heading badges in plain `.md` through bespoke syntax that bypasses the shared pipeline.
@@ -421,7 +421,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(docs): rebuild heading anchors toc and badges` | Files: content metadata/types, mdsvex plugins, TOC component, docs page shell
 
-- [ ] 8. Replace JSON search with lazy Pagefind overlay
+- [x] 8. Replace JSON search with lazy Pagefind overlay
 
   **What to do**: Retire `src/routes/search-index.json/+server.ts` as the public search backend and rebuild `SearchOverlay.svelte` around Pagefind. Keep the overlay/modal UX, keyboard focus behavior, and result card design, but lazy-load Pagefind assets only when search opens. Scope results across docs, blog, and API pages, exclude drafts/unlisted entries, and keep the result limit at 12 items per query with a sensible empty-state.
   **Must NOT do**: Must not fetch the full content corpus as raw JSON on first load. Must not keep both JSON search and Pagefind as equal public codepaths.
@@ -461,7 +461,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(search): replace json search with lazy pagefind overlay` | Files: `src/lib/components/SearchOverlay.svelte`, `src/routes/+layout.svelte`, retired `src/routes/search-index.json/+server.ts`, related search helpers/assets
 
-- [ ] 9. Upgrade header, nav, sidebar, mobile menu, and announcement shell
+- [x] 9. Upgrade header, nav, sidebar, mobile menu, and announcement shell
 
   **What to do**: Refactor the global shell so primary navigation, mobile nav, sidebar, and announcement presentation feel coherent and modern without becoming a redesign project. Keep three primary nav intents (`Docs`, `Blog`, `Get Started`), add a content-driven announcement bar above the header, improve active states and section discoverability, and make the sidebar sticky/collapsible-friendly on small screens while preserving static-first behavior. Source announcement content from a checked-in static site-data file and keep one active announcement at a time.
   **Must NOT do**: Must not introduce backend state or cookie-dependent announcement persistence. Must not add extra top-level nav categories beyond the requested docs/blog/API structure.
@@ -541,7 +541,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `perf(ui): optimize quantico loading and typography budget` | Files: `src/app.css`, root HTML/layout files, static font preload wiring, noncritical asset-loading code
 
-- [ ] 11. Upgrade blog information architecture and metadata output
+- [x] 11. Upgrade blog information architecture and metadata output
 
   **What to do**: Keep `/blog/` as a dedicated route but align it with the new content schema and mdsvex pipeline. Ensure blog posts use `.md` unless they need embedded components, preserve reading time/date/tags, add canonical metadata, improve card hierarchy, and ensure posts participate correctly in search and llms.txt only when public. Keep RSS discoverability link present in the header/footer if it already exists, and ensure blog routes are excluded from docs sidebar logic.
   **Must NOT do**: Must not merge blog into docs sidebar. Must not require a separate blog renderer distinct from the mdsvex content pipeline.
@@ -582,7 +582,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(blog): align blog ia and metadata with mdsvex pipeline` | Files: blog content files, content loader/schema, blog route files, metadata helpers
 
-- [ ] 12. Add static OpenAPI reference plus deferred explorer entrypoint
+- [x] 12. Add static OpenAPI reference plus deferred explorer entrypoint
 
   **What to do**: Introduce a checked-in OpenAPI source location under static assets (for example `static/openapi/terrascale.yaml`) and generate a static API reference experience that lives under the existing `/reference/api/` route tree. Add a separate deferred explorer shell route (for example `/reference/api/explorer/`) that loads the interactive viewer only when visited, not on every docs page. The static route must remain the default linked experience from docs navigation.
   **Must NOT do**: Must not load Swagger/Redoc explorer assets on normal docs/blog page views. Must not turn the explorer into the default API entry page.
@@ -622,7 +622,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(api): add static openapi reference and deferred explorer` | Files: `static/openapi/**`, API docs content/routes/components, content loader/schema, nav links
 
-- [ ] 13. Generate llms.txt and public crawl artifacts
+- [x] 13. Generate llms.txt and public crawl artifacts
 
   **What to do**: Generate a prerendered `llms.txt` endpoint from the same public content graph that powers docs/blog/API navigation. Include only public docs, blog posts, and API reference pages that are not draft/unlisted. Align the output with existing crawl surfaces like sitemap and robots, and ensure canonical/public URLs are represented consistently. Keep the output concise, text-only, and deterministic.
   **Must NOT do**: Must not include drafts, internal-only notes, hidden pages, or explorer-only routes that are not intended for indexing.
@@ -662,7 +662,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(crawl): generate llms output from public content graph` | Files: `src/routes/llms.txt/+server.ts` or equivalent, content-visibility helpers, sitemap/robots related logic as needed
 
-- [ ] 14. Add build-time syntax highlighting, copy UX, and notification animations
+- [x] 14. Add build-time syntax highlighting, copy UX, and notification animations
 
   **What to do**: Replace weak/default code rendering with build-time highlighting using mdsvex-compatible syntax highlighting. Use a Shiki-style build-time highlighter with `github-dark-default` for dark mode and `github-light-default` for light fallback, support fenced-code filenames/titles, line highlighting, diff markers, and a polished copy button that shows a success toast/inline notification and clears automatically. Only `.svx` files may use richer code-block enhancements beyond plain fenced markdown.
   **Must NOT do**: Must not perform syntax highlighting client-side at runtime. Must not add copy UX that depends on a backend or blocks rendering.
@@ -703,7 +703,7 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `feat(code): add build-time highlighting and copy feedback ux` | Files: mdsvex/highlighter config, code-block components, docs styles, representative `.svx` content
 
-- [ ] 15. Run full docs UX/accessibility/performance polish pass
+- [x] 15. Run full docs UX/accessibility/performance polish pass
 
   **What to do**: Perform the final implementation pass that harmonizes spacing, hierarchy, empty states, responsiveness, reduced-motion handling, focus states, icon consistency, nav ergonomics, and page-level polish across home/docs/blog/API. This pass must also clean up stale imports/dependencies left from the old custom renderer or test harness, verify draft exclusion across all public artifacts, and ensure curl-first QA coverage is ready for the final verification wave.
   **Must NOT do**: Must not add new product scope. Must not reopen architecture decisions already locked in earlier tasks.

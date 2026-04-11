@@ -1,4 +1,3 @@
-import GithubSlugger from 'github-slugger';
 import readingTime from 'reading-time';
 import { render } from 'svelte/server';
 import type { Component } from 'svelte';
@@ -22,6 +21,8 @@ const sourceMap = import.meta.glob('/src/content/docs/**/*.{md,svx}', {
 	import: 'default'
 }) as Record<string, string>;
 
+// Keep the placeholder source ignored so /reference/api/ resolves from
+// src/content/docs/reference/api/index.svx without duplicate route collisions.
 const IGNORED_SOURCE_PATHS = new Set(['/src/content/docs/reference/api.md']);
 
 const SECTION_LABELS = {
@@ -265,51 +266,15 @@ function stripHtml(html: string) {
 	return decodeHtmlEntities(html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
 }
 
-function normalizeHeadingText(value: unknown) {
-	return typeof value === 'string' ? stripHtml(value) : undefined;
-}
-
-function normalizeHeadingExport(value: unknown): HeadingLink[] {
-	if (!Array.isArray(value)) {
-		return [];
-	}
-
-	const slugger = new GithubSlugger();
-
-	return value
-		.map((heading) => {
-			if (!isRecord(heading)) {
-				return undefined;
-			}
-
-			const depth = getNumber(heading.depth) ?? getNumber(heading.level);
-			const text =
-				normalizeHeadingText(heading.text) ??
-				normalizeHeadingText(heading.title) ??
-				normalizeHeadingText(heading.value);
-
-			if (!depth || !text || depth < 2 || depth > 3) {
-				return undefined;
-			}
-
-			return {
-				depth,
-				slug: getString(heading.slug) ?? getString(heading.id) ?? slugger.slug(text),
-				text
-			};
-		})
-		.filter((heading): heading is HeadingLink => Boolean(heading));
-}
-
 function extractHeadingsFromHtml(html: string): HeadingLink[] {
 	const headings: HeadingLink[] = [];
 
-	for (const match of html.matchAll(/<h([23])\b[^>]*\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/gi)) {
+	for (const match of html.matchAll(/<h([23])[^>]*id="([^"]*)"[^>]*>(.*?)<\/h[23]>/gis)) {
 		const depth = Number(match[1]);
 		const slug = match[2];
 		const text = stripHtml(match[3].replace(/<a\b[^>]*class="[^"]*heading-anchor[^"]*"[^>]*>[\s\S]*?<\/a>/gi, ''));
 
-		if (!text) {
+		if (!slug || !text) {
 			continue;
 		}
 
@@ -349,6 +314,7 @@ function isSidebarVisibleEntry(entry: ContentEntry) {
 function createSidebarLeaf(entry: ContentEntry): SidebarNode {
 	return {
 		label: entry.title,
+		badge: entry.sidebarBadge,
 		href: entry.route
 	};
 }
@@ -423,8 +389,6 @@ const entries = Object.entries(moduleMap)
 		const content = extractBodySource(raw);
 		const kind = route.startsWith('/blog/') ? 'blog' : 'docs';
 		const html = render(module.default).body;
-		const headings = normalizeHeadingExport(module.headings);
-
 		return {
 			id: route === '/' ? 'home' : route.replaceAll('/', '-').replace(/^-|-$/g, ''),
 			route,
@@ -457,7 +421,7 @@ const entries = Object.entries(moduleMap)
 			content,
 			html,
 			plainText: stripHtml(html),
-			headings: headings.length > 0 ? headings : extractHeadingsFromHtml(html),
+			headings: extractHeadingsFromHtml(html),
 			readingTime: readingTime(content).text
 		} satisfies ContentEntry;
 	})

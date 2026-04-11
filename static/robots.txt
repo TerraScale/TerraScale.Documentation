@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://docs.terrascale.tech/sitemap-index.xml
+Sitemap: https://docs.terrascale.tech/sitemap.xml
+Sitemap: https://docs.terrascale.tech/llms.txt

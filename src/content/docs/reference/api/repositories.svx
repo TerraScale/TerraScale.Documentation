@@ -1,6 +1,9 @@
 ---
 title: Repository Operations
 description: Repository API for typed entity storage with schema validation.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Repositories
 sidebar:
   order: 6
 ---

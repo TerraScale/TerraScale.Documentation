@@ -1,6 +1,9 @@
 ---
 title: Transactions
 description: ACID-compliant transactional operations for atomic multi-item updates.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Transactions
 sidebar:
   order: 5
 ---

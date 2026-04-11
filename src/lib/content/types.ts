@@ -102,4 +102,5 @@ export interface SidebarNode {
 	label: string;
 	href?: string;
 	items?: SidebarNode[];
+	badge?: BadgeMeta;
 }

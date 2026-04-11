@@ -1,6 +1,8 @@
 ---
 title: API Overview
 description: TerraScale API reference - Base URL, authentication, and common patterns.
+openapi:
+  spec: /openapi/terrascale.yaml
 sidebar:
   order: 1
 ---
@@ -39,6 +41,8 @@ See [Authentication](/reference/authentication/) for details.
 ---
 
 ## API Sections
+
+The static reference pages in this section are the default documentation experience. If you want to browse the same OpenAPI source interactively, open the optional [API Explorer](/reference/api/explorer/).
 
 <CardGrid items={[{"title":"Item Operations","icon":"pencil","content":"<p><a href=\"/reference/api/item-operations/\">CRUD operations</a> for individual database items.</p>"},{"title":"Query Operations","icon":"magnifier","content":"<p><a href=\"/reference/api/query-operations/\">Query and Scan</a> for retrieving multiple items.</p>"},{"title":"Batch Operations","icon":"list-format","content":"<p><a href=\"/reference/api/batch-operations/\">Batch read/write</a> for bulk operations.</p>"},{"title":"Transactions","icon":"approve-check","content":"<p><a href=\"/reference/api/transactions/\">Transactional operations</a> for atomic multi-item updates.</p>"},{"title":"Repositories","icon":"document","content":"<p><a href=\"/reference/api/repositories/\">Repository operations</a> for typed entities.</p>"},{"title":"SQL API","icon":"seti:db","content":"<p><a href=\"/reference/api/sql-api/\">SQL interface</a> for SQL-style queries.</p>"},{"title":"Health","icon":"heart","content":"<p><a href=\"/reference/api/health/\">Health endpoints</a> for monitoring.</p>"}]} />
 
@@ -144,4 +148,5 @@ See [Rate Limits](/reference/rate-limits/) for details.
 
 - [Item Operations](/reference/api/item-operations/) - Start with basic CRUD
 - [Query Operations](/reference/api/query-operations/) - Learn to query data
+- [API Explorer](/reference/api/explorer/) - Optional interactive OpenAPI browser
 - [C# SDK](/guides/sdks/csharp/) - Use the SDK for easier development

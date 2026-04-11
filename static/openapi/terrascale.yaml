@@ -1,0 +1,966 @@
+openapi: 3.0.3
+info:
+  title: TerraScale API
+  version: 1.0.0
+  description: >-
+    TerraScale HTTP API for health checks, raw item access, queries, batch operations,
+    transactions, SQL endpoints, and repository-backed entities.
+servers:
+  - url: https://api.terrascale.io
+    description: Production API
+tags:
+  - name: Health
+    description: Service health and probe endpoints.
+  - name: Items
+    description: CRUD access for raw database items.
+  - name: Queries
+    description: Query and scan operations for retrieving multiple items.
+  - name: Batch
+    description: Bulk read and write workflows.
+  - name: Transactions
+    description: Atomic reads and writes across multiple items.
+  - name: SQL
+    description: SQL-style endpoints for query and schema tasks.
+  - name: Repositories
+    description: Typed repository-backed entity operations.
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    DatabaseId:
+      name: databaseId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: TerraScale database identifier.
+    PartitionKey:
+      name: pk
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Partition key for the target item.
+    SortKey:
+      name: sk
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Sort key for the target item.
+    RepositoryId:
+      name: repositoryId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Repository identifier.
+    EntityId:
+      name: entityId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Entity identifier.
+    TableName:
+      name: tableName
+      in: path
+      required: true
+      schema:
+        type: string
+      description: SQL table name.
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+    ItemKey:
+      type: object
+      required: [pk]
+      properties:
+        pk:
+          type: string
+        sk:
+          type: string
+    DatabaseItem:
+      type: object
+      required: [pk, data]
+      properties:
+        pk:
+          type: string
+        sk:
+          type: string
+          nullable: true
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PutItemRequest:
+      type: object
+      required: [pk, data]
+      properties:
+        pk:
+          type: string
+        sk:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        conditionExpression:
+          type: string
+          nullable: true
+    PutItemResponse:
+      type: object
+      required: [pk, updatedAt]
+      properties:
+        pk:
+          type: string
+        sk:
+          type: string
+          nullable: true
+        updatedAt:
+          type: string
+          format: date-time
+    QueryRequest:
+      type: object
+      required: [partitionKey]
+      properties:
+        partitionKey:
+          type: string
+        sortKeyCondition:
+          type: string
+        filterExpression:
+          type: object
+          additionalProperties: true
+          nullable: true
+        limit:
+          type: integer
+          default: 20
+        cursor:
+          type: string
+          nullable: true
+        scanForward:
+          type: boolean
+          default: true
+    ScanRequest:
+      type: object
+      properties:
+        filterExpression:
+          type: object
+          additionalProperties: true
+          nullable: true
+        limit:
+          type: integer
+          default: 20
+        cursor:
+          type: string
+          nullable: true
+    QueryResponse:
+      type: object
+      required: [items, count]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatabaseItem'
+        nextCursor:
+          type: string
+          nullable: true
+        count:
+          type: integer
+        scannedCount:
+          type: integer
+    BatchWriteItem:
+      type: object
+      required: [operation, pk]
+      properties:
+        operation:
+          type: string
+          enum: [Put, Delete]
+        pk:
+          type: string
+        sk:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+    BatchWriteRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          maxItems: 25
+          items:
+            $ref: '#/components/schemas/BatchWriteItem'
+    BatchWriteResponse:
+      type: object
+      required: [successCount, failedCount]
+      properties:
+        successCount:
+          type: integer
+        failedCount:
+          type: integer
+        errors:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              pk:
+                type: string
+              sk:
+                type: string
+              error:
+                type: string
+    BatchGetRequest:
+      type: object
+      required: [keys]
+      properties:
+        keys:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/ItemKey'
+    BatchGetResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatabaseItem'
+        unprocessedKeys:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/ItemKey'
+    TransactGetItem:
+      type: object
+      required: [pk]
+      properties:
+        pk:
+          type: string
+        sk:
+          type: string
+        projectionExpression:
+          type: array
+          items:
+            type: string
+    TransactGetRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/TransactGetItem'
+        clientRequestToken:
+          type: string
+    TransactGetResponse:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              pk:
+                type: string
+              sk:
+                type: string
+              item:
+                type: object
+                additionalProperties: true
+                nullable: true
+              itemExists:
+                type: boolean
+    TransactWriteItem:
+      type: object
+      required: [action, pk]
+      properties:
+        action:
+          type: string
+          enum: [Put, Update, Delete, ConditionCheck]
+        pk:
+          type: string
+        sk:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        conditionExpression:
+          type: string
+    TransactWriteRequest:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          maxItems: 25
+          items:
+            $ref: '#/components/schemas/TransactWriteItem'
+        clientRequestToken:
+          type: string
+    TransactWriteResponse:
+      type: object
+      required: [successCount]
+      properties:
+        successCount:
+          type: integer
+        errors:
+          type: array
+          nullable: true
+          items:
+            type: object
+            properties:
+              itemIndex:
+                type: integer
+              pk:
+                type: string
+              sk:
+                type: string
+              error:
+                type: string
+              errorType:
+                type: string
+    SqlQueryRequest:
+      type: object
+      required: [sql]
+      properties:
+        sql:
+          type: string
+        parameters:
+          type: object
+          additionalProperties: true
+        limit:
+          type: integer
+        pageToken:
+          type: string
+          nullable: true
+    SqlQueryResponse:
+      type: object
+      required: [rows, rowCount, columns]
+      properties:
+        rows:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        rowCount:
+          type: integer
+        columns:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+        nextPageToken:
+          type: string
+          nullable: true
+        executionTimeMs:
+          type: integer
+    SqlExecuteRequest:
+      type: object
+      required: [sql]
+      properties:
+        sql:
+          type: string
+    SqlExecuteResponse:
+      type: object
+      required: [success, message, affectedRows]
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        affectedRows:
+          type: integer
+    SqlTableListResponse:
+      type: object
+      required: [tables]
+      properties:
+        tables:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              rowCount:
+                type: integer
+              createdAt:
+                type: string
+                format: date-time
+    SqlTableSchemaResponse:
+      type: object
+      required: [tableName, columns, primaryKey]
+      properties:
+        tableName:
+          type: string
+        columns:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              type:
+                type: string
+              isPartitionKey:
+                type: boolean
+              isClusteringKey:
+                type: boolean
+              isNullable:
+                type: boolean
+              defaultValue:
+                nullable: true
+        primaryKey:
+          type: object
+          properties:
+            partitionKeys:
+              type: array
+              items:
+                type: string
+            clusteringKeys:
+              type: array
+              items:
+                type: string
+        indexes:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              columns:
+                type: array
+                items:
+                  type: string
+              isUnique:
+                type: boolean
+    RepositoryEntityRequest:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          additionalProperties: true
+    RepositoryEntity:
+      type: object
+      required: [id, data, createdAt, updatedAt]
+      properties:
+        id:
+          type: string
+        data:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    RepositoryListResponse:
+      type: object
+      required: [entities]
+      properties:
+        entities:
+          type: array
+          items:
+            $ref: '#/components/schemas/RepositoryEntity'
+        nextCursor:
+          type: string
+          nullable: true
+        totalCount:
+          type: integer
+    RepositoryQueryRequest:
+      type: object
+      properties:
+        filter:
+          type: string
+        filterValues:
+          type: object
+          additionalProperties: true
+        limit:
+          type: integer
+        cursor:
+          type: string
+          nullable: true
+        sortBy:
+          type: string
+        sortOrder:
+          type: string
+          enum: [asc, desc]
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Overall health check for the API. No authentication required.
+      security: []
+      responses:
+        '200':
+          description: API is healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: Healthy
+        '503':
+          description: API is unhealthy.
+  /health/ready:
+    get:
+      tags: [Health]
+      summary: Readiness probe
+      description: Returns 200 when the service is ready to accept traffic.
+      security: []
+      responses:
+        '200':
+          description: Service is ready.
+        '503':
+          description: Service is not ready.
+  /health/live:
+    get:
+      tags: [Health]
+      summary: Liveness probe
+      description: Confirms the application is running.
+      security: []
+      responses:
+        '200':
+          description: Service is alive.
+  /api/v1/databases/{databaseId}/items:
+    put:
+      tags: [Items]
+      summary: Put item
+      description: Creates a new item or replaces an existing one.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutItemRequest'
+      responses:
+        '200':
+          description: Item stored.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PutItemResponse'
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/databases/{databaseId}/items/{pk}:
+    get:
+      tags: [Items]
+      summary: Get item by partition key
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+        - $ref: '#/components/parameters/PartitionKey'
+      responses:
+        '200':
+          description: Item returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseItem'
+        '404':
+          description: Item not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags: [Items]
+      summary: Delete item by partition key
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+        - $ref: '#/components/parameters/PartitionKey'
+      responses:
+        '204':
+          description: Item deleted.
+  /api/v1/databases/{databaseId}/items/{pk}/{sk}:
+    get:
+      tags: [Items]
+      summary: Get item by partition and sort key
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+        - $ref: '#/components/parameters/PartitionKey'
+        - $ref: '#/components/parameters/SortKey'
+      responses:
+        '200':
+          description: Item returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseItem'
+        '404':
+          description: Item not found.
+    delete:
+      tags: [Items]
+      summary: Delete item by partition and sort key
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+        - $ref: '#/components/parameters/PartitionKey'
+        - $ref: '#/components/parameters/SortKey'
+      responses:
+        '204':
+          description: Item deleted.
+  /api/v1/databases/{databaseId}/items/query:
+    post:
+      tags: [Queries]
+      summary: Query items
+      description: Queries items by partition key with optional sort key conditions.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryRequest'
+      responses:
+        '200':
+          description: Query result page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+  /api/v1/databases/{databaseId}/items/scan:
+    post:
+      tags: [Queries]
+      summary: Scan items
+      description: Scans all items in the database. Use with caution on large datasets.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanRequest'
+      responses:
+        '200':
+          description: Scan result page.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueryResponse'
+  /api/v1/databases/{databaseId}/items/batch/write:
+    post:
+      tags: [Batch]
+      summary: Batch write items
+      description: Performs batch put and delete operations. Maximum 25 items per request.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchWriteRequest'
+      responses:
+        '200':
+          description: Batch write result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchWriteResponse'
+  /api/v1/databases/{databaseId}/items/batch/get:
+    post:
+      tags: [Batch]
+      summary: Batch get items
+      description: Gets multiple items by key. Maximum 100 keys per request.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchGetRequest'
+      responses:
+        '200':
+          description: Batch get result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchGetResponse'
+  /api/v1/databases/{databaseId}/items/transact/get:
+    post:
+      tags: [Transactions]
+      summary: Transactional get
+      description: Atomically reads multiple items at a consistent point in time.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactGetRequest'
+      responses:
+        '200':
+          description: Transactional read result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactGetResponse'
+  /api/v1/databases/{databaseId}/items/transact/write:
+    post:
+      tags: [Transactions]
+      summary: Transactional write
+      description: Atomically writes, updates, deletes, or condition-checks up to 25 items.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactWriteRequest'
+      responses:
+        '200':
+          description: Transactional write result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactWriteResponse'
+  /databases/{databaseId}/sql/query:
+    post:
+      tags: [SQL]
+      summary: Execute SQL query
+      description: Executes SELECT, INSERT, UPDATE, or DELETE statements.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SqlQueryRequest'
+      responses:
+        '200':
+          description: Query completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SqlQueryResponse'
+  /databases/{databaseId}/sql/execute:
+    post:
+      tags: [SQL]
+      summary: Execute SQL DDL
+      description: Executes DDL statements like CREATE TABLE, ALTER TABLE, or DROP TABLE.
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SqlExecuteRequest'
+      responses:
+        '200':
+          description: Statement completed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SqlExecuteResponse'
+  /databases/{databaseId}/sql/tables:
+    get:
+      tags: [SQL]
+      summary: List SQL tables
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+      responses:
+        '200':
+          description: SQL tables returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SqlTableListResponse'
+  /databases/{databaseId}/sql/tables/{tableName}/schema:
+    get:
+      tags: [SQL]
+      summary: Get SQL table schema
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/DatabaseId'
+        - $ref: '#/components/parameters/TableName'
+      responses:
+        '200':
+          description: Schema returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SqlTableSchemaResponse'
+  /api/v1/repositories/{repositoryId}:
+    get:
+      tags: [Repositories]
+      summary: List repository entities
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RepositoryId'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: cursor
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Entity page returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryListResponse'
+    post:
+      tags: [Repositories]
+      summary: Create repository entity
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RepositoryId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositoryEntityRequest'
+      responses:
+        '201':
+          description: Entity created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryEntity'
+  /api/v1/repositories/{repositoryId}/{entityId}:
+    get:
+      tags: [Repositories]
+      summary: Get repository entity
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RepositoryId'
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '200':
+          description: Entity returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryEntity'
+    put:
+      tags: [Repositories]
+      summary: Update repository entity
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RepositoryId'
+        - $ref: '#/components/parameters/EntityId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositoryEntityRequest'
+      responses:
+        '200':
+          description: Updated entity returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryEntity'
+    delete:
+      tags: [Repositories]
+      summary: Delete repository entity
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RepositoryId'
+        - $ref: '#/components/parameters/EntityId'
+      responses:
+        '204':
+          description: Entity deleted.
+  /api/v1/repositories/{repositoryId}/query:
+    post:
+      tags: [Repositories]
+      summary: Query repository entities
+      security:
+        - BearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/RepositoryId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RepositoryQueryRequest'
+      responses:
+        '200':
+          description: Entity page returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RepositoryListResponse'

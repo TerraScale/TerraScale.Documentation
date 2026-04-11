@@ -1,6 +1,9 @@
 ---
 title: Health Endpoints
 description: Health check endpoints for monitoring TerraScale API status.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Health
 sidebar:
   order: 8
 ---

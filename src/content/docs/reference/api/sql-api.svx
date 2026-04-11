@@ -1,6 +1,9 @@
 ---
 title: SQL API
 description: SQL-like interface for TerraScale databases with familiar query syntax.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: SQL
 sidebar:
   order: 7
 ---

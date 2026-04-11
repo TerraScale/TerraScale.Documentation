@@ -6,6 +6,7 @@ import rehypeSlug from 'rehype-slug';
 import remarkDirective from 'remark-directive';
 import remarkGfm from 'remark-gfm';
 import { directiveAdmonitions } from './scripts/mdsvex/directive-admonitions.mjs';
+import { shikiHighlighter } from './scripts/mdsvex/shiki.mjs';
 
 const CONTENT_EXTENSIONS_RE = /\.(md|svx)$/;
 const FRONTMATTER_RE = /^---\s*\n[\s\S]*?\n---\s*\n?/;
@@ -46,6 +47,9 @@ const config = {
 		liftMdxImports(),
 		mdsvex({
 			extensions: ['.md', '.svx'],
+			highlight: {
+				highlighter: shikiHighlighter
+			},
 			remarkPlugins: [remarkGfm, remarkDirective, directiveAdmonitions],
 			rehypePlugins: [
 				rehypeSlug,

@@ -1,0 +1,3 @@
+- Shiki can be integrated with mdsvex by providing a custom highlighter function that returns HTML.
+- Svelte 5's `mount` and `unmount` functions are useful for programmatically adding components to DOM elements rendered from markdown.
+- `@shikijs/transformers` provides out-of-the-box support for diffs, focus, and line highlighting, which just need some CSS to style.

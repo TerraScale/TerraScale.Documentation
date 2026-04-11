@@ -1,6 +1,9 @@
 ---
 title: Item Operations
 description: CRUD operations for individual database items - Put, Get, and Delete.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Items
 sidebar:
   order: 2
 ---

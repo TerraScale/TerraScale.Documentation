@@ -1,6 +1,9 @@
 ---
 title: Batch Operations
 description: Batch read and write operations for efficient bulk data processing.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Batch
 sidebar:
   order: 4
 ---

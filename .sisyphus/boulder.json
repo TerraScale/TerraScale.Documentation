@@ -36,6 +36,42 @@
       "agent": "Sisyphus-Junior",
       "category": "deep",
       "updated_at": "2026-04-11T20:06:26.888Z"
+    },
+    "todo:7": {
+      "task_key": "todo:7",
+      "task_label": "7",
+      "task_title": "Rebuild heading, badge, TOC, and anchor system",
+      "session_id": "ses_281d552d7ffe4s9kN67jH14Yjy",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-11T20:18:36.530Z"
+    },
+    "todo:11": {
+      "task_key": "todo:11",
+      "task_label": "11",
+      "task_title": "Upgrade blog information architecture and metadata output",
+      "session_id": "ses_281c7de7bffeN2rFnbnWR22edf",
+      "agent": "Sisyphus-Junior",
+      "category": "writing",
+      "updated_at": "2026-04-11T20:28:03.129Z"
+    },
+    "todo:13": {
+      "task_key": "todo:13",
+      "task_label": "13",
+      "task_title": "Generate llms.txt and public crawl artifacts",
+      "session_id": "ses_281ba4091ffeH9qrk4NZVnA2Zs",
+      "agent": "Sisyphus-Junior",
+      "category": "writing",
+      "updated_at": "2026-04-11T20:42:33.770Z"
+    },
+    "todo:15": {
+      "task_key": "todo:15",
+      "task_label": "15",
+      "task_title": "Run full docs UX/accessibility/performance polish pass",
+      "session_id": "ses_281b5e813ffe2kpdpFIGhYJmta",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-04-11T20:52:11.719Z"
     }
   }
 }

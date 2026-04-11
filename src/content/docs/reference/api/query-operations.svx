@@ -1,6 +1,9 @@
 ---
 title: Query Operations
 description: Query and Scan operations for retrieving multiple items from your database.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Queries
 sidebar:
   order: 3
 ---
