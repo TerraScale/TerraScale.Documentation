@@ -1,6 +1,8 @@
 ## Stack
 
-- Use Svelte 5 with TypeScript for UI work in this repository.
+- **Only SvelteKit** is allowed for all UI and application work in this repository. Do not use Astro, Next.js, Remix, or any other framework.
+- Use Svelte 5 with TypeScript. Runes syntax (`$state`, `$derived`, `$effect`, etc.) is the default.
+- Do not introduce Astro, React, Vue, or any non-Svelte framework under any circumstances.
 
 ## Deployment
 

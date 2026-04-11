@@ -8,7 +8,6 @@
     "build": "vite build && pagefind --site build",
     "preview": "vite preview",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "test:e2e": "playwright test",
     "icons:sync": "node scripts/icons-sync.mjs"
   },
   "dependencies": {
@@ -34,7 +33,6 @@
   },
   "devDependencies": {
     "@iconify/json": "^2.2.460",
-    "@playwright/test": "^1.59.1",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tailwindcss/vite": "^4.2.2",
     "@tsconfig/svelte": "^5.0.8",

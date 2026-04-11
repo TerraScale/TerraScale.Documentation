@@ -1,0 +1,23 @@
+{
+  "active_plan": "/var/home/mariogk/Projects/TerraScale.Documentation/.sisyphus/plans/docs-site-upgrade.md",
+  "started_at": "2026-04-11T19:34:28.597Z",
+  "session_ids": [
+    "ses_2820f3f2effeYd5grR2wdSJPxF"
+  ],
+  "session_origins": {
+    "ses_2820f3f2effeYd5grR2wdSJPxF": "direct"
+  },
+  "plan_name": "docs-site-upgrade",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Establish SvelteKit + mdsvex static config baseline",
+      "session_id": "ses_281f42b59ffeGo52VJZ0pNF23n",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-04-11T19:40:11.708Z"
+    }
+  }
+}

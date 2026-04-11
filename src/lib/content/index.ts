@@ -6,7 +6,9 @@ import { getIconMarkup } from '$lib/icons';
 import { contentIconMap } from '$lib/ui/icons';
 import type { ContentEntry, ContentMetadata, HeadingLink, SidebarNode } from './types';
 
-const rawMap = import.meta.glob('/src/content/docs/**/*.{md,mdx}', {
+type FrontmatterData = Record<string, unknown>;
+
+const rawMap = import.meta.glob('/src/content/docs/**/*.{md,mdx,svx}', {
 	eager: true,
 	query: '?raw',
 	import: 'default'
@@ -39,12 +41,201 @@ const sidebarDefinition = [
 	{ label: 'About', directory: 'about' }
 ] as const;
 
-function normalizeSegments(segments: string[]) {
-	return segments.map((segment) => segment.toLowerCase());
+function isRecord(value: unknown): value is Record<string, unknown> {
+	return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function getString(value: unknown) {
+	return typeof value === 'string' ? value : undefined;
+}
+
+function getBoolean(value: unknown) {
+	return typeof value === 'boolean' ? value : undefined;
+}
+
+function getNumber(value: unknown) {
+	return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
+}
+
+function titleCase(value: string) {
+	return value
+		.split(/[-_\s]+/)
+		.filter(Boolean)
+		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.join(' ');
+}
+
+function deriveTitle(rawSegments: string[], sourcePath: string) {
+	const fileName = sourcePath.replace(/^.*\//, '').replace(/\.(md|mdx|svx)$/, '');
+	const candidate = rawSegments.at(-1) ?? (fileName === 'index' ? rawSegments.at(-2) : fileName) ?? 'untitled';
+	return titleCase(candidate);
+}
+
+function getBadgeMeta(value: unknown) {
+	if (!isRecord(value)) {
+		return undefined;
+	}
+
+	const text = getString(value.text);
+	if (!text) {
+		return undefined;
+	}
+
+	return {
+		text,
+		variant: getString(value.variant)
+	};
+}
+
+function getSidebarMeta(value: unknown) {
+	if (!isRecord(value)) {
+		return undefined;
+	}
+
+	const order = getNumber(value.order);
+	const group = getString(value.group);
+	const badge = getBadgeMeta(value.badge);
+	const hidden = getBoolean(value.hidden);
+
+	if (order === undefined && group === undefined && badge === undefined && hidden === undefined) {
+		return undefined;
+	}
+
+	return {
+		order,
+		group,
+		badge,
+		hidden
+	};
+}
+
+function getHeroMeta(value: unknown) {
+	if (!isRecord(value)) {
+		return undefined;
+	}
+
+	const actions = Array.isArray(value.actions)
+		? value.actions
+				.map((action) => {
+					if (!isRecord(action)) {
+						return undefined;
+					}
+
+					const text = getString(action.text);
+					const link = getString(action.link);
+					if (!text || !link) {
+						return undefined;
+					}
+
+					return {
+						text,
+						link,
+						icon: getString(action.icon),
+						variant: getString(action.variant)
+					};
+				})
+				.filter((action): action is NonNullable<typeof action> => Boolean(action))
+		: undefined;
+
+	const tagline = getString(value.tagline);
+	if (tagline === undefined && (!actions || actions.length === 0)) {
+		return undefined;
+	}
+
+	return {
+		tagline,
+		actions
+	};
+}
+
+function getAuthors(value: unknown) {
+	if (!Array.isArray(value)) {
+		return undefined;
+	}
+
+	return value
+		.map((author) => {
+			if (!isRecord(author)) {
+				return undefined;
+			}
+
+			const name = getString(author.name);
+			if (!name) {
+				return undefined;
+			}
+
+			return {
+				name,
+				title: getString(author.title),
+				url: getString(author.url)
+			};
+		})
+		.filter((author): author is NonNullable<typeof author> => Boolean(author));
+}
+
+function getTags(value: unknown) {
+	if (!Array.isArray(value)) {
+		return undefined;
+	}
+
+	const tags = value.filter((tag): tag is string => typeof tag === 'string');
+	return tags.length > 0 ? tags : undefined;
+}
+
+function getOpenApiMeta(value: unknown) {
+	if (!isRecord(value)) {
+		return undefined;
+	}
+
+	const spec = getString(value.spec);
+	const tag = getString(value.tag);
+	if (spec === undefined && tag === undefined) {
+		return undefined;
+	}
+
+	return { spec, tag };
+}
+
+function getSeoMeta(value: unknown) {
+	if (!isRecord(value)) {
+		return undefined;
+	}
+
+	const title = getString(value.title);
+	const description = getString(value.description);
+	const image = getString(value.image);
+	const noindex = getBoolean(value.noindex);
+	if (title === undefined && description === undefined && image === undefined && noindex === undefined) {
+		return undefined;
+	}
+
+	return { title, description, image, noindex };
+}
+
+function getContentMetadata(data: FrontmatterData, rawSegments: string[], sourcePath: string): ContentMetadata {
+	return {
+		title: getString(data.title) ?? deriveTitle(rawSegments, sourcePath),
+		description: getString(data.description),
+		draft: getBoolean(data.draft),
+		unlisted: getBoolean(data.unlisted),
+		section: getString(data.section),
+		sidebar: getSidebarMeta(data.sidebar),
+		headingBadge: getBadgeMeta(data.headingBadge),
+		template: getString(data.template),
+		hero: getHeroMeta(data.hero),
+		date: getString(data.date),
+		authors: getAuthors(data.authors),
+		tags: getTags(data.tags),
+		excerpt: getString(data.excerpt),
+		order: getNumber(data.order),
+		openapi: getOpenApiMeta(data.openapi),
+		canonical: getString(data.canonical),
+		seo: getSeoMeta(data.seo)
+	};
 }
 
 function routeFromFile(filePath: string) {
-	const rel = filePath.replace('/src/content/docs/', '').replace(/\.(md|mdx)$/, '');
+	const rel = filePath.replace('/src/content/docs/', '').replace(/\.(md|mdx|svx)$/, '');
 	const rawSegments = rel === 'index' ? [] : rel.replace(/\/index$/, '').split('/');
 	const normalizedSegments = rawSegments.filter(Boolean).map((segment) => segment.toLowerCase());
 	const route = normalizedSegments.length ? `/${normalizedSegments.join('/')}/` : '/';
@@ -213,12 +404,67 @@ function sortEntries(a: ContentEntry, b: ContentEntry) {
 	return a.title.localeCompare(b.title);
 }
 
+export function isPublicEntry(entry: ContentEntry) {
+	return entry.metadata.draft !== true;
+}
+
+export function isListedEntry(entry: ContentEntry) {
+	return isPublicEntry(entry) && entry.metadata.unlisted !== true;
+}
+
+function isSidebarVisibleEntry(entry: ContentEntry) {
+	return isListedEntry(entry) && entry.metadata.sidebar?.hidden !== true;
+}
+
+function createSidebarLeaf(entry: ContentEntry): SidebarNode {
+	return {
+		label: entry.title,
+		href: entry.route
+	};
+}
+
+function appendSidebarLeaf(nodes: SidebarNode[], entry: ContentEntry, fallbackSection?: string) {
+	const section = entry.metadata.section?.trim();
+	const group = entry.metadata.sidebar?.group?.trim();
+	const groupPath = [section && section !== fallbackSection ? section : undefined, group].filter(
+		(label): label is string => Boolean(label)
+	);
+
+	if (groupPath.length === 0) {
+		nodes.push(createSidebarLeaf(entry));
+		return;
+	}
+
+	let items = nodes;
+	for (const label of groupPath) {
+		let node = items.find((candidate) => candidate.label === label && candidate.href === undefined);
+		if (!node) {
+			node = { label, items: [] };
+			items.push(node);
+		}
+		if (!node.items) {
+			node.items = [];
+		}
+		items = node.items;
+	}
+
+	items.push(createSidebarLeaf(entry));
+}
+
+function createSidebarItems(entries: ContentEntry[], fallbackSection?: string) {
+	const nodes: SidebarNode[] = [];
+	for (const entry of entries) {
+		appendSidebarLeaf(nodes, entry, fallbackSection);
+	}
+	return nodes;
+}
+
 const entries = Object.entries(rawMap)
 	.filter(([sourcePath]) => !IGNORED_SOURCE_PATHS.has(sourcePath))
 	.map(([sourcePath, raw]) => {
 		const { data, content } = matter(raw);
 		const { route, rawSegments, normalizedSegments, directory } = routeFromFile(sourcePath);
-		const metadata = data as ContentMetadata;
+		const metadata = getContentMetadata((isRecord(data) ? data : {}) as FrontmatterData, rawSegments, sourcePath);
 		const kind = route.startsWith('/blog/') ? 'blog' : 'docs';
 
 		return {
@@ -228,7 +474,7 @@ const entries = Object.entries(rawMap)
 			segmentPath: rawSegments,
 			sourcePath,
 			sourceDirectory: directory,
-			title: metadata.title ?? rawSegments.at(-1) ?? 'Untitled',
+			title: metadata.title,
 			description: metadata.description ?? '',
 			kind,
 			date: metadata.date,
@@ -237,8 +483,17 @@ const entries = Object.entries(rawMap)
 			excerpt: metadata.excerpt,
 			template: metadata.template,
 			hero: metadata.hero,
+			section: metadata.section,
 			sidebarOrder: metadata.sidebar?.order,
+			sidebarGroup: metadata.sidebar?.group,
 			sidebarBadge: metadata.sidebar?.badge,
+			sidebarHidden: metadata.sidebar?.hidden,
+			headingBadge: metadata.headingBadge,
+			draft: metadata.draft,
+			unlisted: metadata.unlisted,
+			openapi: metadata.openapi,
+			canonical: metadata.canonical,
+			seo: metadata.seo,
 			metadata,
 			raw,
 			content,
@@ -255,13 +510,18 @@ const entries = Object.entries(rawMap)
 		return a.route.localeCompare(b.route);
 	});
 
-const routeMap = new Map(entries.map((entry) => [entry.route, entry]));
-const docsEntries = entries.filter((entry) => entry.kind === 'docs' && entry.route !== '/');
-const blogEntries = entries.filter((entry) => entry.kind === 'blog');
+const publicEntries = entries.filter(isPublicEntry);
+const listedEntries = publicEntries.filter(isListedEntry);
+const routeMap = new Map(publicEntries.map((entry) => [entry.route, entry]));
+const docsEntries = listedEntries.filter((entry) => entry.kind === 'docs' && entry.route !== '/');
+const blogEntries = listedEntries.filter((entry) => entry.kind === 'blog');
 
 function listDirectoryEntries(directory: string) {
 	return docsEntries
-		.filter((entry) => entry.route.startsWith(`/${directory.toLowerCase()}/`))
+		.filter(
+			(entry) =>
+				entry.route.startsWith(`/${directory.toLowerCase()}/`) && isSidebarVisibleEntry(entry)
+		)
 		.sort(sortEntries);
 }
 
@@ -276,12 +536,10 @@ function buildSidebarNodes(
 ): SidebarNode[] {
 	return definition.map((item) => {
 		if ('directory' in item) {
+			const items = createSidebarItems(listDirectoryEntries(item.directory), item.label);
 			return {
 				label: item.label,
-				items: listDirectoryEntries(item.directory).map((entry) => ({
-					label: entry.title,
-					href: entry.route
-				}))
+				items
 			};
 		}
 
@@ -289,12 +547,10 @@ function buildSidebarNodes(
 			label: item.label,
 			items: item.items.map((child) => {
 				if ('directory' in child) {
+					const items = createSidebarItems(listDirectoryEntries(child.directory), child.label);
 					return {
 						label: child.label,
-						items: listDirectoryEntries(child.directory).map((entry) => ({
-							label: entry.title,
-							href: entry.route
-						}))
+						items
 					};
 				}
 
@@ -323,11 +579,11 @@ function flattenSidebar(nodes: SidebarNode[]): string[] {
 const sidebarNodes = buildSidebarNodes(sidebarDefinition);
 const orderedDocsRoutes = flattenSidebar(sidebarNodes);
 
-export const allEntries = entries;
+export const allEntries = publicEntries;
 export const allDocsEntries = docsEntries;
 export const allBlogEntries = blogEntries;
 export const sidebar = sidebarNodes;
-export const searchableEntries = entries.filter((entry) => entry.route !== '/');
+export const searchableEntries = listedEntries.filter((entry) => entry.route !== '/');
 
 export function getEntryByRoute(route: string) {
 	if (route === '/') {
@@ -366,7 +622,7 @@ export function getPrevNext(entry: ContentEntry) {
 }
 
 export function getPrerenderEntries() {
-	return entries
+	return publicEntries
 		.filter((entry) => entry.route !== '/')
 		.map((entry) => ({
 			slug: entry.slug.join('/')

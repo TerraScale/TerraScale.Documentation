@@ -13,7 +13,9 @@ export interface BadgeMeta {
 
 export interface SidebarMeta {
 	order?: number;
+	group?: string;
 	badge?: BadgeMeta;
+	hidden?: boolean;
 }
 
 export interface HeroAction {
@@ -28,10 +30,26 @@ export interface HeroMeta {
 	actions?: HeroAction[];
 }
 
+export interface OpenApiMeta {
+	spec?: string;
+	tag?: string;
+}
+
+export interface SeoMeta {
+	title?: string;
+	description?: string;
+	image?: string;
+	noindex?: boolean;
+}
+
 export interface ContentMetadata {
 	title: string;
 	description?: string;
+	draft?: boolean;
+	unlisted?: boolean;
+	section?: string;
 	sidebar?: SidebarMeta;
+	headingBadge?: BadgeMeta;
 	template?: string;
 	hero?: HeroMeta;
 	date?: string;
@@ -39,6 +57,9 @@ export interface ContentMetadata {
 	tags?: string[];
 	excerpt?: string;
 	order?: number;
+	openapi?: OpenApiMeta;
+	canonical?: string;
+	seo?: SeoMeta;
 }
 
 export interface ContentEntry {
@@ -57,8 +78,17 @@ export interface ContentEntry {
 	excerpt?: string;
 	template?: string;
 	hero?: HeroMeta;
+	section?: string;
 	sidebarOrder?: number;
+	sidebarGroup?: string;
 	sidebarBadge?: BadgeMeta;
+	sidebarHidden?: boolean;
+	headingBadge?: BadgeMeta;
+	draft?: boolean;
+	unlisted?: boolean;
+	openapi?: OpenApiMeta;
+	canonical?: string;
+	seo?: SeoMeta;
 	metadata: ContentMetadata;
 	raw: string;
 	content: string;

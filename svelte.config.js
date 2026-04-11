@@ -9,11 +9,11 @@ import { directiveAdmonitions } from './scripts/mdsvex/directive-admonitions.mjs
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	extensions: ['.svelte', '.md', '.mdx'],
+	extensions: ['.svelte', '.md', '.mdx', '.svx'],
 	preprocess: [
 		vitePreprocess(),
 		mdsvex({
-			extensions: ['.md', '.mdx'],
+			extensions: ['.md', '.mdx', '.svx'],
 			remarkPlugins: [remarkGfm, remarkDirective, directiveAdmonitions],
 			rehypePlugins: [
 				rehypeSlug,
