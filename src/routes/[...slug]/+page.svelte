@@ -10,13 +10,7 @@
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
 	import type { BadgeMeta, ContentEntry, SidebarNode } from '$lib/content/types';
 
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
-	let { data }: {
-		entry: ContentEntry;
-		sidebar: SidebarNode[];
-		prev?: ContentEntry;
-		next?: ContentEntry;
-	} = $props();
+	let { data }: { data: { entry: ContentEntry; sidebar: SidebarNode[]; prev?: ContentEntry; next?: ContentEntry } } = $props();
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function getBadgeClass(badge?: BadgeMeta) {

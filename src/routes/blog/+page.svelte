@@ -1,10 +1,7 @@
 <script lang="ts">
 	import type { ContentEntry } from '$lib/content/types';
 
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
-	let { data }: {
-		posts: ContentEntry[];
-	} = $props();
+	let { data }: { data: { posts: ContentEntry[] } } = $props();
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function formatDate(dateStr?: string) {
@@ -144,6 +141,7 @@
 		line-height: 1.6;
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
+		line-clamp: 3;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}

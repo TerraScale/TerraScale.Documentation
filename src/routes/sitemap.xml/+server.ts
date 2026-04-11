@@ -1,10 +1,11 @@
-import { allEntries } from '$lib/content';
+import { allEntries, isListedEntry } from '$lib/content';
 
 export const prerender = true;
 
 export function GET() {
 	const baseUrl = 'https://docs.terrascale.tech';
 	const urls = allEntries
+		.filter(isListedEntry)
 		.map((entry) => `<url><loc>${baseUrl}${entry.route}</loc></url>`)
 		.join('');
 
