@@ -24,6 +24,12 @@ function markElement(node) {
 
 export function rehypeTodoHighlight() {
 	return (tree) => {
+		visit(tree, (node, index, parent) => {
+			if (parent) {
+				node.parent = parent;
+			}
+		});
+
 		visit(tree, 'text', (node, index, parent) => {
 			if (!parent || !node.value.trim() || !TODO_RE.test(node.value)) {
 				return;
