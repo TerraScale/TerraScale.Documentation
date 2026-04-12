@@ -86,6 +86,7 @@ Simple APIs, powerful features. Deploy your database with just a few lines of co
 ## Explore the Documentation
 
 <CardGrid items={[{"title":"Getting Started","icon":"rocket","content":"<p>Set up your TerraScale account and make your first API call in minutes.</p>\n<pre><code>[Start the guide →](/guides/getting-started/)\n</code></pre>"},{"title":"API Reference","icon":"document","content":"<p>Complete API documentation with examples for all endpoints.</p>\n<pre><code>[Open API reference →](/reference/api/)\n</code></pre>"},{"title":"SDKs & Libraries","icon":"puzzle","content":"<p>Official client libraries for C#, Go, and TypeScript.</p>\n<pre><code>[Browse SDKs →](/guides/sdks/csharp/)\n</code></pre>"},{"title":"Dashboard Guide","icon":"laptop","content":"<p>Learn how to use the TerraScale dashboard to manage your databases.</p>\n<pre><code>[Open guide →](/dashboard/why-open-source/)\n</code></pre>"}]} />
+<CardGrid items={[{"title":"Getting Started","icon":"rocket","content":"<p>Set up your TerraScale account and make your first API call in minutes.</p>\n<pre><code>[Start the guide →](/guides/getting-started/)\n</code></pre>"},{"title":"API Reference","icon":"document","content":"<p>Complete API documentation with examples for all endpoints.</p>\n<pre><code>[Open API reference →](/reference/api/)\n</code></pre>"},{"title":"SDKs & Libraries","icon":"puzzle","content":"<p>Official client libraries for C#, Go, and TypeScript.</p>\n<pre><code>[Browse SDKs →](/guides/sdks/csharp/)\n</code></pre>"}]} />
 
 ---
 

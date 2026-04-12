@@ -1,6 +1,6 @@
 ---
 title: API Strategy
-description: Choose the right API pattern for your TerraScale application - Custom API, DynamoDB-Compatible, or SQL.
+description: Choose the right API pattern for your TerraScale application - TerraScale API, DynamoDB-Compatible, or SQL.
 sidebar:
   order: 2
 ---
@@ -11,9 +11,9 @@ TerraScale provides three API access patterns. Each serves different use cases a
 
 ---
 
-## TerraScale Custom API (Recommended)
+## TerraScale API (Recommended)
 
-The TerraScale Custom API is the **preferred method** for accessing your databases. It provides:
+The TerraScale API is the **preferred method** for accessing your databases. It provides:
 
 - **Best Performance**: Optimized for TerraScale's architecture
 - **Full Feature Access**: All platform capabilities available
@@ -25,7 +25,7 @@ The TerraScale Custom API is the **preferred method** for accessing your databas
 - You want the best performance and developer experience
 - You need access to all TerraScale features
 ```csharp
-// Example: Using the Custom API
+// Example: Using the TerraScale API
 var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 {
     ApiKey = "ts_live_your_api_key",
@@ -59,7 +59,7 @@ This API is designed for **migration scenarios**. It provides partial compatibil
 - **Partial compatibility only** - Not a complete DynamoDB replacement
 - **Migration-focused** - Use to ease transition from AWS
 - **Feature subset** - Some DynamoDB operations are not supported
-- **Transitional** - Consider migrating to Custom API over time
+- **Transitional** - Consider migrating to TerraScale API over time
 
 ### Supported Operations
 
@@ -143,7 +143,7 @@ DROP INDEX name
 
 ## API Comparison
 
-| Feature | Custom API | DynamoDB API | SQL API |
+| Feature | TerraScale API | DynamoDB API | SQL API |
 |---------|------------|--------------|---------|
 | Performance | Best | Good | Good |
 | Type Safety | Full | Partial | Minimal |
@@ -157,20 +157,20 @@ DROP INDEX name
 
 ## Choosing the Right API
 
-<CardGrid items={[{"title":"New Projects","icon":"rocket","content":"<p><strong>Use Custom API</strong> from day one for best performance and full feature access.</p>"},{"title":"AWS Migration","icon":"right-arrow","content":"<p><strong>Start with DynamoDB API</strong>, then migrate to Custom API over time.</p>"},{"title":"SQL Background","icon":"document","content":"<p><strong>Use SQL API</strong> for exploration, <strong>Custom API</strong> for production.</p>"}]} />
+<CardGrid items={[{"title":"New Projects","icon":"rocket","content":"<p><strong>Use TerraScale API</strong> from day one for best performance and full feature access.</p>"},{"title":"AWS Migration","icon":"right-arrow","content":"<p><strong>Start with DynamoDB API</strong>, then migrate to TerraScale API over time.</p>"},{"title":"SQL Background","icon":"document","content":"<p><strong>Use SQL API</strong> for exploration, <strong>TerraScale API</strong> for production.</p>"}]} />
 
 ### Recommendation
 
-**Start with the Custom API** unless you have a specific reason to use the alternatives:
+**Start with the TerraScale API** unless you have a specific reason to use the alternatives:
 
-1. **New projects**: Use Custom API from day one
-2. **AWS migration**: Start with DynamoDB API, migrate to Custom API over time
-3. **SQL familiarity**: Use SQL API for exploration, Custom API for production
+1. **New projects**: Use TerraScale API from day one
+2. **AWS migration**: Start with DynamoDB API, migrate to TerraScale API over time
+3. **SQL familiarity**: Use SQL API for exploration, TerraScale API for production
 
 ---
 
 ## Next Steps
 
-- [C# SDK Guide](/guides/sdks/csharp/) - Learn the Custom API with the C# SDK
+- [C# SDK Guide](/guides/sdks/csharp/) - Learn the TerraScale API with the C# SDK
 - [API Reference](/reference/api/) - Complete API documentation
 - [SQL API Reference](/reference/api/sql-api/) - SQL statement reference

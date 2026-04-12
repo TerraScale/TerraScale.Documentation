@@ -39,14 +39,11 @@ There are three main approaches, each with trade-offs:
 
 Export everything from DynamoDB, import to TerraScale, update your application to point to TerraScale.
 
-**Pros:**
-- Simplest conceptually
-- Clean cutover
-
-**Cons:**
-- Requires downtime
-- Risky for large datasets
-- All-or-nothing
+| Pros | Cons |
+|------|------|
+| Simplest conceptually | Requires downtime |
+| Clean cutover | Risky for large datasets |
+| | All-or-nothing |
 
 **Best for:** Small datasets, applications that can tolerate planned downtime.
 
@@ -54,15 +51,11 @@ Export everything from DynamoDB, import to TerraScale, update your application t
 
 Update your application to write to both databases. Backfill historical data. Gradually shift reads to TerraScale. Eventually stop writing to DynamoDB.
 
-**Pros:**
-- Zero downtime
-- Gradual, safe transition
-- Easy rollback
-
-**Cons:**
-- More complex implementation
-- Temporary cost of running two databases
-- Need to handle consistency carefully
+| Pros | Cons |
+|------|------|
+| Zero downtime | More complex implementation |
+| Gradual, safe transition | Temporary cost of running two databases |
+| Easy rollback | Need to handle consistency carefully |
 
 **Best for:** Production systems that can't tolerate downtime.
 
@@ -70,14 +63,11 @@ Update your application to write to both databases. Backfill historical data. Gr
 
 Migrate one table at a time. Each table goes through its own dual-write cycle.
 
-**Pros:**
-- Lower risk per migration
-- Learn from each iteration
-- Easier to manage
-
-**Cons:**
-- Takes longer overall
-- Cross-table queries are complex during migration
+| Pros | Cons |
+|------|------|
+| Lower risk per migration | Takes longer overall |
+| Learn from each iteration | Cross-table queries are complex during migration |
+| Easier to manage | |
 
 **Best for:** Large systems with many independent tables.
 

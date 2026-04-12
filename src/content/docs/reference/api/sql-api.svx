@@ -13,7 +13,7 @@ import { Tabs, TabItem } from '$lib/mdx';
 A SQL-like interface for developers who prefer relational-style queries.
 
 :::note[Minimal SQL Subset]
-The SQL API provides a minimal SQL subset. It's ideal for exploration and prototyping, but consider the [Custom API](/guides/api-strategy/) for production.
+The SQL API provides a minimal SQL subset. It's ideal for exploration and prototyping, but consider the [TerraScale API](/guides/api-strategy/) for production.
 :::
 
 ---
@@ -294,7 +294,7 @@ CREATE INDEX products_name_idx ON products (name)
 - Developers with SQL background
 - Prototyping
 
-**Consider Custom API for:**
+**Consider TerraScale API for:**
 - Production applications
 - Performance-critical code
 - Full feature access
@@ -305,5 +305,5 @@ CREATE INDEX products_name_idx ON products (name)
 ## Next Steps
 
 - [API Strategy](/guides/api-strategy/) - Compare API options
-- [Query Operations](/reference/api/query-operations/) - Custom API queries
+- [Query Operations](/reference/api/query-operations/) - TerraScale API queries
 - [Getting Started](/guides/getting-started/) - Quick start guide

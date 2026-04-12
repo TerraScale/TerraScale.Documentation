@@ -358,7 +358,7 @@
 									{#if operation.parameters.length > 0}
 										<div class="grid gap-[0.6rem]">
 											<h5 class="m-0 text-[0.88rem] font-semibold uppercase tracking-[0.08em] text-slate-100">Parameters</h5>
-											<table class="w-full border-collapse text-[0.9rem]">
+											<table class="w-full border-collapse text-[0.9rem] [&_thead]:bg-white/8 [&_tbody_tr:nth-child(odd)]:bg-white/3 [&_tbody_tr:nth-child(even)]:bg-white/7 [&_tbody_tr:hover]:bg-white/10">
 												<thead>
 													<tr><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">Name</th><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">In</th><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">Type</th><th class="border-b border-white/8 px-3 py-[0.65rem] text-left align-top font-semibold text-[var(--color-ts-text-muted)]">Required</th></tr>
 												</thead>

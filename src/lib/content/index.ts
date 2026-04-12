@@ -30,7 +30,6 @@ const SECTION_LABELS = {
 	sdks: 'SDKs',
 	account: 'Account',
 	reference: 'Reference',
-	dashboard: 'Dashboard',
 	roadmap: 'Roadmap',
 	about: 'About'
 } as const;

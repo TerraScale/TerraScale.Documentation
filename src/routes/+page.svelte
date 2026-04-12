@@ -52,12 +52,6 @@
 			title: 'SDKs & Libraries',
 			description: 'Official client libraries for C#, Go, and TypeScript.',
 			href: '/guides/sdks/csharp/'
-		},
-		{
-			icon: 'laptop',
-			title: 'Dashboard Guide',
-			description: 'Learn how to use the TerraScale dashboard to manage your databases.',
-			href: '/dashboard/why-open-source/'
 		}
 	];
 
