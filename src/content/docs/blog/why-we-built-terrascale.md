@@ -8,6 +8,10 @@ tags:
   - behind-the-scenes
   - story
 excerpt: Every startup has an origin story. Ours started with a $47,000 cloud bill and a lot of frustration. Here's the real story of why TerraScale exists.
+cover:
+  wide: /images/blog/why-we-built-terrascale/cover-wide.svg
+  square: /images/blog/why-we-built-terrascale/cover-square.svg
+  alt: Two dark structural plates split and rejoined by a precise electric seam, evoking a painful infrastructure redesign.
 ---
 
 Every startup has an origin story. Usually it's something inspiring - a founder sees a problem, has a vision, builds something amazing. Our story is a bit less glamorous. It started with a $47,000 cloud bill.

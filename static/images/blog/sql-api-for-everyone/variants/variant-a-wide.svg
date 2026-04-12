@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-sql-api-for-everyone-wide-0" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-sql-api-for-everyone-wide-0" cx="0.2" cy="0.18" r="0.48">
+		<stop offset="0%" stop-color="#7dd3fc" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#60a5fa" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-sql-api-for-everyone-wide-0" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-sql-api-for-everyone-wide-0" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-sql-api-for-everyone-wide-0" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#7dd3fc" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>sql-api-for-everyone wide variant 1</title>
+<desc>Architectural table planes and elegant query lines that suggest structured access through SQL.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-sql-api-for-everyone-wide-0)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-sql-api-for-everyone-wide-0)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-sql-api-for-everyone-wide-0)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-sql-api-for-everyone-wide-0)" stroke-width="1"/>
+
+<g><circle cx="768.29" cy="696.6" r="1.57" fill="#60a5fa" opacity="0.17"/><circle cx="1204.98" cy="411.74" r="1.55" fill="#f8fafc" opacity="0.16"/><circle cx="1181.21" cy="38.9" r="1.77" fill="#f8fafc" opacity="0.14"/><circle cx="1186.01" cy="391.01" r="2.22" fill="#60a5fa" opacity="0.14"/><circle cx="730.16" cy="309.21" r="1.42" fill="#f8fafc" opacity="0.15"/><circle cx="1380.99" cy="197.26" r="2.39" fill="#f8fafc" opacity="0.21"/><circle cx="647.84" cy="549.02" r="1.22" fill="#60a5fa" opacity="0.08"/><circle cx="290.97" cy="358.14" r="1.91" fill="#f8fafc" opacity="0.09"/><circle cx="161.87" cy="746.77" r="1.83" fill="#f8fafc" opacity="0.12"/><circle cx="535.78" cy="679.58" r="2.19" fill="#60a5fa" opacity="0.18"/><circle cx="344.96" cy="92.67" r="1.94" fill="#f8fafc" opacity="0.13"/><circle cx="1261.62" cy="109.99" r="1.58" fill="#f8fafc" opacity="0.09"/><circle cx="1582.44" cy="453.69" r="1.29" fill="#60a5fa" opacity="0.14"/><circle cx="961.62" cy="495.13" r="2.27" fill="#f8fafc" opacity="0.12"/><circle cx="906.56" cy="680.43" r="1.58" fill="#f8fafc" opacity="0.21"/><circle cx="1052.22" cy="41.8" r="2.15" fill="#60a5fa" opacity="0.22"/></g>
+<g>
+<polygon points="288 216 1280 216 1222 306 230 306" fill="rgba(10,17,28,0.68)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><line x1="330" y1="261" x2="1170" y2="261" stroke="#7dd3fc" stroke-opacity="0.3" stroke-width="2" stroke-linecap="round"/><polygon points="322 324 1246 324 1188 414 264 414" fill="rgba(10,17,28,0.68)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><line x1="364" y1="369" x2="1136" y2="369" stroke="#60a5fa" stroke-opacity="0.78" stroke-width="2" stroke-linecap="round"/><polygon points="356 432 1212 432 1154 522 298 522" fill="rgba(10,17,28,0.68)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><line x1="398" y1="477" x2="1102" y2="477" stroke="#7dd3fc" stroke-opacity="0.3" stroke-width="2" stroke-linecap="round"/><polygon points="390 540 1178 540 1120 630 332 630" fill="rgba(10,17,28,0.68)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><line x1="432" y1="585" x2="1068" y2="585" stroke="#7dd3fc" stroke-opacity="0.3" stroke-width="2" stroke-linecap="round"/><path d="M 466.56 192 L 565.76 162 L 903.04 162" fill="none" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>
+</g>
+</svg>

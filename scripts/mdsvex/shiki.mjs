@@ -7,7 +7,7 @@ import {
 } from '@shikijs/transformers';
 
 const highlighter = await createHighlighter({
-	themes: ['github-dark-default', 'github-light-default'],
+	themes: ['github-dark-default'],
 	langs: [
 		'javascript',
 		'typescript',
@@ -36,10 +36,7 @@ export async function shikiHighlighter(code, lang, meta) {
 	try {
 		const html = highlighter.codeToHtml(code, {
 			lang: language,
-			themes: {
-				light: 'github-light-default',
-				dark: 'github-dark-default'
-			},
+			theme: 'github-dark-default',
 			meta: { __raw: meta },
 			transformers: [
 				transformerNotationDiff(),

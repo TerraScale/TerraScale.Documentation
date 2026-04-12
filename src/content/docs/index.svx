@@ -22,22 +22,22 @@ import { FeatureGrid } from '$lib/mdx';
   <div class="pointer-events-none absolute left-1/2 top-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle,rgba(37,99,235,0.15)_0,transparent_60%)]"></div>
   <div class="pointer-events-none absolute right-0 top-1/2 h-[600px] w-[600px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0,transparent_60%)]"></div>
   <div class="relative z-10 flex flex-col items-center">
-    <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300">
+    <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[0.76rem] font-medium uppercase tracking-[0.08em] text-slate-300">
       <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
-      <span>Now in Public Beta</span>
+      <span>Now in Public Alpha</span>
     </div>
-    <h1 class="font-[var(--font-display)] text-5xl leading-[1.1] tracking-tight text-slate-50 sm:text-6xl">
+    <h1 class="text-[2.9rem] leading-[1.12] tracking-[0.01em] text-slate-50 sm:text-[4rem]">
       Scale Your <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Database</span><br/>Effortlessly
     </h1>
-    <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-slate-400">
+    <p class="mx-auto mt-7 max-w-2xl text-[1.02rem] leading-[1.9] tracking-[0.01em] text-slate-400">
       The most advanced database platform for modern applications.<br/>
       Deploy globally. Scale infinitely. Build faster.
     </p>
     <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
-      <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+      <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
         Get Started Free
       </a>
-      <a href="/reference/authentication/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+      <a href="/reference/api/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
         View Documentation
       </a>
     </div>
@@ -91,14 +91,14 @@ Simple APIs, powerful features. Deploy your database with just a few lines of co
 
 <div class="py-12 text-center">
   <h2>Ready to Build the Future?</h2>
-  <p class="mb-8 text-slate-400">
+  <p class="mb-8 text-[0.98rem] leading-[1.85] tracking-[0.01em] text-slate-400">
     Join thousands of developers building scalable, reliable applications with TerraScale.
   </p>
   <div class="flex flex-wrap justify-center gap-4">
-    <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+    <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
       Start Building Today
     </a>
-    <a href="https://terrascale.tech/pricing" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.9rem] leading-[1.2] font-semibold text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+    <a href="https://terrascale.tech/pricing" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
       View Pricing
     </a>
   </div>

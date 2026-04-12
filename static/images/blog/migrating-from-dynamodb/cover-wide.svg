@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-migrating-from-dynamodb-wide-2-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-migrating-from-dynamodb-wide-2-final" cx="0.52" cy="0.7" r="0.56">
+		<stop offset="0%" stop-color="#60a5fa" stop-opacity="0.22"/>
+		<stop offset="48%" stop-color="#2dd4bf" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-migrating-from-dynamodb-wide-2-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-migrating-from-dynamodb-wide-2-final" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.18"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-migrating-from-dynamodb-wide-2-final" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>migrating-from-dynamodb wide final</title>
+<desc>Two structured data systems connected by a calm transfer bridge, representing migration from one platform to another.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-migrating-from-dynamodb-wide-2-final)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-migrating-from-dynamodb-wide-2-final)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-migrating-from-dynamodb-wide-2-final)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-migrating-from-dynamodb-wide-2-final)" stroke-width="1"/>
+
+<g><circle cx="432.47" cy="608.41" r="1.58" fill="#2dd4bf" opacity="0.13"/><circle cx="1545.23" cy="273.88" r="3.12" fill="#f8fafc" opacity="0.24"/><circle cx="337.05" cy="279.79" r="1.49" fill="#f8fafc" opacity="0.09"/><circle cx="150.6" cy="339.17" r="2.23" fill="#2dd4bf" opacity="0.18"/><circle cx="708.19" cy="615.19" r="2.14" fill="#f8fafc" opacity="0.14"/><circle cx="147.38" cy="839.05" r="2.16" fill="#f8fafc" opacity="0.24"/><circle cx="1261.74" cy="816.18" r="1.01" fill="#2dd4bf" opacity="0.15"/><circle cx="1258.65" cy="424.52" r="1.62" fill="#f8fafc" opacity="0.22"/><circle cx="166.83" cy="228.83" r="2.43" fill="#f8fafc" opacity="0.17"/><circle cx="637.98" cy="215.81" r="1.83" fill="#2dd4bf" opacity="0.18"/><circle cx="1149.46" cy="588.06" r="2.19" fill="#f8fafc" opacity="0.17"/><circle cx="987.74" cy="253.58" r="2.84" fill="#f8fafc" opacity="0.11"/><circle cx="777.9" cy="223.66" r="1.91" fill="#2dd4bf" opacity="0.17"/><circle cx="187.77" cy="833.6" r="2.04" fill="#f8fafc" opacity="0.13"/><circle cx="1385.23" cy="565.09" r="3.21" fill="#f8fafc" opacity="0.15"/><circle cx="333.33" cy="463.18" r="1.23" fill="#2dd4bf" opacity="0.1"/><circle cx="1090.44" cy="75.62" r="1.67" fill="#f8fafc" opacity="0.19"/><circle cx="308.58" cy="364.8" r="1.42" fill="#f8fafc" opacity="0.08"/><circle cx="1199.06" cy="405.2" r="2.65" fill="#2dd4bf" opacity="0.2"/><circle cx="1518.44" cy="680.69" r="1.67" fill="#f8fafc" opacity="0.13"/><circle cx="487.43" cy="590.4" r="3.32" fill="#f8fafc" opacity="0.14"/><circle cx="209.13" cy="118.14" r="1.58" fill="#2dd4bf" opacity="0.1"/></g>
+<g>
+<rect x="224" y="225" width="352" height="378" rx="26" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/><rect x="1024" y="225" width="352" height="378" rx="26" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/><line x1="272" y1="299" x2="528" y2="299" stroke="#60a5fa" stroke-opacity="0.24" stroke-width="2"/><line x1="1072" y1="299" x2="1328" y2="299" stroke="#60a5fa" stroke-opacity="0.24" stroke-width="2"/><line x1="272" y1="385" x2="528" y2="385" stroke="#60a5fa" stroke-opacity="0.24" stroke-width="2"/><line x1="1072" y1="385" x2="1328" y2="385" stroke="#60a5fa" stroke-opacity="0.24" stroke-width="2"/><line x1="272" y1="471" x2="528" y2="471" stroke="#60a5fa" stroke-opacity="0.24" stroke-width="2"/><line x1="1072" y1="471" x2="1328" y2="471" stroke="#60a5fa" stroke-opacity="0.24" stroke-width="2"/><path d="M 576 406.44 C 736 300.6 864 512.28 1024 406.44" fill="none" stroke="#2dd4bf" stroke-width="6" stroke-linecap="round" opacity="0.95"/><path d="M 576 406.44 C 736 300.6 864 512.28 1024 406.44" fill="none" stroke="#60a5fa" stroke-width="12" stroke-opacity="0.08" stroke-linecap="round"/>
+</g>
+</svg>

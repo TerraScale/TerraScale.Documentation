@@ -14,6 +14,15 @@
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	let { data }: { data: { entry: ContentEntry; sidebar: SidebarNode[]; prev?: ContentEntry; next?: ContentEntry } } = $props();
+	const siteUrl = 'https://docs.terrascale.tech';
+
+	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
+	function toAbsoluteUrl(path?: string) {
+		return path ? new URL(path, siteUrl).toString() : undefined;
+	}
+
+	let socialImage = $derived(toAbsoluteUrl(data.entry.seo?.image ?? data.entry.cover?.wide));
+	let socialImageAlt = $derived(data.entry.cover?.alt ?? data.entry.title);
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function getBadgeClass(badge?: BadgeMeta) {
@@ -24,7 +33,7 @@
 		} as const;
 
 		const tone = tones[(badge?.variant as keyof typeof tones) ?? 'secondary'] ?? tones.secondary;
-		return `inline-flex items-center rounded-full px-[0.65rem] py-[0.35rem] font-[var(--font-display)] text-[0.72rem] uppercase tracking-[0.08em] ${tone}`;
+		return `inline-flex items-center rounded-full px-[0.65rem] py-[0.35rem] text-[0.68rem] font-medium uppercase tracking-[0.05em] ${tone}`;
 	}
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
@@ -91,6 +100,17 @@
 	<meta property="og:title" content={data.entry.title} />
 	<meta property="og:description" content={data.entry.description} />
 	<meta property="og:type" content="article" />
+	<meta name="twitter:title" content={data.entry.title} />
+	<meta name="twitter:description" content={data.entry.description} />
+	<meta name="twitter:card" content={socialImage ? 'summary_large_image' : 'summary'} />
+	{#if socialImage}
+		<meta property="og:image" content={socialImage} />
+		<meta property="og:image:alt" content={socialImageAlt} />
+		<meta property="og:image:width" content="1600" />
+		<meta property="og:image:height" content="900" />
+		<meta name="twitter:image" content={socialImage} />
+		<meta name="twitter:image:alt" content={socialImageAlt} />
+	{/if}
 	{#if data.entry.date}
 		<meta property="article:published_time" content={data.entry.date} />
 	{/if}
@@ -100,22 +120,22 @@
 	<section class="mx-auto w-[calc(100%-1.25rem)] max-w-none px-0 pb-16 pt-7 sm:w-[calc(100%-3rem)] md:pb-20">
 		<div class="rounded-2xl border border-white/10 bg-white/6 p-7 shadow-[0_14px_40px_rgba(0,0,0,0.35)] backdrop-blur-[14px] max-[640px]:p-5">
 			<div class="mb-6 border-b border-white/6 pb-5">
-				<p class="mb-[0.85rem] text-[0.8rem] uppercase tracking-[0.16em] text-blue-300">Blog</p>
-				<h1>{data.entry.title}</h1>
+				<p class="mb-[0.85rem] text-[0.72rem] font-medium uppercase tracking-[0.12em] text-blue-300">Blog</p>
+				<h1 class="text-[2.2rem] leading-[1.14] tracking-[0.01em] text-slate-50 sm:text-[2.8rem]">{data.entry.title}</h1>
 				{#if data.entry.description}
-					<p class="m-0 text-[0.95rem] leading-7 text-slate-400">{data.entry.description}</p>
+					<p class="m-0 text-[1rem] leading-[1.85] tracking-[0.01em] text-slate-400">{data.entry.description}</p>
 				{/if}
-				<div class="mt-4 flex flex-wrap items-center gap-3 text-[0.8rem] uppercase tracking-[0.08em] text-slate-300">
+				<div class="mt-4 flex flex-wrap items-center gap-3 text-[0.78rem] uppercase tracking-[0.06em] text-slate-300">
 					<time datetime={data.entry.date}>{formatDate(data.entry.date)}</time>
 					<span class="mx-2 opacity-50">•</span>
 					<span>{data.entry.readingTime}</span>
 				</div>
 				{#if data.entry.authors && data.entry.authors.length > 0}
-					<div class="mt-6 flex flex-wrap gap-6 pt-6 border-t border-white/8">
+					<div class="mt-6 flex flex-wrap gap-6 border-t border-white/8 pt-6">
 						{#each data.entry.authors as author}
 							<div class="flex items-center gap-3">
 								<div class="flex flex-col">
-									<span class="font-semibold text-slate-50 [&_a]:text-inherit [&_a]:no-underline [&_a:hover]:underline [&_a:hover]:text-blue-400">
+									<span class="text-[0.95rem] font-semibold tracking-[0.01em] text-slate-50 [&_a]:text-inherit [&_a]:no-underline [&_a:hover]:underline [&_a:hover]:text-blue-400">
 										{#if author.url}
 											<a href={author.url}>{author.name}</a>
 										{:else}
@@ -123,7 +143,7 @@
 										{/if}
 									</span>
 									{#if author.title}
-										<span class="text-sm text-slate-400">{author.title}</span>
+										<span class="text-[0.82rem] uppercase tracking-[0.05em] text-slate-400">{author.title}</span>
 									{/if}
 								</div>
 							</div>
@@ -131,6 +151,17 @@
 					</div>
 				{/if}
 			</div>
+			{#if data.entry.cover?.wide}
+				<div class="mb-7 overflow-hidden rounded-[1.5rem] border border-white/10 bg-[linear-gradient(180deg,rgba(10,16,28,0.92),rgba(4,7,14,0.96))] shadow-[0_18px_40px_rgba(0,0,0,0.3)]">
+					<div class="aspect-[16/9]">
+						<img
+							class="h-full w-full object-cover"
+							src={data.entry.cover.wide}
+							alt={data.entry.cover.alt ?? `${data.entry.title} cover artwork`}
+						/>
+					</div>
+				</div>
+			{/if}
 			<article data-prose class={proseShellClasses}>
 				{@html data.entry.html}
 			</article>
@@ -142,14 +173,14 @@
 		<DocsSidebar items={data.sidebar} />
 		<div class="min-w-0 px-8 pb-8 pt-6 max-[860px]:px-0 max-[860px]:pt-5">
 			<div class="mb-5">
-				<h1>
+				<h1 class="flex flex-wrap items-center gap-3 text-[2rem] leading-[1.14] tracking-[0.01em] text-slate-50 sm:text-[2.55rem]">
 					<span>{data.entry.title}</span>
 					{#if data.entry.headingBadge}
 						<span class={getBadgeClass(data.entry.headingBadge)}>{data.entry.headingBadge.text}</span>
 					{/if}
 				</h1>
 				{#if data.entry.description}
-					<p class="text-[0.95rem] leading-7 text-slate-400">{data.entry.description}</p>
+					<p class="text-[1rem] leading-[1.85] tracking-[0.01em] text-slate-400">{data.entry.description}</p>
 				{/if}
 			</div>
 			<article data-prose class={proseShellClasses}>

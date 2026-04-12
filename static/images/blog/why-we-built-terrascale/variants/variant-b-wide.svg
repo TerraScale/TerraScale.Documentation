@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-why-we-built-terrascale-wide-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-why-we-built-terrascale-wide-1" cx="0.78" cy="0.24" r="0.48">
+		<stop offset="0%" stop-color="#93c5fd" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#38bdf8" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-why-we-built-terrascale-wide-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-why-we-built-terrascale-wide-1" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-why-we-built-terrascale-wide-1" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#93c5fd" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>why-we-built-terrascale wide variant 2</title>
+<desc>Two dark structural plates split and rejoined by a precise electric seam, evoking a painful infrastructure redesign.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-why-we-built-terrascale-wide-1)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-why-we-built-terrascale-wide-1)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-why-we-built-terrascale-wide-1)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-why-we-built-terrascale-wide-1)" stroke-width="1"/>
+
+<g><circle cx="751.15" cy="524.28" r="2.78" fill="#38bdf8" opacity="0.21"/><circle cx="1087.22" cy="578.28" r="1.59" fill="#f8fafc" opacity="0.08"/><circle cx="539.4" cy="164.16" r="1.96" fill="#f8fafc" opacity="0.21"/><circle cx="1516.91" cy="818.47" r="1.44" fill="#38bdf8" opacity="0.12"/><circle cx="172.35" cy="674.88" r="2.74" fill="#f8fafc" opacity="0.19"/><circle cx="616.61" cy="752.07" r="2.14" fill="#f8fafc" opacity="0.11"/><circle cx="1372.78" cy="69.77" r="2.67" fill="#38bdf8" opacity="0.08"/><circle cx="1173.02" cy="396.96" r="1.3" fill="#f8fafc" opacity="0.1"/><circle cx="762.36" cy="358.04" r="1.48" fill="#f8fafc" opacity="0.15"/><circle cx="1118.05" cy="116.16" r="1.79" fill="#38bdf8" opacity="0.2"/><circle cx="1527.64" cy="459.94" r="2.37" fill="#f8fafc" opacity="0.16"/><circle cx="1462.62" cy="126.27" r="1.66" fill="#f8fafc" opacity="0.22"/><circle cx="182.85" cy="626.57" r="1.08" fill="#38bdf8" opacity="0.12"/><circle cx="721.15" cy="70.23" r="2.63" fill="#f8fafc" opacity="0.19"/><circle cx="190.07" cy="611.97" r="1.66" fill="#f8fafc" opacity="0.22"/><circle cx="1407.65" cy="510.21" r="2.3" fill="#38bdf8" opacity="0.13"/></g>
+<g>
+<polygon points="192 144 622 180 646 162 716 297 676 450 746 603 710 747 288 774" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/><polygon points="876 162 1392 126 1312 774 746 747 782 603 712 450 752 297 682 162" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/><polyline points="664 162 734 297 694 450 764 603 728 747" fill="none" stroke="#38bdf8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/><polyline points="682 162 716 297 712 450 746 603 746 747" fill="none" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="10 10" stroke-opacity="0.48"/>
+</g>
+</svg>

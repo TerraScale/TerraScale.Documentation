@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-introducing-terrascale-wide-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-introducing-terrascale-wide-1" cx="0.78" cy="0.24" r="0.48">
+		<stop offset="0%" stop-color="#60a5fa" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#22d3ee" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-introducing-terrascale-wide-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-introducing-terrascale-wide-1" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-introducing-terrascale-wide-1" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>introducing-terrascale wide variant 2</title>
+<desc>Illuminated horizon lines and a rising beacon suggesting a new global data platform emerging from darkness.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-introducing-terrascale-wide-1)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-introducing-terrascale-wide-1)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-introducing-terrascale-wide-1)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-introducing-terrascale-wide-1)" stroke-width="1"/>
+
+<g><circle cx="551.97" cy="872.47" r="2.07" fill="#22d3ee" opacity="0.1"/><circle cx="1135.26" cy="772.04" r="1.84" fill="#f8fafc" opacity="0.08"/><circle cx="963.52" cy="691.24" r="1.25" fill="#f8fafc" opacity="0.12"/><circle cx="965.75" cy="230.22" r="2.35" fill="#22d3ee" opacity="0.15"/><circle cx="378.08" cy="288.99" r="1.68" fill="#f8fafc" opacity="0.17"/><circle cx="1200.8" cy="91.09" r="2.2" fill="#f8fafc" opacity="0.16"/><circle cx="1152.13" cy="592.07" r="1.37" fill="#22d3ee" opacity="0.17"/><circle cx="1249.75" cy="290.88" r="1.62" fill="#f8fafc" opacity="0.18"/><circle cx="7.87" cy="775.72" r="2.06" fill="#f8fafc" opacity="0.15"/><circle cx="1077.35" cy="404.03" r="1.19" fill="#22d3ee" opacity="0.15"/><circle cx="527.88" cy="565.7" r="1.64" fill="#f8fafc" opacity="0.1"/><circle cx="1022.82" cy="753.55" r="1.89" fill="#f8fafc" opacity="0.2"/><circle cx="1057.92" cy="479.77" r="2.27" fill="#22d3ee" opacity="0.14"/><circle cx="502.9" cy="548.47" r="1.86" fill="#f8fafc" opacity="0.14"/><circle cx="282.46" cy="71.66" r="2.73" fill="#f8fafc" opacity="0.18"/><circle cx="1002.7" cy="431.99" r="2.04" fill="#22d3ee" opacity="0.15"/></g>
+<g>
+<path d="M 0 558 C 100 584.91 152 599.4 200 599.4 C 248 599.4 300 531.09 400 558 C 500 531.09 552 516.6 600 516.6 C 648 516.6 700 584.91 800 558 C 900 584.91 952 599.4 1000 599.4 C 1048 599.4 1100 531.09 1200 558 C 1300 531.09 1352 516.6 1400 516.6 C 1448 516.6 1500 584.91 1600 558 L 1600 900 L 0 900 Z" fill="rgba(10,17,28,0.76)" fill-opacity="0.1" stroke="#60a5fa" stroke-opacity="0.22" stroke-width="1.4"/><path d="M 0 594 C 100 624.11 152 641.4 200 641.4 C 248 641.4 300 559.89 400 594 C 500 559.89 552 542.6 600 542.6 C 648 542.6 700 624.11 800 594 C 900 624.11 952 641.4 1000 641.4 C 1048 641.4 1100 559.89 1200 594 C 1300 559.89 1352 542.6 1400 542.6 C 1448 542.6 1500 624.11 1600 594 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.16" stroke="#60a5fa" stroke-opacity="0.19" stroke-width="1.28"/><path d="M 0 630 C 100 663.31 152 683.4 200 683.4 C 248 683.4 300 588.69 400 630 C 500 588.69 552 568.6 600 568.6 C 648 568.6 700 663.31 800 630 C 900 663.31 952 683.4 1000 683.4 C 1048 683.4 1100 588.69 1200 630 C 1300 588.69 1352 568.6 1400 568.6 C 1448 568.6 1500 663.31 1600 630 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.22" stroke="#60a5fa" stroke-opacity="0.16" stroke-width="1.16"/><path d="M 0 666 C 100 702.51 152 725.4 200 725.4 C 248 725.4 300 617.49 400 666 C 500 617.49 552 594.6 600 594.6 C 648 594.6 700 702.51 800 666 C 900 702.51 952 725.4 1000 725.4 C 1048 725.4 1100 617.49 1200 666 C 1300 617.49 1352 594.6 1400 594.6 C 1448 594.6 1500 702.51 1600 666 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.28" stroke="#60a5fa" stroke-opacity="0.13" stroke-width="1.04"/><path d="M 0 702 C 100 741.71 152 767.4 200 767.4 C 248 767.4 300 646.29 400 702 C 500 646.29 552 620.6 600 620.6 C 648 620.6 700 741.71 800 702 C 900 741.71 952 767.4 1000 767.4 C 1048 767.4 1100 646.29 1200 702 C 1300 646.29 1352 620.6 1400 620.6 C 1448 620.6 1500 741.71 1600 702 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.34" stroke="#60a5fa" stroke-opacity="0.1" stroke-width="0.92"/><line x1="1216" y1="414" x2="1216" y2="630" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" opacity="0.95"/><circle cx="1216" cy="414" r="8" fill="#22d3ee" opacity="0.95"/><circle cx="1216" cy="414" r="26" fill="none" stroke="#60a5fa" stroke-opacity="0.38" stroke-width="1.4"/>
+</g>
+</svg>

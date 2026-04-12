@@ -10,6 +10,10 @@ tags:
   - cost
   - tips
 excerpt: TerraScale's pricing is simple, but that doesn't mean you can't optimize. Here are 10 tips to get the most value from your database.
+cover:
+  wide: /images/blog/cost-optimization-tips/cover-wide.svg
+  square: /images/blog/cost-optimization-tips/cover-square.svg
+  alt: Compressed layers and trimmed bands balancing neatly around a core, representing database cost optimization.
 ---
 
 TerraScale's pricing is straightforward: you pay for storage and operations. But that doesn't mean you can't optimize. Here are 10 tips I share with developers to help them get the most value.

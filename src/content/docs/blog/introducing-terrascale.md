@@ -8,6 +8,10 @@ tags:
   - announcement
   - launch
 excerpt: After two years of development, we're excited to announce TerraScale - a globally distributed NoSQL database that combines the power of DynamoDB with the simplicity developers deserve.
+cover:
+  wide: /images/blog/introducing-terrascale/cover-wide.svg
+  square: /images/blog/introducing-terrascale/cover-square.svg
+  alt: Illuminated horizon lines and a rising beacon suggesting a new global data platform emerging from darkness.
 ---
 
 After two years of late nights, countless refactors, and way too much coffee, I'm thrilled to finally share what we've been building: TerraScale.
@@ -36,7 +40,7 @@ A few things that make it different:
 
 Honestly? Anyone who's tired of fighting their database.
 
-We've been running a private beta for the past six months with about 50 companies. The use cases have been all over the map - real-time gaming leaderboards, IoT sensor data, e-commerce product catalogs, financial transaction logs.
+We've been running a Public Alpha for the past six months with about 50 companies. The use cases have been all over the map - real-time gaming leaderboards, IoT sensor data, e-commerce product catalogs, financial transaction logs.
 
 The common thread is that these teams wanted something that would just work. They didn't want to become database experts. They wanted to ship their actual product.
 

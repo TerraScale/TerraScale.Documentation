@@ -9,6 +9,10 @@ tags:
   - security
   - best-practices
 excerpt: Security isn't optional. Here's how to keep your TerraScale databases secure with API key management, MFA, and access controls.
+cover:
+  wide: /images/blog/security-best-practices/cover-wide.svg
+  square: /images/blog/security-best-practices/cover-square.svg
+  alt: Layered shield geometry and guarded perimeter nodes, conveying enterprise-grade database security.
 ---
 
 Security isn't optional. Here's everything you need to know to keep your TerraScale databases secure.

@@ -9,6 +9,10 @@ tags:
   - tutorial
   - getting-started
 excerpt: I timed myself. From opening the browser to running my first query took 4 minutes and 37 seconds. Here's exactly what I did.
+cover:
+  wide: /images/blog/getting-started-5-minutes/cover-wide.svg
+  square: /images/blog/getting-started-5-minutes/cover-square.svg
+  alt: A sequence of clean illuminated steps leading toward a ready-state portal, representing a fast getting-started path.
 ---
 
 I timed myself this morning. From opening my browser to running my first query against TerraScale took 4 minutes and 37 seconds. Here's the exact steps, nothing skipped.

@@ -2,10 +2,18 @@
   "active_plan": "/var/home/mariogk/Projects/TerraScale.Documentation/.sisyphus/plans/tailwind-only-styling-migration.md",
   "started_at": "2026-04-11T21:46:57.684Z",
   "session_ids": [
-    "ses_2820f3f2effeYd5grR2wdSJPxF"
+    "ses_2820f3f2effeYd5grR2wdSJPxF",
+    "ses_28142d177ffeUWyQo5i3aHgDdV",
+    "ses_28142cf39ffe2B8T4NXtXBKTqS",
+    "ses_28142cd5dffexMoFaSJjAbPqEm",
+    "ses_28142cb67ffef3kTZfpEk1ZyyY"
   ],
   "session_origins": {
-    "ses_2820f3f2effeYd5grR2wdSJPxF": "direct"
+    "ses_2820f3f2effeYd5grR2wdSJPxF": "direct",
+    "ses_28142d177ffeUWyQo5i3aHgDdV": "appended",
+    "ses_28142cf39ffe2B8T4NXtXBKTqS": "appended",
+    "ses_28142cd5dffexMoFaSJjAbPqEm": "appended",
+    "ses_28142cb67ffef3kTZfpEk1ZyyY": "appended"
   },
   "plan_name": "tailwind-only-styling-migration",
   "agent": "atlas",
@@ -81,6 +89,15 @@
       "agent": "Sisyphus-Junior",
       "category": "unspecified-high",
       "updated_at": "2026-04-11T22:48:16.554Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "Plan Compliance Audit — oracle",
+      "session_id": "ses_281297556ffeXrmCDYG7VbPUMP",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-04-11T23:19:18.601Z"
     }
   }
 }

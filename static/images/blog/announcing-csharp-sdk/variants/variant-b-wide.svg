@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-announcing-csharp-sdk-wide-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-announcing-csharp-sdk-wide-1" cx="0.78" cy="0.24" r="0.48">
+		<stop offset="0%" stop-color="#93c5fd" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#22d3ee" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-announcing-csharp-sdk-wide-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-announcing-csharp-sdk-wide-1" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-announcing-csharp-sdk-wide-1" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#93c5fd" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>announcing-csharp-sdk wide variant 2</title>
+<desc>Precise bracketed engineering forms and modular nodes, evoking a polished new SDK release.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-announcing-csharp-sdk-wide-1)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-announcing-csharp-sdk-wide-1)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-announcing-csharp-sdk-wide-1)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-announcing-csharp-sdk-wide-1)" stroke-width="1"/>
+
+<g><circle cx="1163.75" cy="342.21" r="1.04" fill="#22d3ee" opacity="0.13"/><circle cx="149.75" cy="379.67" r="2.53" fill="#f8fafc" opacity="0.14"/><circle cx="941.15" cy="687.23" r="2.46" fill="#f8fafc" opacity="0.18"/><circle cx="1046.89" cy="649.69" r="1.57" fill="#22d3ee" opacity="0.24"/><circle cx="724.98" cy="536.72" r="1.12" fill="#f8fafc" opacity="0.15"/><circle cx="1562.23" cy="647.02" r="2.24" fill="#f8fafc" opacity="0.23"/><circle cx="45.45" cy="684.56" r="2.2" fill="#22d3ee" opacity="0.15"/><circle cx="1030.73" cy="57.76" r="2.69" fill="#f8fafc" opacity="0.11"/><circle cx="1090.81" cy="418.03" r="1.42" fill="#f8fafc" opacity="0.23"/><circle cx="282.24" cy="740.1" r="1.77" fill="#22d3ee" opacity="0.13"/><circle cx="1332.27" cy="242.76" r="1.57" fill="#f8fafc" opacity="0.12"/><circle cx="664.36" cy="720.82" r="2.11" fill="#f8fafc" opacity="0.16"/><circle cx="205.9" cy="870.99" r="1.61" fill="#22d3ee" opacity="0.2"/><circle cx="1103.67" cy="568.51" r="2.61" fill="#f8fafc" opacity="0.13"/><circle cx="211.83" cy="2.38" r="2.27" fill="#f8fafc" opacity="0.19"/><circle cx="1248.93" cy="883.81" r="2.55" fill="#22d3ee" opacity="0.21"/></g>
+<g>
+<rect x="688.1" y="253.8" width="128.7" height="356.4" rx="28" fill="rgba(8,16,28,0.6)" stroke="#93c5fd" stroke-opacity="0.22" stroke-width="1.4"/><rect x="975.2" y="253.8" width="128.7" height="356.4" rx="28" fill="rgba(8,16,28,0.6)" stroke="#93c5fd" stroke-opacity="0.22" stroke-width="1.4"/><rect x="852.44" y="388.44" width="87.12" height="87.12" rx="22" fill="#22d3ee" opacity="0.18" stroke="#22d3ee" stroke-opacity="0.5" stroke-width="2"/><line x1="828.68" y1="432" x2="963.32" y2="432" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/><line x1="896" y1="364.68" x2="896" y2="499.32" stroke="#93c5fd" stroke-width="2" stroke-dasharray="8 10" stroke-linecap="round" opacity="0.7"/>
+</g>
+</svg>

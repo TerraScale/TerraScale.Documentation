@@ -11,9 +11,9 @@
 		<div class="inline-flex size-8 items-center justify-center rounded-[0.4rem] border border-blue-300/22 bg-blue-500/15">
 			<Icon name={contentIconMap[icon] ?? 'file-text'} size={18} />
 		</div>
-		<h3 class="m-0 text-base">{title}</h3>
+		<h3 class="m-0 text-[1rem] font-semibold tracking-[0.01em] text-slate-50">{title}</h3>
 	</header>
-	<div class="text-[0.9rem] leading-[1.65] text-slate-400 [&_p]:text-[0.9rem] [&_p]:leading-[1.65] [&_p]:text-slate-400">
+	<div class="text-[0.94rem] leading-[1.75] tracking-[0.01em] text-slate-400 [&_p]:text-[0.94rem] [&_p]:leading-[1.75] [&_p]:tracking-[0.01em] [&_p]:text-slate-400">
 		<slot />
 	</div>
 </article>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-understanding-partition-keys-wide-2" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-understanding-partition-keys-wide-2" cx="0.52" cy="0.7" r="0.48">
+		<stop offset="0%" stop-color="#7dd3fc" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#60a5fa" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-understanding-partition-keys-wide-2" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-understanding-partition-keys-wide-2" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-understanding-partition-keys-wide-2" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#7dd3fc" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>understanding-partition-keys wide variant 3</title>
+<desc>Ordered shelves and compartments with one highlighted retrieval path, visualizing partition and sort key logic.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-understanding-partition-keys-wide-2)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-understanding-partition-keys-wide-2)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-understanding-partition-keys-wide-2)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-understanding-partition-keys-wide-2)" stroke-width="1"/>
+
+<g><circle cx="475.56" cy="659.47" r="1.12" fill="#60a5fa" opacity="0.16"/><circle cx="606.14" cy="388.12" r="1.78" fill="#f8fafc" opacity="0.2"/><circle cx="503.22" cy="49.98" r="1.53" fill="#f8fafc" opacity="0.2"/><circle cx="734.98" cy="734.84" r="1.92" fill="#60a5fa" opacity="0.13"/><circle cx="794.01" cy="76.79" r="2.58" fill="#f8fafc" opacity="0.11"/><circle cx="325.85" cy="71.74" r="1.08" fill="#f8fafc" opacity="0.19"/><circle cx="628.77" cy="133.47" r="1.91" fill="#60a5fa" opacity="0.08"/><circle cx="331.36" cy="477.92" r="1.56" fill="#f8fafc" opacity="0.09"/><circle cx="556.4" cy="863.03" r="2.5" fill="#f8fafc" opacity="0.11"/><circle cx="639.26" cy="155.17" r="2.24" fill="#60a5fa" opacity="0.22"/><circle cx="459.64" cy="725.21" r="1.62" fill="#f8fafc" opacity="0.15"/><circle cx="884.27" cy="305.64" r="1.95" fill="#f8fafc" opacity="0.24"/><circle cx="160.49" cy="207.81" r="2.38" fill="#60a5fa" opacity="0.11"/><circle cx="585.68" cy="876.1" r="1.93" fill="#f8fafc" opacity="0.15"/><circle cx="1326.56" cy="462.93" r="2.01" fill="#f8fafc" opacity="0.23"/><circle cx="1218.88" cy="691.18" r="2.27" fill="#60a5fa" opacity="0.09"/></g>
+<g>
+<rect x="320" y="180" width="1088" height="504" rx="28" fill="rgba(9,16,26,0.55)" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"/><line x1="537.6" y1="180" x2="537.6" y2="684" stroke="rgba(148,163,184,0.22)" stroke-width="1"/><line x1="755.2" y1="180" x2="755.2" y2="684" stroke="rgba(148,163,184,0.22)" stroke-width="1"/><line x1="972.8" y1="180" x2="972.8" y2="684" stroke="rgba(148,163,184,0.22)" stroke-width="1"/><line x1="1190.4" y1="180" x2="1190.4" y2="684" stroke="rgba(148,163,184,0.22)" stroke-width="1"/><line x1="320" y1="306" x2="1408" y2="306" stroke="rgba(148,163,184,0.22)" stroke-width="1"/><line x1="320" y1="432" x2="1408" y2="432" stroke="rgba(148,163,184,0.22)" stroke-width="1"/><line x1="320" y1="558" x2="1408" y2="558" stroke="rgba(148,163,184,0.22)" stroke-width="1"/><polyline points="428.8 280.8 428.8 542.88 896.64 542.88 896.64 391.68 1233.92 391.68" fill="none" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="428.8" cy="280.8" r="6" fill="#7dd3fc" opacity="0.95"/><circle cx="428.8" cy="542.88" r="6" fill="#7dd3fc" opacity="0.95"/><circle cx="896.64" cy="542.88" r="6" fill="#7dd3fc" opacity="0.95"/><circle cx="896.64" cy="391.68" r="6" fill="#7dd3fc" opacity="0.95"/><circle cx="1233.92" cy="391.68" r="8" fill="#60a5fa" opacity="0.95"/>
+</g>
+</svg>

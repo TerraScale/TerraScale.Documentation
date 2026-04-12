@@ -21,9 +21,9 @@
 <section class="mx-auto block w-[calc(100%-1.25rem)] max-w-none px-0 pb-16 pt-7 sm:w-[calc(100%-3rem)] md:pb-20">
 	<div class="w-full max-w-[min(1100px,100%)] px-8 pb-8 pt-6 max-[860px]:px-0 max-[860px]:pt-5">
 		<div class="mb-5">
-			<p class="mb-[0.85rem] text-[0.8rem] uppercase tracking-[0.16em] text-blue-300">Deferred explorer</p>
-			<h1>API Explorer</h1>
-			<p class="text-[0.95rem] leading-7 text-slate-400">
+			<p class="mb-[0.85rem] text-[0.72rem] font-medium uppercase tracking-[0.12em] text-blue-300">Deferred explorer</p>
+			<h1 class="text-[2rem] leading-[1.14] tracking-[0.01em] text-slate-50 sm:text-[2.5rem]">API Explorer</h1>
+			<p class="text-[1rem] leading-[1.85] tracking-[0.01em] text-slate-400">
 				Interactive OpenAPI browser for the checked-in TerraScale spec at
 				<code>/openapi/terrascale.yaml</code>.
 			</p>

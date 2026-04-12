@@ -10,6 +10,10 @@ tags:
   - deep-dive
   - tutorial
 excerpt: Transactions let you update multiple items atomically. Here's when you need them, when you don't, and how to use them effectively.
+cover:
+  wide: /images/blog/transactions-deep-dive/cover-wide.svg
+  square: /images/blog/transactions-deep-dive/cover-square.svg
+  alt: Two bright atomic forms locked in a balanced frame, expressing precise all-or-nothing transactions.
 ---
 
 Transactions are one of TerraScale's most powerful features - and one of the most misunderstood. Let me clear up when you need them, when you don't, and how to use them effectively.

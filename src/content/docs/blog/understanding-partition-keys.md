@@ -9,6 +9,10 @@ tags:
   - data-modeling
   - deep-dive
 excerpt: I've explained partition keys to many developers. Here's the explanation that finally clicks for most people.
+cover:
+  wide: /images/blog/understanding-partition-keys/cover-wide.svg
+  square: /images/blog/understanding-partition-keys/cover-square.svg
+  alt: Ordered shelves and compartments with one highlighted retrieval path, visualizing partition and sort key logic.
 ---
 
 I've explained partition keys to many developers over the years. Some get it immediately. Most don't, and that's not their fault - most explanations are terrible.

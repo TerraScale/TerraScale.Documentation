@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" fill="none">
+
+<defs>
+	<linearGradient id="bg-why-we-built-terrascale-square-3-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-why-we-built-terrascale-square-3-final" cx="0.35" cy="0.5" r="0.56">
+		<stop offset="0%" stop-color="#93c5fd" stop-opacity="0.22"/>
+		<stop offset="48%" stop-color="#38bdf8" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-why-we-built-terrascale-square-3-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-why-we-built-terrascale-square-3-final" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.18"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-why-we-built-terrascale-square-3-final" width="100" height="120" patternUnits="userSpaceOnUse">
+		<path d="M 100 0 L 0 0 0 120" fill="none" stroke="#93c5fd" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>why-we-built-terrascale square final</title>
+<desc>Two dark structural plates split and rejoined by a precise electric seam, evoking a painful infrastructure redesign.</desc>
+
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#bg-why-we-built-terrascale-square-3-final)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#glow-why-we-built-terrascale-square-3-final)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#grid-why-we-built-terrascale-square-3-final)" opacity="0.42"/>
+	<rect x="42" y="42" width="1116" height="1116" rx="37.8" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="42" y1="71.4" x2="42" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="42" x2="71.4" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="42" x2="1158" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="42" x2="1158" y2="71.4" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1128.6" x2="42" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1158" x2="71.4" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="1158" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="1128.6" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="60.9" y="60.9" width="1078.2" height="1078.2" rx="31.5" fill="none" stroke="url(#edge-why-we-built-terrascale-square-3-final)" stroke-width="1"/>
+
+<g><circle cx="367.48" cy="1194.25" r="1.19" fill="#38bdf8" opacity="0.2"/><circle cx="1033.55" cy="228.94" r="3.3" fill="#f8fafc" opacity="0.23"/><circle cx="499.92" cy="693.62" r="3.03" fill="#f8fafc" opacity="0.14"/><circle cx="253.48" cy="761.86" r="2.25" fill="#38bdf8" opacity="0.12"/><circle cx="570.05" cy="736.31" r="1.95" fill="#f8fafc" opacity="0.12"/><circle cx="576.19" cy="539.14" r="1.06" fill="#f8fafc" opacity="0.1"/><circle cx="364.96" cy="240.04" r="1.6" fill="#38bdf8" opacity="0.21"/><circle cx="308.12" cy="1186.39" r="2.13" fill="#f8fafc" opacity="0.13"/><circle cx="178.18" cy="293.23" r="2.15" fill="#f8fafc" opacity="0.16"/><circle cx="986.19" cy="622.48" r="2.07" fill="#38bdf8" opacity="0.09"/><circle cx="1101.02" cy="1194.42" r="1.38" fill="#f8fafc" opacity="0.22"/><circle cx="912.95" cy="3.91" r="2.36" fill="#f8fafc" opacity="0.16"/><circle cx="959.5" cy="229.36" r="2.91" fill="#38bdf8" opacity="0.19"/><circle cx="867.1" cy="1192.81" r="1.87" fill="#f8fafc" opacity="0.21"/><circle cx="303.27" cy="1118.78" r="2.8" fill="#f8fafc" opacity="0.13"/><circle cx="851.85" cy="1039.65" r="2.36" fill="#38bdf8" opacity="0.2"/><circle cx="464" cy="900.46" r="1.2" fill="#f8fafc" opacity="0.12"/><circle cx="1165.38" cy="529.93" r="3.18" fill="#f8fafc" opacity="0.09"/><circle cx="1113.81" cy="49.55" r="1.34" fill="#38bdf8" opacity="0.22"/><circle cx="872.05" cy="380.47" r="3.26" fill="#f8fafc" opacity="0.11"/><circle cx="690.03" cy="1171.8" r="3.1" fill="#f8fafc" opacity="0.12"/><circle cx="494.75" cy="1103.55" r="2.41" fill="#38bdf8" opacity="0.21"/></g>
+<g>
+<polygon points="144 192 470 240 494 216 564 396 524 600 594 804 558 996 216 1032" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/><polygon points="724 216 1044 168 984 1032 594 996 630 804 560 600 600 396 530 216" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.08)" stroke-width="1.5"/><polyline points="512 216 582 396 542 600 612 804 576 996" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.92"/><polyline points="530 216 564 396 560 600 594 804 594 996" fill="none" stroke="#93c5fd" stroke-width="1.5" stroke-dasharray="10 10" stroke-opacity="0.48"/>
+</g>
+</svg>

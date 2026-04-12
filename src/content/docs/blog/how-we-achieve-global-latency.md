@@ -10,6 +10,10 @@ tags:
   - deep-dive
   - performance
 excerpt: An honest look at TerraScale's architecture - what works, what's hard, and how we achieve low latency globally.
+cover:
+  wide: /images/blog/how-we-achieve-global-latency/cover-wide.svg
+  square: /images/blog/how-we-achieve-global-latency/cover-square.svg
+  alt: A sparse abstract globe with a few bright low-latency routes connecting distant regions.
 ---
 
 "How is TerraScale fast everywhere?"

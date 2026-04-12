@@ -205,12 +205,12 @@
 					<input
 						bind:this={inputEl}
 						bind:value={query}
-						class="flex-1 border-0 bg-transparent text-slate-50 outline-none"
+						class="flex-1 border-0 bg-transparent text-[0.98rem] tracking-[0.01em] text-slate-50 outline-none"
 						aria-label="Search documentation"
 						placeholder="Search docs, guides, reference, blog..."
 					/>
 				</div>
-				<button type="button" class="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/6 p-[0.85rem] font-[var(--font-display)] text-sm font-bold uppercase tracking-[0.04em] text-slate-50 transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400" on:click={close} aria-label="Close search">
+				<button type="button" class="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/6 p-[0.85rem] text-slate-50 transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400" on:click={close} aria-label="Close search">
 					<Icon name="close" size={18} />
 				</button>
 			</div>
@@ -218,32 +218,32 @@
 			<div class="mt-4 grid max-h-[60vh] gap-3 overflow-auto">
 				{#if loading}
 					<div class="rounded-2xl border border-white/8 bg-white/4 p-4 transition-[transform,border-color,background-color] duration-200">
-						<strong>{query.trim() ? 'Searching…' : 'Loading search…'}</strong>
+						<strong class="text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">{query.trim() ? 'Searching…' : 'Loading search…'}</strong>
 					</div>
 				{:else if loadError}
 					<div class="rounded-2xl border border-white/8 bg-white/4 p-4 transition-[transform,border-color,background-color] duration-200">
-						<strong>Search is unavailable right now.</strong>
-						<p class="leading-7 text-slate-400">Please try again in a moment.</p>
+						<strong class="text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">Search is unavailable right now.</strong>
+						<p class="mt-2 text-[0.92rem] leading-[1.75] tracking-[0.01em] text-slate-400">Please try again in a moment.</p>
 					</div>
 				{:else if !query.trim()}
 					<div class="rounded-2xl border border-white/8 bg-white/4 p-4 transition-[transform,border-color,background-color] duration-200">
-						<strong>Search docs, blog, and API pages</strong>
-						<p class="leading-7 text-slate-400">Start typing to search across the full site index.</p>
+						<strong class="text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">Search docs, blog, and API pages</strong>
+						<p class="mt-2 text-[0.92rem] leading-[1.75] tracking-[0.01em] text-slate-400">Start typing to search across the full site index.</p>
 					</div>
 				{:else if !results.length}
 					<div class="rounded-2xl border border-white/8 bg-white/4 p-4 transition-[transform,border-color,background-color] duration-200">
-						<strong>No results found</strong>
-						<p class="leading-7 text-slate-400">Try a different term or browse a broader topic.</p>
+						<strong class="text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">No results found</strong>
+						<p class="mt-2 text-[0.92rem] leading-[1.75] tracking-[0.01em] text-slate-400">Try a different term or browse a broader topic.</p>
 					</div>
 				{/if}
 				{#each results as result}
 					<a class="block rounded-2xl border border-white/8 bg-white/4 p-4 transition-[transform,border-color,background-color] duration-200 hover:-translate-y-1 hover:border-blue-400/40 focus-visible:bg-white/8 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400" href={result.url} on:click={close}>
-						<div class="flex gap-2 text-[0.72rem] uppercase tracking-[0.08em] text-slate-300">
+						<div class="flex gap-2 text-[0.68rem] font-medium uppercase tracking-[0.08em] text-slate-300">
 							<span>{result.kind}</span>
 							<span>{result.section}</span>
 						</div>
-						<strong>{result.title}</strong>
-						<p class="leading-7 text-slate-400">{result.description}</p>
+						<strong class="mt-2 block text-[1rem] font-semibold leading-[1.4] tracking-[0.01em] text-slate-50">{result.title}</strong>
+						<p class="mt-2 text-[0.92rem] leading-[1.75] tracking-[0.01em] text-slate-400">{result.description}</p>
 					</a>
 				{/each}
 			</div>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" fill="none">
+
+<defs>
+	<linearGradient id="bg-introducing-terrascale-square-3" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-introducing-terrascale-square-3" cx="0.35" cy="0.5" r="0.48">
+		<stop offset="0%" stop-color="#60a5fa" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#22d3ee" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-introducing-terrascale-square-3" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-introducing-terrascale-square-3" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-introducing-terrascale-square-3" width="100" height="120" patternUnits="userSpaceOnUse">
+		<path d="M 100 0 L 0 0 0 120" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>introducing-terrascale square variant 4</title>
+<desc>Illuminated horizon lines and a rising beacon suggesting a new global data platform emerging from darkness.</desc>
+
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#bg-introducing-terrascale-square-3)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#glow-introducing-terrascale-square-3)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#grid-introducing-terrascale-square-3)" opacity="0.42"/>
+	<rect x="42" y="42" width="1116" height="1116" rx="37.8" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="42" y1="71.4" x2="42" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="42" x2="71.4" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="42" x2="1158" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="42" x2="1158" y2="71.4" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1128.6" x2="42" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1158" x2="71.4" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="1158" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="1128.6" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="60.9" y="60.9" width="1078.2" height="1078.2" rx="31.5" fill="none" stroke="url(#edge-introducing-terrascale-square-3)" stroke-width="1"/>
+
+<g><circle cx="143.58" cy="752.81" r="1.06" fill="#22d3ee" opacity="0.11"/><circle cx="139.38" cy="1137.63" r="1.93" fill="#f8fafc" opacity="0.14"/><circle cx="516.22" cy="905.05" r="1.46" fill="#f8fafc" opacity="0.19"/><circle cx="531.02" cy="620.37" r="1.64" fill="#22d3ee" opacity="0.16"/><circle cx="199.38" cy="538.64" r="2.04" fill="#f8fafc" opacity="0.17"/><circle cx="490.17" cy="1173.75" r="1.84" fill="#f8fafc" opacity="0.12"/><circle cx="270.65" cy="1117.05" r="2.56" fill="#22d3ee" opacity="0.16"/><circle cx="54.81" cy="1063.07" r="1.96" fill="#f8fafc" opacity="0.12"/><circle cx="277.67" cy="253.8" r="1.19" fill="#f8fafc" opacity="0.16"/><circle cx="307.6" cy="867.81" r="2.75" fill="#22d3ee" opacity="0.24"/><circle cx="786.66" cy="369.85" r="2.02" fill="#f8fafc" opacity="0.18"/><circle cx="873.06" cy="574.55" r="1.24" fill="#f8fafc" opacity="0.13"/><circle cx="1121.8" cy="359.48" r="2.47" fill="#22d3ee" opacity="0.23"/><circle cx="1120.65" cy="60.26" r="1.29" fill="#f8fafc" opacity="0.12"/><circle cx="988.26" cy="1199.71" r="1.94" fill="#f8fafc" opacity="0.1"/><circle cx="441.76" cy="1162.38" r="2.76" fill="#22d3ee" opacity="0.23"/></g>
+<g>
+<path d="M 0 792 C 75 827.88 114 847.2 150 847.2 C 186 847.2 225 756.12 300 792 C 375 756.12 414 736.8 450 736.8 C 486 736.8 525 827.88 600 792 C 675 827.88 714 847.2 750 847.2 C 786 847.2 825 756.12 900 792 C 975 756.12 1014 736.8 1050 736.8 C 1086 736.8 1125 827.88 1200 792 L 1200 1200 L 0 1200 Z" fill="rgba(10,17,28,0.76)" fill-opacity="0.1" stroke="#60a5fa" stroke-opacity="0.22" stroke-width="1.4"/><path d="M 0 840 C 75 879.08 114 901.2 150 901.2 C 186 901.2 225 796.92 300 840 C 375 796.92 414 774.8 450 774.8 C 486 774.8 525 879.08 600 840 C 675 879.08 714 901.2 750 901.2 C 786 901.2 825 796.92 900 840 C 975 796.92 1014 774.8 1050 774.8 C 1086 774.8 1125 879.08 1200 840 L 1200 1200 L 0 1200 Z" fill="#09101a" fill-opacity="0.16" stroke="#60a5fa" stroke-opacity="0.19" stroke-width="1.28"/><path d="M 0 888 C 75 930.28 114 955.2 150 955.2 C 186 955.2 225 837.72 300 888 C 375 837.72 414 812.8 450 812.8 C 486 812.8 525 930.28 600 888 C 675 930.28 714 955.2 750 955.2 C 786 955.2 825 837.72 900 888 C 975 837.72 1014 812.8 1050 812.8 C 1086 812.8 1125 930.28 1200 888 L 1200 1200 L 0 1200 Z" fill="#09101a" fill-opacity="0.22" stroke="#60a5fa" stroke-opacity="0.16" stroke-width="1.16"/><path d="M 0 936 C 75 981.48 114 1009.2 150 1009.2 C 186 1009.2 225 878.52 300 936 C 375 878.52 414 850.8 450 850.8 C 486 850.8 525 981.48 600 936 C 675 981.48 714 1009.2 750 1009.2 C 786 1009.2 825 878.52 900 936 C 975 878.52 1014 850.8 1050 850.8 C 1086 850.8 1125 981.48 1200 936 L 1200 1200 L 0 1200 Z" fill="#09101a" fill-opacity="0.28" stroke="#60a5fa" stroke-opacity="0.13" stroke-width="1.04"/><path d="M 0 984 C 75 1032.68 114 1063.2 150 1063.2 C 186 1063.2 225 919.32 300 984 C 375 919.32 414 888.8 450 888.8 C 486 888.8 525 1032.68 600 984 C 675 1032.68 714 1063.2 750 1063.2 C 786 1063.2 825 919.32 900 984 C 975 919.32 1014 888.8 1050 888.8 C 1086 888.8 1125 1032.68 1200 984 L 1200 1200 L 0 1200 Z" fill="#09101a" fill-opacity="0.34" stroke="#60a5fa" stroke-opacity="0.1" stroke-width="0.92"/><line x1="432" y1="600" x2="432" y2="888" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" opacity="0.95"/><circle cx="432" cy="600" r="8" fill="#22d3ee" opacity="0.95"/><circle cx="432" cy="600" r="26" fill="none" stroke="#60a5fa" stroke-opacity="0.38" stroke-width="1.4"/>
+</g>
+</svg>

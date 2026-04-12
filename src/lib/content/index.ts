@@ -34,6 +34,15 @@ const SECTION_LABELS = {
 	about: 'About'
 } as const;
 
+const DISPLAY_LABEL_ALIASES = {
+	api: 'API',
+	sdk: 'SDK',
+	sdks: 'SDKs',
+	sql: 'SQL',
+	llm: 'LLM',
+	llms: 'LLMs'
+} as const;
+
 type SectionKey = keyof typeof SECTION_LABELS;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -52,11 +61,15 @@ function getNumber(value: unknown) {
 	return typeof value === 'number' && Number.isFinite(value) ? value : undefined;
 }
 
+function normalizeDisplayLabel(value: string) {
+	return DISPLAY_LABEL_ALIASES[value.toLowerCase() as keyof typeof DISPLAY_LABEL_ALIASES] ?? value;
+}
+
 function titleCase(value: string) {
 	return value
 		.split(/[-_\s]+/)
 		.filter(Boolean)
-		.map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+		.map((part) => normalizeDisplayLabel(part.charAt(0).toUpperCase() + part.slice(1)))
 		.join(' ');
 }
 
@@ -143,6 +156,23 @@ function getHeroMeta(value: unknown) {
 	};
 }
 
+function getCoverMeta(value: unknown) {
+	if (!isRecord(value)) {
+		return undefined;
+	}
+
+	const wide = getString(value.wide);
+	if (!wide) {
+		return undefined;
+	}
+
+	return {
+		wide,
+		square: getString(value.square),
+		alt: getString(value.alt)
+	};
+}
+
 function getAuthors(value: unknown) {
 	if (!Array.isArray(value)) {
 		return undefined;
@@ -218,6 +248,7 @@ function getContentMetadata(data: FrontmatterData, rawSegments: string[], source
 		headingBadge: getBadgeMeta(data.headingBadge),
 		template: getString(data.template),
 		hero: getHeroMeta(data.hero),
+		cover: getCoverMeta(data.cover),
 		date: getString(data.date),
 		authors: getAuthors(data.authors),
 		tags: getTags(data.tags),
@@ -397,7 +428,7 @@ const entries = Object.entries(moduleMap)
 			sourcePath,
 			sourceDirectory: directory,
 			title: metadata.title,
-			description: metadata.description ?? '',
+			description: metadata.description ?? metadata.excerpt ?? '',
 			kind,
 			date: metadata.date,
 			authors: metadata.authors ?? [],
@@ -405,6 +436,7 @@ const entries = Object.entries(moduleMap)
 			excerpt: metadata.excerpt,
 			template: metadata.template,
 			hero: metadata.hero,
+			cover: metadata.cover,
 			section: metadata.section,
 			sidebarOrder: metadata.sidebar?.order,
 			sidebarGroup: metadata.sidebar?.group,

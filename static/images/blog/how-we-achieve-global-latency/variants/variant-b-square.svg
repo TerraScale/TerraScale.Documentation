@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" fill="none">
+
+<defs>
+	<linearGradient id="bg-how-we-achieve-global-latency-square-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-how-we-achieve-global-latency-square-1" cx="0.78" cy="0.24" r="0.48">
+		<stop offset="0%" stop-color="#60a5fa" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#22d3ee" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-how-we-achieve-global-latency-square-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-how-we-achieve-global-latency-square-1" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-how-we-achieve-global-latency-square-1" width="100" height="120" patternUnits="userSpaceOnUse">
+		<path d="M 100 0 L 0 0 0 120" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>how-we-achieve-global-latency square variant 2</title>
+<desc>A sparse abstract globe with a few bright low-latency routes connecting distant regions.</desc>
+
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#bg-how-we-achieve-global-latency-square-1)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#glow-how-we-achieve-global-latency-square-1)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#grid-how-we-achieve-global-latency-square-1)" opacity="0.42"/>
+	<rect x="42" y="42" width="1116" height="1116" rx="37.8" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="42" y1="71.4" x2="42" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="42" x2="71.4" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="42" x2="1158" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="42" x2="1158" y2="71.4" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1128.6" x2="42" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1158" x2="71.4" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="1158" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="1128.6" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="60.9" y="60.9" width="1078.2" height="1078.2" rx="31.5" fill="none" stroke="url(#edge-how-we-achieve-global-latency-square-1)" stroke-width="1"/>
+
+<g><circle cx="527.01" cy="723.64" r="1.03" fill="#22d3ee" opacity="0.11"/><circle cx="24.23" cy="866.29" r="1.6" fill="#f8fafc" opacity="0.12"/><circle cx="880.89" cy="738.41" r="2.06" fill="#f8fafc" opacity="0.14"/><circle cx="610.88" cy="86.19" r="2.7" fill="#22d3ee" opacity="0.16"/><circle cx="428.2" cy="1175.38" r="1.42" fill="#f8fafc" opacity="0.21"/><circle cx="885.37" cy="560.22" r="1.76" fill="#f8fafc" opacity="0.16"/><circle cx="934.75" cy="659.36" r="2.64" fill="#22d3ee" opacity="0.23"/><circle cx="64.31" cy="958.54" r="2.1" fill="#f8fafc" opacity="0.16"/><circle cx="21.36" cy="328.23" r="2.79" fill="#f8fafc" opacity="0.16"/><circle cx="1124.9" cy="875.7" r="1.46" fill="#22d3ee" opacity="0.21"/><circle cx="588.2" cy="386.41" r="2.48" fill="#f8fafc" opacity="0.16"/><circle cx="194.55" cy="532.24" r="1.06" fill="#f8fafc" opacity="0.14"/><circle cx="911.08" cy="362.98" r="2.65" fill="#22d3ee" opacity="0.19"/><circle cx="566.1" cy="1036.07" r="1.61" fill="#f8fafc" opacity="0.12"/><circle cx="319.55" cy="143.87" r="1.87" fill="#f8fafc" opacity="0.09"/><circle cx="693.57" cy="523.66" r="1.5" fill="#22d3ee" opacity="0.18"/></g>
+<g>
+<circle cx="600" cy="600" r="264" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="1.4"/><ellipse cx="600" cy="600" rx="163.68" ry="264" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="1"/><ellipse cx="600" cy="600" rx="73.92" ry="264" fill="none" stroke="rgba(148,163,184,0.18)" stroke-width="1"/><line x1="336" y1="600" x2="864" y2="600" stroke="rgba(148,163,184,0.18)" stroke-width="1"/><line x1="600" y1="336" x2="600" y2="864" stroke="rgba(148,163,184,0.18)" stroke-width="1"/><path d="M 409.92 647.52 Q 547.2 357.12 737.28 468" fill="none" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" opacity="0.88"/><circle cx="409.92" cy="647.52" r="5" fill="#60a5fa" opacity="0.92"/><circle cx="737.28" cy="468" r="6" fill="#22d3ee" opacity="0.95"/><path d="M 541.92 790.08 Q 600 357.12 821.76 568.32" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" opacity="0.88"/><circle cx="541.92" cy="790.08" r="5" fill="#60a5fa" opacity="0.92"/><circle cx="821.76" cy="568.32" r="6" fill="#22d3ee" opacity="0.95"/><path d="M 372.96 578.88 Q 652.8 357.12 621.12 805.92" fill="none" stroke="#60a5fa" stroke-width="3" stroke-linecap="round" opacity="0.88"/><circle cx="372.96" cy="578.88" r="5" fill="#60a5fa" opacity="0.92"/><circle cx="621.12" cy="805.92" r="6" fill="#22d3ee" opacity="0.95"/>
+</g>
+</svg>

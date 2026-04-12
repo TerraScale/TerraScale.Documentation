@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" fill="none">
+
+<defs>
+	<linearGradient id="bg-getting-started-5-minutes-square-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-getting-started-5-minutes-square-1" cx="0.78" cy="0.24" r="0.48">
+		<stop offset="0%" stop-color="#60a5fa" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#34d399" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-getting-started-5-minutes-square-1" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-getting-started-5-minutes-square-1" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-getting-started-5-minutes-square-1" width="100" height="120" patternUnits="userSpaceOnUse">
+		<path d="M 100 0 L 0 0 0 120" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>getting-started-5-minutes square variant 2</title>
+<desc>A sequence of clean illuminated steps leading toward a ready-state portal, representing a fast getting-started path.</desc>
+
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#bg-getting-started-5-minutes-square-1)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#glow-getting-started-5-minutes-square-1)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#grid-getting-started-5-minutes-square-1)" opacity="0.42"/>
+	<rect x="42" y="42" width="1116" height="1116" rx="37.8" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="42" y1="71.4" x2="42" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="42" x2="71.4" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="42" x2="1158" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="42" x2="1158" y2="71.4" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1128.6" x2="42" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1158" x2="71.4" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="1158" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="1128.6" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="60.9" y="60.9" width="1078.2" height="1078.2" rx="31.5" fill="none" stroke="url(#edge-getting-started-5-minutes-square-1)" stroke-width="1"/>
+
+<g><circle cx="1101.45" cy="815.37" r="1.87" fill="#34d399" opacity="0.17"/><circle cx="769.12" cy="259.21" r="1.97" fill="#f8fafc" opacity="0.17"/><circle cx="945.34" cy="573.55" r="1.28" fill="#f8fafc" opacity="0.15"/><circle cx="1019.51" cy="1012.68" r="2.33" fill="#34d399" opacity="0.23"/><circle cx="61.51" cy="24.3" r="1.58" fill="#f8fafc" opacity="0.23"/><circle cx="162.66" cy="137.07" r="2" fill="#f8fafc" opacity="0.2"/><circle cx="537.1" cy="1184.74" r="1.48" fill="#34d399" opacity="0.24"/><circle cx="191.71" cy="389.56" r="1.59" fill="#f8fafc" opacity="0.13"/><circle cx="588.05" cy="51.2" r="1.2" fill="#f8fafc" opacity="0.21"/><circle cx="981.7" cy="974.03" r="1.7" fill="#34d399" opacity="0.17"/><circle cx="603.13" cy="1093.54" r="1.57" fill="#f8fafc" opacity="0.14"/><circle cx="1130.21" cy="859.95" r="2.31" fill="#f8fafc" opacity="0.12"/><circle cx="1170.42" cy="883.06" r="1.6" fill="#34d399" opacity="0.16"/><circle cx="432.63" cy="180.62" r="2.11" fill="#f8fafc" opacity="0.22"/><circle cx="569.52" cy="392.34" r="2.22" fill="#f8fafc" opacity="0.08"/><circle cx="386.88" cy="617.92" r="2.06" fill="#34d399" opacity="0.23"/></g>
+<g>
+<polygon points="240 840 912 840 866 882 286 882" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><polygon points="296 758 856 758 810 800 342 800" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><polygon points="352 676 800 676 754 718 398 718" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><polygon points="408 594 744 594 698 636 454 636" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><polygon points="464 512 688 512 642 554 510 554" fill="rgba(10,17,28,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><rect x="492" y="264" width="216" height="240" rx="24" fill="none" stroke="#34d399" stroke-width="3" opacity="0.9"/><path d="M 600 504 L 600 828" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="8 12" stroke-opacity="0.6"/>
+</g>
+</svg>

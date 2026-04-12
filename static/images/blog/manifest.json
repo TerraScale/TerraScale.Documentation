@@ -1,0 +1,93 @@
+[
+  {
+    "slug": "introducing-terrascale",
+    "wide": "/images/blog/introducing-terrascale/cover-wide.svg",
+    "square": "/images/blog/introducing-terrascale/cover-square.svg",
+    "finalVariant": "c",
+    "alt": "Illuminated horizon lines and a rising beacon suggesting a new global data platform emerging from darkness."
+  },
+  {
+    "slug": "why-we-built-terrascale",
+    "wide": "/images/blog/why-we-built-terrascale/cover-wide.svg",
+    "square": "/images/blog/why-we-built-terrascale/cover-square.svg",
+    "finalVariant": "d",
+    "alt": "Two dark structural plates split and rejoined by a precise electric seam, evoking a painful infrastructure redesign."
+  },
+  {
+    "slug": "getting-started-5-minutes",
+    "wide": "/images/blog/getting-started-5-minutes/cover-wide.svg",
+    "square": "/images/blog/getting-started-5-minutes/cover-square.svg",
+    "finalVariant": "b",
+    "alt": "A sequence of clean illuminated steps leading toward a ready-state portal, representing a fast getting-started path."
+  },
+  {
+    "slug": "understanding-partition-keys",
+    "wide": "/images/blog/understanding-partition-keys/cover-wide.svg",
+    "square": "/images/blog/understanding-partition-keys/cover-square.svg",
+    "finalVariant": "a",
+    "alt": "Ordered shelves and compartments with one highlighted retrieval path, visualizing partition and sort key logic."
+  },
+  {
+    "slug": "migrating-from-dynamodb",
+    "wide": "/images/blog/migrating-from-dynamodb/cover-wide.svg",
+    "square": "/images/blog/migrating-from-dynamodb/cover-square.svg",
+    "finalVariant": "c",
+    "alt": "Two structured data systems connected by a calm transfer bridge, representing migration from one platform to another."
+  },
+  {
+    "slug": "building-realtime-leaderboard",
+    "wide": "/images/blog/building-realtime-leaderboard/cover-wide.svg",
+    "square": "/images/blog/building-realtime-leaderboard/cover-square.svg",
+    "finalVariant": "b",
+    "alt": "Tall ranked pillars with disciplined motion streaks, suggesting a fast real-time gaming leaderboard."
+  },
+  {
+    "slug": "how-we-achieve-global-latency",
+    "wide": "/images/blog/how-we-achieve-global-latency/cover-wide.svg",
+    "square": "/images/blog/how-we-achieve-global-latency/cover-square.svg",
+    "finalVariant": "a",
+    "alt": "A sparse abstract globe with a few bright low-latency routes connecting distant regions."
+  },
+  {
+    "slug": "announcing-csharp-sdk",
+    "wide": "/images/blog/announcing-csharp-sdk/cover-wide.svg",
+    "square": "/images/blog/announcing-csharp-sdk/cover-square.svg",
+    "finalVariant": "c",
+    "alt": "Precise bracketed engineering forms and modular nodes, evoking a polished new SDK release."
+  },
+  {
+    "slug": "sql-api-for-everyone",
+    "wide": "/images/blog/sql-api-for-everyone/cover-wide.svg",
+    "square": "/images/blog/sql-api-for-everyone/cover-square.svg",
+    "finalVariant": "d",
+    "alt": "Architectural table planes and elegant query lines that suggest structured access through SQL."
+  },
+  {
+    "slug": "cost-optimization-tips",
+    "wide": "/images/blog/cost-optimization-tips/cover-wide.svg",
+    "square": "/images/blog/cost-optimization-tips/cover-square.svg",
+    "finalVariant": "b",
+    "alt": "Compressed layers and trimmed bands balancing neatly around a core, representing database cost optimization."
+  },
+  {
+    "slug": "transactions-deep-dive",
+    "wide": "/images/blog/transactions-deep-dive/cover-wide.svg",
+    "square": "/images/blog/transactions-deep-dive/cover-square.svg",
+    "finalVariant": "c",
+    "alt": "Two bright atomic forms locked in a balanced frame, expressing precise all-or-nothing transactions."
+  },
+  {
+    "slug": "multi-region-setup",
+    "wide": "/images/blog/multi-region-setup/cover-wide.svg",
+    "square": "/images/blog/multi-region-setup/cover-square.svg",
+    "finalVariant": "a",
+    "alt": "Mirrored region clusters connected by measured replication lines, illustrating a multi-region setup."
+  },
+  {
+    "slug": "security-best-practices",
+    "wide": "/images/blog/security-best-practices/cover-wide.svg",
+    "square": "/images/blog/security-best-practices/cover-square.svg",
+    "finalVariant": "d",
+    "alt": "Layered shield geometry and guarded perimeter nodes, conveying enterprise-grade database security."
+  }
+]

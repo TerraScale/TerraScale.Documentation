@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" fill="none">
+
+<defs>
+	<linearGradient id="bg-building-realtime-leaderboard-square-3" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-building-realtime-leaderboard-square-3" cx="0.35" cy="0.5" r="0.48">
+		<stop offset="0%" stop-color="#38bdf8" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#60a5fa" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-building-realtime-leaderboard-square-3" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-building-realtime-leaderboard-square-3" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-building-realtime-leaderboard-square-3" width="100" height="120" patternUnits="userSpaceOnUse">
+		<path d="M 100 0 L 0 0 0 120" fill="none" stroke="#38bdf8" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>building-realtime-leaderboard square variant 4</title>
+<desc>Tall ranked pillars with disciplined motion streaks, suggesting a fast real-time gaming leaderboard.</desc>
+
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#bg-building-realtime-leaderboard-square-3)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#glow-building-realtime-leaderboard-square-3)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#grid-building-realtime-leaderboard-square-3)" opacity="0.42"/>
+	<rect x="42" y="42" width="1116" height="1116" rx="37.8" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="42" y1="71.4" x2="42" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="42" x2="71.4" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="42" x2="1158" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="42" x2="1158" y2="71.4" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1128.6" x2="42" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1158" x2="71.4" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="1158" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="1128.6" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="60.9" y="60.9" width="1078.2" height="1078.2" rx="31.5" fill="none" stroke="url(#edge-building-realtime-leaderboard-square-3)" stroke-width="1"/>
+
+<g><circle cx="1028.47" cy="1150.15" r="2.29" fill="#60a5fa" opacity="0.18"/><circle cx="47.84" cy="595.66" r="2.64" fill="#f8fafc" opacity="0.11"/><circle cx="613.73" cy="181.1" r="1.47" fill="#f8fafc" opacity="0.16"/><circle cx="991.49" cy="169.13" r="1.49" fill="#60a5fa" opacity="0.22"/><circle cx="684.12" cy="488.44" r="1.79" fill="#f8fafc" opacity="0.09"/><circle cx="378.22" cy="1157.4" r="2.32" fill="#f8fafc" opacity="0.22"/><circle cx="704.59" cy="27.78" r="1.59" fill="#60a5fa" opacity="0.2"/><circle cx="183.12" cy="361.19" r="2.46" fill="#f8fafc" opacity="0.09"/><circle cx="575.38" cy="859.34" r="1.54" fill="#f8fafc" opacity="0.19"/><circle cx="1112.57" cy="741.3" r="2.28" fill="#60a5fa" opacity="0.1"/><circle cx="921.57" cy="930.1" r="1.41" fill="#f8fafc" opacity="0.11"/><circle cx="1141.8" cy="1190.06" r="2.21" fill="#f8fafc" opacity="0.1"/><circle cx="1010.23" cy="523.59" r="2.45" fill="#60a5fa" opacity="0.15"/><circle cx="265.68" cy="1176.19" r="2.61" fill="#f8fafc" opacity="0.23"/><circle cx="307.64" cy="1002.75" r="1.86" fill="#f8fafc" opacity="0.23"/><circle cx="937.27" cy="901.16" r="1.67" fill="#60a5fa" opacity="0.17"/></g>
+<g>
+<rect x="264" y="720" width="96" height="192" rx="22" fill="rgba(8,16,28,0.76)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><rect x="274" y="732" width="76" height="168" rx="16" fill="#38bdf8" opacity="0.12"/><rect x="432" y="384" width="96" height="528" rx="22" fill="rgba(8,16,28,0.76)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><rect x="442" y="396" width="76" height="504" rx="16" fill="#38bdf8" opacity="0.12"/><rect x="600" y="168" width="96" height="744" rx="22" fill="rgba(8,16,28,0.76)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><rect x="610" y="180" width="76" height="720" rx="16" fill="#60a5fa" opacity="0.24"/><line x1="648" y1="150" x2="756" y2="24" stroke="#60a5fa" stroke-width="2" stroke-opacity="0.55" stroke-linecap="round"/><rect x="768" y="264" width="96" height="648" rx="22" fill="rgba(8,16,28,0.76)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><rect x="778" y="276" width="76" height="624" rx="16" fill="#38bdf8" opacity="0.12"/><line x1="816" y1="246" x2="924" y2="120" stroke="#60a5fa" stroke-width="2" stroke-opacity="0.55" stroke-linecap="round"/><rect x="936" y="0" width="96" height="912" rx="22" fill="rgba(8,16,28,0.76)" stroke="rgba(255,255,255,0.1)" stroke-width="1.25"/><rect x="946" y="12" width="76" height="888" rx="16" fill="#38bdf8" opacity="0.12"/><line x1="984" y1="-18" x2="1092" y2="-144" stroke="#60a5fa" stroke-width="2" stroke-opacity="0.55" stroke-linecap="round"/>
+</g>
+</svg>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" fill="none">
+
+<defs>
+	<linearGradient id="bg-multi-region-setup-square-2" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-multi-region-setup-square-2" cx="0.52" cy="0.7" r="0.48">
+		<stop offset="0%" stop-color="#60a5fa" stop-opacity="0.18"/>
+		<stop offset="48%" stop-color="#22d3ee" stop-opacity="0.08"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-multi-region-setup-square-2" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-multi-region-setup-square-2" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-multi-region-setup-square-2" width="100" height="120" patternUnits="userSpaceOnUse">
+		<path d="M 100 0 L 0 0 0 120" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>multi-region-setup square variant 3</title>
+<desc>Mirrored region clusters connected by measured replication lines, illustrating a multi-region setup.</desc>
+
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#bg-multi-region-setup-square-2)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#glow-multi-region-setup-square-2)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#grid-multi-region-setup-square-2)" opacity="0.42"/>
+	<rect x="42" y="42" width="1116" height="1116" rx="37.8" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="42" y1="71.4" x2="42" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="42" x2="71.4" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="42" x2="1158" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="42" x2="1158" y2="71.4" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1128.6" x2="42" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1158" x2="71.4" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="1158" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="1128.6" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="60.9" y="60.9" width="1078.2" height="1078.2" rx="31.5" fill="none" stroke="url(#edge-multi-region-setup-square-2)" stroke-width="1"/>
+
+<g><circle cx="147.07" cy="649.68" r="1.61" fill="#22d3ee" opacity="0.13"/><circle cx="108.24" cy="830.76" r="1.73" fill="#f8fafc" opacity="0.1"/><circle cx="166.63" cy="193.25" r="1.54" fill="#f8fafc" opacity="0.17"/><circle cx="393.21" cy="869.42" r="1.94" fill="#22d3ee" opacity="0.16"/><circle cx="287.72" cy="536.38" r="1.03" fill="#f8fafc" opacity="0.15"/><circle cx="1126.39" cy="988.22" r="2.42" fill="#f8fafc" opacity="0.1"/><circle cx="774.99" cy="1167.98" r="2.37" fill="#22d3ee" opacity="0.16"/><circle cx="977.18" cy="62.95" r="2.23" fill="#f8fafc" opacity="0.24"/><circle cx="825.44" cy="215.71" r="2.27" fill="#f8fafc" opacity="0.14"/><circle cx="568.49" cy="376.64" r="1.97" fill="#22d3ee" opacity="0.18"/><circle cx="830.69" cy="454.29" r="1.9" fill="#f8fafc" opacity="0.1"/><circle cx="653.74" cy="405.49" r="1.16" fill="#f8fafc" opacity="0.15"/><circle cx="1061.06" cy="873.42" r="1.71" fill="#22d3ee" opacity="0.2"/><circle cx="8.95" cy="529.12" r="2.41" fill="#f8fafc" opacity="0.09"/><circle cx="525.36" cy="646.15" r="1.35" fill="#f8fafc" opacity="0.21"/><circle cx="925.32" cy="1166.31" r="1.48" fill="#22d3ee" opacity="0.15"/></g>
+<g>
+<circle cx="254" cy="570" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><circle cx="782" cy="570" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><line x1="254" y1="570" x2="782" y2="570" stroke="#22d3ee" stroke-opacity="0.28" stroke-width="1.8" stroke-dasharray="9 12"/><circle cx="302" cy="666" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><circle cx="830" cy="666" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><line x1="302" y1="666" x2="830" y2="666" stroke="#22d3ee" stroke-opacity="0.28" stroke-width="1.8" stroke-dasharray="9 12"/><circle cx="360" cy="612" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><circle cx="888" cy="612" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><line x1="360" y1="612" x2="888" y2="612" stroke="#22d3ee" stroke-opacity="0.28" stroke-width="1.8" stroke-dasharray="9 12"/><circle cx="414" cy="682" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><circle cx="942" cy="682" r="24" fill="rgba(9,16,26,0.72)" stroke="#60a5fa" stroke-opacity="0.34" stroke-width="1.6"/><line x1="414" y1="682" x2="942" y2="682" stroke="#22d3ee" stroke-opacity="0.28" stroke-width="1.8" stroke-dasharray="9 12"/><circle cx="336" cy="624" r="30" fill="#60a5fa" opacity="0.18"/><circle cx="864" cy="624" r="30" fill="#22d3ee" opacity="0.18"/>
+</g>
+</svg>

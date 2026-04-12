@@ -30,6 +30,12 @@ export interface HeroMeta {
 	actions?: HeroAction[];
 }
 
+export interface CoverMeta {
+	wide: string;
+	square?: string;
+	alt?: string;
+}
+
 export interface OpenApiMeta {
 	spec?: string;
 	tag?: string;
@@ -52,6 +58,7 @@ export interface ContentMetadata {
 	headingBadge?: BadgeMeta;
 	template?: string;
 	hero?: HeroMeta;
+	cover?: CoverMeta;
 	date?: string;
 	authors?: Array<{ name: string; title?: string; url?: string }>;
 	tags?: string[];
@@ -78,6 +85,7 @@ export interface ContentEntry {
 	excerpt?: string;
 	template?: string;
 	hero?: HeroMeta;
+	cover?: CoverMeta;
 	section?: string;
 	sidebarOrder?: number;
 	sidebarGroup?: string;

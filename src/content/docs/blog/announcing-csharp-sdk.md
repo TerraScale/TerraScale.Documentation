@@ -10,9 +10,13 @@ tags:
   - sdk
   - dotnet
 excerpt: Today we're releasing the official TerraScale C# SDK. Here's what's in the box and why we built it.
+cover:
+  wide: /images/blog/announcing-csharp-sdk/cover-wide.svg
+  square: /images/blog/announcing-csharp-sdk/cover-square.svg
+  alt: Precise bracketed engineering forms and modular nodes, evoking a polished new SDK release.
 ---
 
-Today we're releasing the official TerraScale C# SDK. It's been in beta for three months and I'm genuinely proud of how it turned out.
+Today we're releasing the official TerraScale C# SDK. It's been in Public Alpha for three months and I'm genuinely proud of how it turned out.
 
 ## Why C# First?
 

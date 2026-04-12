@@ -11,7 +11,8 @@ TerraScale uses a **Tailwind v4 CSS-first** approach. There is no `tailwind.conf
 - **No Scoped Styles**: Svelte `<style>` blocks are forbidden.
 - **No Custom Selectors**: Avoid creating custom CSS classes or semantic selectors.
 - **No @apply or @utility**: Do not use `@apply` or `@utility` in CSS files.
-- **Token-Driven**: Use the `--color-ts-*`, `--font-*`, and `--shadow-ts-*` tokens defined in the `@theme` block.
+- **Shared Theme Values**: Keep the shared `--color-ts-*`, `--font-*`, and `--shadow-ts-*` definitions in the `@theme` block.
+- **No Em Dashes**: Never use em dashes in theme docs, design guidance, component copy, or other user-facing text. Rewrite with commas, periods, colons, or plain hyphens instead.
 
 ## Token System
 
@@ -36,10 +37,10 @@ The theme is defined in the `@theme` block within `src/app.css`. These tokens ar
 | `--color-ts-divider` | `#1a1a24` | Borders and separators |
 
 ### Typography
-- **Display**: `Quantico` (used for headings and brand elements)
-- **Body**: `Inter` (used for all standard copy)
+- **Display**: `Quantico`
+- **Body**: `Quantico`
 
-Fonts are loaded via `@font-face` in `src/app.css`.
+Quantico is self-hosted from `static/fonts/` as local `woff2` assets. Define it via `@font-face` in `src/app.css`, keep `font-display: swap`, and preload the critical `400` and `700` weights in `src/app.html`.
 
 ### Shadows and Radius
 - **Brutal Shadow**: `--shadow-ts-brutal` (4px offset, dark)
@@ -92,6 +93,6 @@ The `src/app.css` file is the only place where custom CSS should exist. It is re
 ## Contributor Rules
 
 1. **Utility First**: Always try to achieve the design using standard Tailwind utilities first.
-2. **Use Tokens**: Use theme tokens (e.g., `text-ts-primary`) instead of hardcoded hex values.
+2. **Use Quantico**: Route typography through the shared Quantico font setup instead of introducing additional font families.
 3. **Prose Styling**: Use the `[data-prose]` pattern for any Markdown-generated content.
-4. **No Scoped Styles**: If you need a complex style, consider if it should be a token or if it can be achieved with arbitrary variants.
+4. **No Scoped Styles**: If you need a complex style, consider if it should live in the shared theme or if it can be achieved with arbitrary variants.

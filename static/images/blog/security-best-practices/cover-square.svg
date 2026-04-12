@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" fill="none">
+
+<defs>
+	<linearGradient id="bg-security-best-practices-square-3-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-security-best-practices-square-3-final" cx="0.35" cy="0.5" r="0.56">
+		<stop offset="0%" stop-color="#93c5fd" stop-opacity="0.22"/>
+		<stop offset="48%" stop-color="#34d399" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-security-best-practices-square-3-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-security-best-practices-square-3-final" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.18"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-security-best-practices-square-3-final" width="100" height="120" patternUnits="userSpaceOnUse">
+		<path d="M 100 0 L 0 0 0 120" fill="none" stroke="#93c5fd" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>security-best-practices square final</title>
+<desc>Layered shield geometry and guarded perimeter nodes, conveying enterprise-grade database security.</desc>
+
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#bg-security-best-practices-square-3-final)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#glow-security-best-practices-square-3-final)"/>
+	<rect x="0" y="0" width="1200" height="1200" fill="url(#grid-security-best-practices-square-3-final)" opacity="0.42"/>
+	<rect x="42" y="42" width="1116" height="1116" rx="37.8" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="42" y1="71.4" x2="42" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="42" x2="71.4" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="42" x2="1158" y2="42" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="42" x2="1158" y2="71.4" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1128.6" x2="42" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="42" y1="1158" x2="71.4" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1128.6" y1="1158" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1158" y1="1128.6" x2="1158" y2="1158" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="60.9" y="60.9" width="1078.2" height="1078.2" rx="31.5" fill="none" stroke="url(#edge-security-best-practices-square-3-final)" stroke-width="1"/>
+
+<g><circle cx="907.62" cy="662.38" r="2.77" fill="#34d399" opacity="0.08"/><circle cx="897.1" cy="411.67" r="1.1" fill="#f8fafc" opacity="0.11"/><circle cx="880.53" cy="1177.73" r="2.05" fill="#f8fafc" opacity="0.19"/><circle cx="428.68" cy="741.68" r="1.44" fill="#34d399" opacity="0.09"/><circle cx="696.03" cy="236.53" r="2.43" fill="#f8fafc" opacity="0.2"/><circle cx="1095.62" cy="87.42" r="1.27" fill="#f8fafc" opacity="0.14"/><circle cx="606.93" cy="261.39" r="2.56" fill="#34d399" opacity="0.22"/><circle cx="281.34" cy="101.47" r="2.72" fill="#f8fafc" opacity="0.21"/><circle cx="689.5" cy="599.71" r="1.76" fill="#f8fafc" opacity="0.21"/><circle cx="197.83" cy="999.47" r="1.99" fill="#34d399" opacity="0.16"/><circle cx="928.75" cy="554.37" r="2.56" fill="#f8fafc" opacity="0.13"/><circle cx="122.05" cy="132.08" r="1.13" fill="#f8fafc" opacity="0.11"/><circle cx="271.69" cy="1149.47" r="3.39" fill="#34d399" opacity="0.16"/><circle cx="466.59" cy="412.36" r="2.96" fill="#f8fafc" opacity="0.24"/><circle cx="333.13" cy="918.63" r="1.61" fill="#f8fafc" opacity="0.15"/><circle cx="452.45" cy="157.38" r="2.66" fill="#34d399" opacity="0.2"/><circle cx="998.15" cy="369.86" r="2.1" fill="#f8fafc" opacity="0.22"/><circle cx="1011.95" cy="1153.76" r="1.98" fill="#f8fafc" opacity="0.17"/><circle cx="453.43" cy="414.13" r="1.79" fill="#34d399" opacity="0.23"/><circle cx="197.93" cy="500.63" r="2.51" fill="#f8fafc" opacity="0.1"/><circle cx="850.73" cy="62.45" r="2.93" fill="#f8fafc" opacity="0.17"/><circle cx="590.1" cy="322.8" r="1.17" fill="#34d399" opacity="0.1"/></g>
+<g>
+<polygon points="600 312 768 456 720 756 600 912 480 756 432 456" fill="rgba(8,16,28,0.6)" stroke="#93c5fd" stroke-opacity="0.34" stroke-width="2"/><polygon points="600 385.92 720.96 489.6 686.4 705.6 600 817.92 513.6 705.6 479.04 489.6" fill="none" stroke="#34d399" stroke-opacity="0.42" stroke-width="2"/><path d="M 540 600 L 588 660 L 672 552" fill="none" stroke="#34d399" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="600" cy="192" r="8" fill="#93c5fd" opacity="0.82"/><circle cx="840" cy="576" r="8" fill="#93c5fd" opacity="0.82"/><circle cx="600" cy="984" r="8" fill="#93c5fd" opacity="0.82"/><circle cx="360" cy="576" r="8" fill="#93c5fd" opacity="0.82"/>
+</g>
+</svg>

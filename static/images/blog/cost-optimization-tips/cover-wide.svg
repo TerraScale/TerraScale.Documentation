@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-cost-optimization-tips-wide-1-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-cost-optimization-tips-wide-1-final" cx="0.78" cy="0.24" r="0.56">
+		<stop offset="0%" stop-color="#34d399" stop-opacity="0.22"/>
+		<stop offset="48%" stop-color="#60a5fa" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-cost-optimization-tips-wide-1-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-cost-optimization-tips-wide-1-final" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.18"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-cost-optimization-tips-wide-1-final" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#34d399" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>cost-optimization-tips wide final</title>
+<desc>Compressed layers and trimmed bands balancing neatly around a core, representing database cost optimization.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-cost-optimization-tips-wide-1-final)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-cost-optimization-tips-wide-1-final)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-cost-optimization-tips-wide-1-final)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-cost-optimization-tips-wide-1-final)" stroke-width="1"/>
+
+<g><circle cx="530.71" cy="472.22" r="1.31" fill="#60a5fa" opacity="0.15"/><circle cx="633.09" cy="668.46" r="2.27" fill="#f8fafc" opacity="0.12"/><circle cx="634.74" cy="529.95" r="2.46" fill="#f8fafc" opacity="0.09"/><circle cx="1118.69" cy="402.38" r="2.33" fill="#60a5fa" opacity="0.23"/><circle cx="1250.21" cy="586.01" r="1.37" fill="#f8fafc" opacity="0.23"/><circle cx="207.51" cy="327.13" r="1.47" fill="#f8fafc" opacity="0.14"/><circle cx="819.45" cy="251.16" r="2.88" fill="#60a5fa" opacity="0.1"/><circle cx="144.37" cy="683.71" r="1.18" fill="#f8fafc" opacity="0.22"/><circle cx="8.7" cy="794.89" r="2.26" fill="#f8fafc" opacity="0.09"/><circle cx="1345.34" cy="276.09" r="1.79" fill="#60a5fa" opacity="0.09"/><circle cx="935.06" cy="126.21" r="1.02" fill="#f8fafc" opacity="0.12"/><circle cx="1276.61" cy="175.74" r="1.96" fill="#f8fafc" opacity="0.13"/><circle cx="1489.52" cy="265.45" r="1.81" fill="#60a5fa" opacity="0.09"/><circle cx="1401.29" cy="390.89" r="2.35" fill="#f8fafc" opacity="0.11"/><circle cx="424.91" cy="727.5" r="1.85" fill="#f8fafc" opacity="0.22"/><circle cx="125.43" cy="294.13" r="1.19" fill="#60a5fa" opacity="0.21"/><circle cx="954.31" cy="666.44" r="2.74" fill="#f8fafc" opacity="0.13"/><circle cx="999.76" cy="89.52" r="2.94" fill="#f8fafc" opacity="0.16"/><circle cx="553.06" cy="621.62" r="2.17" fill="#60a5fa" opacity="0.2"/><circle cx="651.89" cy="226.51" r="2.13" fill="#f8fafc" opacity="0.22"/><circle cx="105.8" cy="231.21" r="2.16" fill="#f8fafc" opacity="0.18"/><circle cx="128.41" cy="519.01" r="2.86" fill="#60a5fa" opacity="0.22"/></g>
+<g>
+<rect x="272" y="252" width="992" height="76.5" rx="24" fill="rgba(9,16,26,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><rect x="288" y="264" width="960" height="52.5" rx="18" fill="#34d399" opacity="0.1"/><rect x="344" y="354.5" width="848" height="76.5" rx="24" fill="rgba(9,16,26,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><rect x="360" y="366.5" width="816" height="52.5" rx="18" fill="#34d399" opacity="0.1"/><rect x="416" y="457" width="704" height="76.5" rx="24" fill="rgba(9,16,26,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><rect x="432" y="469" width="672" height="52.5" rx="18" fill="#60a5fa" opacity="0.2"/><rect x="488" y="559.5" width="560" height="76.5" rx="24" fill="rgba(9,16,26,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><rect x="504" y="571.5" width="528" height="52.5" rx="18" fill="#34d399" opacity="0.1"/><rect x="560" y="662" width="416" height="76.5" rx="24" fill="rgba(9,16,26,0.72)" stroke="rgba(255,255,255,0.1)" stroke-width="1.2"/><rect x="576" y="674" width="384" height="52.5" rx="18" fill="#34d399" opacity="0.1"/><line x1="768" y1="198" x2="768" y2="702" stroke="#60a5fa" stroke-width="4" stroke-linecap="round" opacity="0.9"/>
+</g>
+</svg>

@@ -8,18 +8,14 @@ description: This is a similar language to mongodb's query
 Cosmos has pretty much all the features and it has more features than TerraScale, and is the closest comparison that 
 we can make.
 
-Pros:
-- Stability
-- Backed by Microsoft
-- Reliable
-- Has a lot of features
-- SDK
-- Azure
-
-Cons:
-- Price
-- SDK 
-- Azure
+| Pros | Cons |
+|------|------|
+| Stability | Price |
+| Backed by Microsoft | SDK |
+| Reliable | Azure |
+| Has a lot of features | |
+| SDK | |
+| Azure | |
 
 ### Why is Azure both in Pros and Cons?
 Well if you already use Azure it is quite easy to create a CosmosDB and get using and you will have unified charge.
@@ -28,18 +24,14 @@ But if you do not Azure account nor Azure experience it can be quite hard to fin
 # DynamoDB
 Dynamo is a great product and it was one of the inspirations that made me create TerraScale.
 
-Pros:
-- Stability
-- Backed by Amazon
-- Reliable
-- Has a lot of features
-- SDK
-- AWS
-
-Cons:
-- Price
-- SDK 
-- AWS
+| Pros | Cons |
+|------|------|
+| Stability | Price |
+| Backed by Amazon | SDK |
+| Reliable | AWS |
+| Has a lot of features | |
+| SDK | |
+| AWS | |
 
 ### Why is AWS both in Pros and Cons?
 Well if you already use Azure it is quite easy to create a CosmosDB and get using and you will have unified charge.

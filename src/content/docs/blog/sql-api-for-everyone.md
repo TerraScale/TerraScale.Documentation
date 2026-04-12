@@ -10,6 +10,10 @@ tags:
   - tutorial
   - api
 excerpt: Not everyone wants to learn a new query language. That's why we built the SQL API. It's SQL. It works. Here's how to use it.
+cover:
+  wide: /images/blog/sql-api-for-everyone/cover-wide.svg
+  square: /images/blog/sql-api-for-everyone/cover-square.svg
+  alt: Architectural table planes and elegant query lines that suggest structured access through SQL.
 ---
 
 I'll be honest: I love TerraScale's native API. It's powerful, it's fast, and once you understand partition keys, it makes perfect sense.

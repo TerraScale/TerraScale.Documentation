@@ -5,12 +5,12 @@ sidebar:
   order: 1
 ---
 
-## Alpha
+## Public Alpha
 
 - Feature 1: Description
 - Feature 2: Description
 
-## Beta
+## Public Alpha Roadmap
 
 - Feature 1: Description
 - Feature 2: Description

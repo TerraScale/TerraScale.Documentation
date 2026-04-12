@@ -10,6 +10,10 @@ tags:
   - gaming
   - real-time
 excerpt: Let's build a leaderboard that handles 10,000 score updates per second. The whole thing is about 200 lines of code. Here's how.
+cover:
+  wide: /images/blog/building-realtime-leaderboard/cover-wide.svg
+  square: /images/blog/building-realtime-leaderboard/cover-square.svg
+  alt: Tall ranked pillars with disciplined motion streaks, suggesting a fast real-time gaming leaderboard.
 ---
 
 I challenged myself to build a real-time gaming leaderboard. Not a toy demo - something that could actually handle a popular mobile game. The goal: 10,000 score updates per second with leaderboard queries returning in under 50ms.

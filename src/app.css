@@ -16,7 +16,7 @@
 	--color-ts-text-muted: #94a3b8;
 	--color-ts-divider: #1a1a24;
 	--font-display: 'Quantico', system-ui, sans-serif;
-	--font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+	--font-body: 'Quantico', system-ui, sans-serif;
 	--shadow-ts-brutal: 4px 4px 0 rgba(0, 0, 0, 0.6);
 	--shadow-ts-brutal-blue: 4px 4px 0 rgba(37, 99, 235, 0.35);
 	--shadow-ts-soft: 0 14px 40px rgba(0, 0, 0, 0.35);
@@ -44,6 +44,10 @@ html {
 	color-scheme: dark;
 	scroll-behavior: smooth;
 	overflow-x: clip;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -51,6 +55,7 @@ body {
 	min-height: 100vh;
 	overflow-x: clip;
 	font-family: var(--font-body);
+	letter-spacing: 0.01em;
 	color: var(--color-ts-text);
 	background:
 		radial-gradient(circle at top left, rgba(37, 99, 235, 0.18), transparent 22rem),

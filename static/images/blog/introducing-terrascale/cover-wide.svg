@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" fill="none">
+
+<defs>
+	<linearGradient id="bg-introducing-terrascale-wide-2-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#04070c"/>
+		<stop offset="42%" stop-color="#07111d"/>
+		<stop offset="100%" stop-color="#030509"/>
+	</linearGradient>
+	<radialGradient id="glow-introducing-terrascale-wide-2-final" cx="0.52" cy="0.7" r="0.56">
+		<stop offset="0%" stop-color="#60a5fa" stop-opacity="0.22"/>
+		<stop offset="48%" stop-color="#22d3ee" stop-opacity="0.12"/>
+		<stop offset="100%" stop-color="#05070c" stop-opacity="0"/>
+	</radialGradient>
+	<linearGradient id="panel-introducing-terrascale-wide-2-final" x1="0%" y1="0%" x2="100%" y2="100%">
+		<stop offset="0%" stop-color="#0d1726" stop-opacity="0.94"/>
+		<stop offset="100%" stop-color="#08101b" stop-opacity="0.58"/>
+	</linearGradient>
+	<linearGradient id="edge-introducing-terrascale-wide-2-final" x1="0%" y1="0%" x2="100%" y2="0%">
+		<stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+		<stop offset="50%" stop-color="#ffffff" stop-opacity="0.18"/>
+		<stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+	</linearGradient>
+	<pattern id="grid-introducing-terrascale-wide-2-final" width="133.33" height="90" patternUnits="userSpaceOnUse">
+		<path d="M 133.33 0 L 0 0 0 90" fill="none" stroke="#60a5fa" stroke-opacity="0.08" stroke-width="1"/>
+	</pattern>
+</defs>
+<title>introducing-terrascale wide final</title>
+<desc>Illuminated horizon lines and a rising beacon suggesting a new global data platform emerging from darkness.</desc>
+
+	<rect x="0" y="0" width="1600" height="900" fill="url(#bg-introducing-terrascale-wide-2-final)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#glow-introducing-terrascale-wide-2-final)"/>
+	<rect x="0" y="0" width="1600" height="900" fill="url(#grid-introducing-terrascale-wide-2-final)" opacity="0.42"/>
+	<rect x="31.5" y="31.5" width="1537" height="837" rx="28.35" fill="none" stroke="rgba(148,163,184,0.16)" stroke-width="1.5"/>
+	<line x1="31.5" y1="53.55" x2="31.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="31.5" x2="53.55" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="31.5" x2="1568.5" y2="31.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="31.5" x2="1568.5" y2="53.55" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="846.45" x2="31.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="31.5" y1="868.5" x2="53.55" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1546.45" y1="868.5" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<line x1="1568.5" y1="846.45" x2="1568.5" y2="868.5" stroke="rgba(255,255,255,0.24)" stroke-width="2"/>
+	<rect x="45.68" y="45.68" width="1508.65" height="808.65" rx="23.63" fill="none" stroke="url(#edge-introducing-terrascale-wide-2-final)" stroke-width="1"/>
+
+<g><circle cx="858.09" cy="873.11" r="1.32" fill="#22d3ee" opacity="0.11"/><circle cx="485.05" cy="677.55" r="2.89" fill="#f8fafc" opacity="0.19"/><circle cx="260.33" cy="865.04" r="2.83" fill="#f8fafc" opacity="0.14"/><circle cx="1360.53" cy="144.26" r="2.63" fill="#22d3ee" opacity="0.22"/><circle cx="1172.53" cy="682.62" r="2.16" fill="#f8fafc" opacity="0.2"/><circle cx="740.93" cy="839.42" r="3.05" fill="#f8fafc" opacity="0.2"/><circle cx="1108.55" cy="723.32" r="1.46" fill="#22d3ee" opacity="0.11"/><circle cx="576.75" cy="607.28" r="1.44" fill="#f8fafc" opacity="0.13"/><circle cx="831.16" cy="758.43" r="2.04" fill="#f8fafc" opacity="0.22"/><circle cx="1280.72" cy="755.93" r="2.92" fill="#22d3ee" opacity="0.18"/><circle cx="422.23" cy="414.32" r="1.02" fill="#f8fafc" opacity="0.23"/><circle cx="1183.18" cy="566.59" r="3.16" fill="#f8fafc" opacity="0.21"/><circle cx="43.59" cy="742.12" r="1.65" fill="#22d3ee" opacity="0.12"/><circle cx="546.41" cy="21.44" r="1.76" fill="#f8fafc" opacity="0.11"/><circle cx="1433.07" cy="564.8" r="3.4" fill="#f8fafc" opacity="0.09"/><circle cx="270.4" cy="611.22" r="1.82" fill="#22d3ee" opacity="0.14"/><circle cx="1145.03" cy="597.79" r="2.26" fill="#f8fafc" opacity="0.09"/><circle cx="246.41" cy="204.91" r="2.67" fill="#f8fafc" opacity="0.21"/><circle cx="838.22" cy="117.58" r="1.8" fill="#22d3ee" opacity="0.09"/><circle cx="146.66" cy="610.75" r="1.66" fill="#f8fafc" opacity="0.09"/><circle cx="938.77" cy="31.73" r="3.24" fill="#f8fafc" opacity="0.24"/><circle cx="339.98" cy="501.93" r="1.63" fill="#22d3ee" opacity="0.14"/></g>
+<g>
+<path d="M 0 648 C 100 681.93 152 700.2 200 700.2 C 248 700.2 300 614.07 400 648 C 500 614.07 552 595.8 600 595.8 C 648 595.8 700 681.93 800 648 C 900 681.93 952 700.2 1000 700.2 C 1048 700.2 1100 614.07 1200 648 C 1300 614.07 1352 595.8 1400 595.8 C 1448 595.8 1500 681.93 1600 648 L 1600 900 L 0 900 Z" fill="rgba(10,17,28,0.76)" fill-opacity="0.1" stroke="#60a5fa" stroke-opacity="0.22" stroke-width="1.4"/><path d="M 0 684 C 100 721.13 152 742.2 200 742.2 C 248 742.2 300 642.87 400 684 C 500 642.87 552 621.8 600 621.8 C 648 621.8 700 721.13 800 684 C 900 721.13 952 742.2 1000 742.2 C 1048 742.2 1100 642.87 1200 684 C 1300 642.87 1352 621.8 1400 621.8 C 1448 621.8 1500 721.13 1600 684 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.16" stroke="#60a5fa" stroke-opacity="0.19" stroke-width="1.28"/><path d="M 0 720 C 100 760.33 152 784.2 200 784.2 C 248 784.2 300 671.67 400 720 C 500 671.67 552 647.8 600 647.8 C 648 647.8 700 760.33 800 720 C 900 760.33 952 784.2 1000 784.2 C 1048 784.2 1100 671.67 1200 720 C 1300 671.67 1352 647.8 1400 647.8 C 1448 647.8 1500 760.33 1600 720 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.22" stroke="#60a5fa" stroke-opacity="0.16" stroke-width="1.16"/><path d="M 0 756 C 100 799.53 152 826.2 200 826.2 C 248 826.2 300 700.47 400 756 C 500 700.47 552 673.8 600 673.8 C 648 673.8 700 799.53 800 756 C 900 799.53 952 826.2 1000 826.2 C 1048 826.2 1100 700.47 1200 756 C 1300 700.47 1352 673.8 1400 673.8 C 1448 673.8 1500 799.53 1600 756 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.28" stroke="#60a5fa" stroke-opacity="0.13" stroke-width="1.04"/><path d="M 0 792 C 100 838.73 152 868.2 200 868.2 C 248 868.2 300 729.27 400 792 C 500 729.27 552 699.8 600 699.8 C 648 699.8 700 838.73 800 792 C 900 838.73 952 868.2 1000 868.2 C 1048 868.2 1100 729.27 1200 792 C 1300 729.27 1352 699.8 1400 699.8 C 1448 699.8 1500 838.73 1600 792 L 1600 900 L 0 900 Z" fill="#09101a" fill-opacity="0.34" stroke="#60a5fa" stroke-opacity="0.1" stroke-width="0.92"/><line x1="800" y1="504" x2="800" y2="720" stroke="#22d3ee" stroke-width="4" stroke-linecap="round" opacity="0.95"/><circle cx="800" cy="504" r="10" fill="#22d3ee" opacity="0.95"/><circle cx="800" cy="504" r="34" fill="none" stroke="#60a5fa" stroke-opacity="0.38" stroke-width="1.4"/>
+</g>
+</svg>

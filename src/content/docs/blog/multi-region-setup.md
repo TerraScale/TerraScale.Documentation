@@ -10,6 +10,10 @@ tags:
   - replication
   - tutorial
 excerpt: Your users are everywhere. Your database should be too. Here's how to set up multi-region replication in TerraScale.
+cover:
+  wide: /images/blog/multi-region-setup/cover-wide.svg
+  square: /images/blog/multi-region-setup/cover-square.svg
+  alt: Mirrored region clusters connected by measured replication lines, illustrating a multi-region setup.
 ---
 
 Your users are everywhere. Your database should be too.

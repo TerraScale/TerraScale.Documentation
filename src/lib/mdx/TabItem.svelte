@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
+	import { getContext, type Snippet } from 'svelte';
 
-	let { label = 'Tab' } = $props<{ label?: string }>();
+	let { label = 'Tab', children } = $props<{ label?: string; children?: Snippet }>();
 
 	const tabsContext = getContext<{
 		getActiveTab: () => string;
@@ -14,5 +14,5 @@
 </script>
 
 <section class={isActive ? 'block' : 'hidden'} role="tabpanel">
-	<slot />
+	{@render children?.()}
 </section>

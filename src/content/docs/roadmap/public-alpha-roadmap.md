@@ -1,11 +1,11 @@
 ---
-title: Beta
-description: Beta features and improvements in TerraScale.
+title: Public Alpha Roadmap
+description: Planned improvements for TerraScale during Public Alpha.
 sidebar:
   order: 3
 ---
 
-Beta is going to be our next version and we do not have a release date
+Public Alpha is the release stage we are focused on today, and these are the next improvements we plan to ship.
 
 # Planned features
 
@@ -19,7 +19,7 @@ We want to agressively cache all queries that we can and automatically invalidat
 #### Replication
 
 #### Storage limitation
-On alpha we plan to limit to 100gb on beta we want to raise this limit to 500gb
+In Public Alpha we currently limit each database to 100gb, and we plan to raise that limit to 500gb.
 
 #### Caching
 We want to add manual memory caching feature to our database so you can cache queries and invalidate them,

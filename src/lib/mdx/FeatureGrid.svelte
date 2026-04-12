@@ -15,8 +15,8 @@
 			<div class="inline-flex size-8 items-center justify-center rounded-[0.4rem] border border-blue-300/22 bg-blue-500/15">
 				<Icon name={contentIconMap[feature.icon] ?? 'database'} size={22} />
 			</div>
-			<h3 class="mb-2 mt-[0.85rem] text-base">{feature.title}</h3>
-			<p class="text-[0.9rem] leading-[1.65] text-slate-400">{feature.description}</p>
+			<h3 class="mb-2 mt-[0.85rem] text-[1rem] font-semibold tracking-[0.01em] text-slate-50">{feature.title}</h3>
+			<p class="text-[0.94rem] leading-[1.75] tracking-[0.01em] text-slate-400">{feature.description}</p>
 		</article>
 	{/each}
 </div>

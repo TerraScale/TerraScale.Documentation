@@ -10,6 +10,10 @@ tags:
   - dynamodb
   - guide
 excerpt: TerraScale offers a DynamoDB-compatible API that makes migration straightforward. Here's the complete playbook for moving your data.
+cover:
+  wide: /images/blog/migrating-from-dynamodb/cover-wide.svg
+  square: /images/blog/migrating-from-dynamodb/cover-square.svg
+  alt: Two structured data systems connected by a calm transfer bridge, representing migration from one platform to another.
 ---
 
 One of the questions I get most often is: "How do I migrate from DynamoDB to TerraScale?"

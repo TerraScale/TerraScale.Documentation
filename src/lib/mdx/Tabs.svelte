@@ -1,7 +1,10 @@
 <script lang="ts">
-	import { setContext } from 'svelte';
+	import { setContext, type Snippet } from 'svelte';
 
-	let { items = [] } = $props<{ items?: Array<{ label: string; content: string }> }>();
+	let { items = [], children } = $props<{
+		items?: Array<{ label: string; content: string }>;
+		children?: Snippet;
+	}>();
 
 	let tabs = $state<Array<{ id: string; label: string }>>([]);
 	let active = $state('');
@@ -39,7 +42,7 @@
 			{#each items as item, index}
 				<button
 					type="button"
-					class={`cursor-pointer border-0 bg-transparent px-0 py-[0.15rem] text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${active === item.label || (!active && index === 0) ? 'text-blue-500' : ''}`}
+					class={`cursor-pointer border-0 bg-transparent px-0 py-[0.15rem] text-[0.8rem] font-medium uppercase tracking-[0.05em] text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${active === item.label || (!active && index === 0) ? 'text-blue-500' : ''}`}
 					onclick={() => setActiveTab(item.label)}
 					role="tab"
 					aria-selected={active === item.label || (!active && index === 0)}
@@ -59,23 +62,23 @@
 			{/each}
 		</div>
 	</div>
-{:else}
-	<div class="my-6">
-		<div class="mb-3 flex flex-wrap gap-3 border-b border-white/6 pb-2" role="tablist" aria-label="Tabbed code and examples">
-			{#each tabs as tab}
+	{:else}
+		<div class="my-6">
+			<div class="mb-3 flex flex-wrap gap-3 border-b border-white/6 pb-2" role="tablist" aria-label="Tabbed code and examples">
+				{#each tabs as tab}
 				<button
 					type="button"
-					class={`cursor-pointer border-0 bg-transparent px-0 py-[0.15rem] text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${active === tab.id ? 'text-blue-500' : ''}`}
+					class={`cursor-pointer border-0 bg-transparent px-0 py-[0.15rem] text-[0.8rem] font-medium uppercase tracking-[0.05em] text-slate-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${active === tab.id ? 'text-blue-500' : ''}`}
 					onclick={() => setActiveTab(tab.id)}
 					role="tab"
 					aria-selected={active === tab.id}
 				>
 					{tab.label}
 				</button>
-			{/each}
+				{/each}
+			</div>
+			<div>
+				{@render children?.()}
+			</div>
 		</div>
-		<div>
-			<slot />
-		</div>
-	</div>
-{/if}
+	{/if}
