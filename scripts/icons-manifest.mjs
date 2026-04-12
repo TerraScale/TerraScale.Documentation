@@ -22,6 +22,8 @@ export const iconManifest = [
 	{ name: 'heart-pulse', source: 'lucide:heart-pulse' },
 	{ name: 'key-round', source: 'lucide:key-round' },
 	{ name: 'laptop', source: 'lucide:laptop' },
+	{ name: 'map', source: 'lucide:map' },
+	{ name: 'message-circle', source: 'lucide:message-circle' },
 	{ name: 'linkedin', source: 'simple-icons:linkedin' },
 	{ name: 'list', source: 'lucide:list' },
 	{ name: 'mail', source: 'lucide:mail' },

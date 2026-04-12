@@ -9,6 +9,7 @@
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	const navItems = [
 		{ href: '/guides/getting-started/', label: 'Docs', icon: 'book-open' },
+		{ href: '/roadmap/', label: 'Roadmap', icon: 'map' },
 		{ href: '/blog/', label: 'Blog', icon: 'pencil-line' },
 		{ href: '/guides/getting-started/', label: 'Get Started', primary: true, icon: 'rocket' }
 	];
@@ -37,6 +38,10 @@
 		const pathname = page.url.pathname;
 		if (href === '/blog/') {
 			return pathname.startsWith('/blog/');
+		}
+
+		if (href === '/roadmap/') {
+			return pathname.startsWith('/roadmap/');
 		}
 
 		if (href === '/guides/getting-started/') {

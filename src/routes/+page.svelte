@@ -42,6 +42,12 @@
 			href: '/guides/getting-started/'
 		},
 		{
+			icon: 'map',
+			title: 'Roadmap',
+			description: 'See what is live, what is next, and where TerraScale is heading.',
+			href: '/roadmap/'
+		},
+		{
 			icon: 'file-text',
 			title: 'API Reference',
 			description: 'Complete API documentation with examples for all endpoints.',
