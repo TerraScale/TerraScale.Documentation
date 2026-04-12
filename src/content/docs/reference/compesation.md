@@ -1,39 +1,82 @@
 ---
-title: Compesation
-description: Information about TerraScale's pricing plans.
+title: Compensation Policy
+description: Billing rules for rollover usage, overage tolerance, and monthly operation limits.
 ---
 
-We want to be extremely fair to you and also remain profitable, so we will not do the same as other
-subscription based services that if you do not use your month's features and limits you will loose it.
+This policy explains how TerraScale handles unused operations, monthly resets, and short overages. The goal is simple: give you predictable billing without cutting off healthy workloads.
 
-### What will we do differently?
-When you have some unused limits when we enter a new month we will roll over the previous month usage limit to the
-next one.
-#### Example:
-- Example 1:
-We are on January and you have a Pro plan, you just use 1 million operations but you still have 9 million that you did not use
-we will add this extra 9 million to February as an extra usage so you will have 10 + 9, you will first use the original
-February 10 million operations when you go over that amount you will use the extra 9 million, if you do not use the full
-9 million extra operations that rolled over from January you will loose it.
-As you used all your February limit March you will have only 10 million.
+> Note: This page keeps the legacy `/reference/compesation/` URL for compatibility with existing links.
 
-- Example 2:
-We are on January you have a Pro plan you just used half(5 million operations) this 5 million will roll over to February
-you will have a total of 10+5=15 million operations.
-In February you just used 2 million operations, it will have a remaining of 8 million, in March you will have a total of
-18 million operations to use.
+## What is usage rollover
 
-### Over usage
-We will allow you to over use the database and will never hard block any requests, we will warn you
-that you are using more than you plan allows and if it passes more than 20% in a single month we will charge
-for the excess, if it is less than 20% we will be a bro and just let you get away with it.
+If your plan includes a monthly operation allowance and you do not use all of it, the unused portion rolls into the next month.
 
-But if we feel that you are pushing it to the limits just to abuse this system we will warn and ask you to upgrade
-politely and you will have plenty of time to upgrade or use your database less.
+Rollover gives you extra flexibility for uneven traffic patterns. It is designed for normal month to month variation, not as a permanent replacement for upgrading to a larger plan.
 
-#### Example:
+## How rollover works
 
-You are on Hobby plan you have 1 million operations if you over use less about 100 thousand we will not charge you
-and we will not limit you, you will just get an warning e-mail.
-But if you pass the 20% limit in a single month we will be forced to issue a separate charge to your credit card,
-of course you can turn this feature off and we will simply block future requests if you prefer.
+TerraScale applies your current month's included operations first. After that, any unused operations rolled over from the previous month are used.
+
+Rollover is valid for one additional billing cycle only.
+
+### Rollover rules
+
+- Unused included operations roll into the next month.
+- Current month usage is consumed before rolled over usage.
+- Any rollover amount expires at the end of the next month if it is not used.
+- Rollover does not stack indefinitely across multiple months.
+
+## Over-usage policy
+
+TerraScale does not hard block requests by default when you exceed your monthly included operations.
+
+Instead, we apply the following policy:
+
+- We notify you when usage exceeds your plan's monthly allowance.
+- Usage up to 20% above your monthly allowance is tolerated without an overage charge.
+- If usage exceeds that 20% tolerance within a single billing month, the excess may be charged separately.
+- If we detect repeated overages that suggest your workload no longer fits the plan, we may ask you to upgrade.
+- If your account settings allow it, you can disable overages and have excess requests blocked instead.
+
+## Examples
+
+### Example 1: full use of the current month, partial use of rollover
+
+Assume a plan includes 10 million operations per month.
+
+| Month | Included operations | Rolled in from previous month | Total available | Operations used | Rollover to next month |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| January | 10 million | 0 | 10 million | 1 million | 9 million |
+| February | 10 million | 9 million | 19 million | 12 million | 0 |
+| March | 10 million | 0 | 10 million | Depends on March usage | Depends on March usage |
+
+In this scenario, the 9 million unused operations from January roll into February. February uses its own included 10 million first, then 2 million of the rollover. The remaining 7 million rollover from January expires at the end of February.
+
+### Example 2: rollover after a light month
+
+Assume the same plan includes 10 million operations per month.
+
+| Month | Included operations | Rolled in from previous month | Total available | Operations used | Rollover to next month |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| January | 10 million | 0 | 10 million | 5 million | 5 million |
+| February | 10 million | 5 million | 15 million | 2 million | 8 million |
+| March | 10 million | 8 million | 18 million | Depends on March usage | Depends on March usage |
+
+Here, February uses only 2 million of its included 10 million. Because the rolled over 5 million from January was not needed, it expires at the end of February. March receives the 8 million unused portion of February's included allowance.
+
+### Example 3: overage tolerance
+
+Assume a plan includes 1 million operations per month.
+
+| Monthly allowance | Usage | Percent over plan | Result |
+| ---: | ---: | ---: | --- |
+| 1 million | 1.1 million | 10% | Warning only, no overage charge |
+| 1 million | 1.2 million | 20% | Warning only, no overage charge |
+| 1 million | 1.25 million | 25% | Separate overage charge may apply |
+
+## Related
+
+- [Pricing](/reference/pricing/)
+- [Plans](/reference/plans/)
+- [Billing](/reference/billing/)
+- [Rate Limits](/reference/rate-limits/)

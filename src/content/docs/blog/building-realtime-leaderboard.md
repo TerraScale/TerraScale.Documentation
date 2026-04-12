@@ -9,20 +9,28 @@ tags:
   - tutorial
   - gaming
   - real-time
-excerpt: Let's build a leaderboard that handles 10,000 score updates per second. The whole thing is about 200 lines of code. Here's how.
+excerpt: Let's build a leaderboard that handles 10,000 score updates per second. The whole thing is about 200 lines of code. Here's how it comes together.
 cover:
   wide: /images/blog/building-realtime-leaderboard/cover-wide.svg
   square: /images/blog/building-realtime-leaderboard/cover-square.svg
   alt: Tall ranked pillars with disciplined motion streaks, suggesting a fast real-time gaming leaderboard.
 ---
 
-I challenged myself to build a real-time gaming leaderboard. Not a toy demo - something that could actually handle a popular mobile game. The goal: 10,000 score updates per second with leaderboard queries returning in under 50ms.
+I challenged myself to build a real-time gaming leaderboard. Not a toy demo, something that could actually handle a popular mobile game. The goal: 10,000 score updates per second with leaderboard queries returning in under 50ms.
 
 Spoiler: I did it in about 200 lines of code. Here's the whole journey.
 
+## What you'll learn
+
+- Why the obvious leaderboard model falls apart at scale
+- How a bucketed score design keeps updates and rank lookups practical
+- Which parts you should precompute instead of recalculating on demand
+
+If you're new to TerraScale modeling, read the [partition key guide](/blog/understanding-partition-keys/) and [best practices reference](/reference/best-practices/) alongside this walkthrough.
+
 ## The Requirements
 
-A gaming leaderboard needs to support:
+A gaming leaderboard needs to support a few different access patterns at the same time:
 
 1. **Score updates** - Players submit scores constantly
 2. **Global top 100** - Show the best players worldwide
@@ -30,14 +38,14 @@ A gaming leaderboard needs to support:
 4. **Friend leaderboard** - How do I compare to my friends?
 5. **Time-based boards** - Daily, weekly, all-time
 
-The tricky part is that these requirements conflict. Score updates need to be fast (write-optimized). Leaderboards need to be sorted (read-optimized). You can't optimize for both with a naive approach.
+The tricky part is that these requirements conflict. Score updates need to be fast and write-optimized. Leaderboards need to be sorted and read-optimized. You can't optimize for both with a naive approach.
 
 ## The Naive Approach (Don't Do This)
 
-My first instinct was:
+My first instinct was this:
 ```
 pk: "leaderboard#global"
-sk: "{score}#{player_id}"
+sk: "{score}#{playerId}"
 ```
 
 This keeps scores sorted! Easy, right?
@@ -48,18 +56,18 @@ Also, getting a player's rank requires counting all entries with higher scores. 
 
 ## The Actual Approach
 
-After some research, I landed on a bucketed approach:
+After some research, I landed on a bucketed approach.
 
 ### Data Model
 ```
 // Player's current score
-pk: "player#{player_id}"
+pk: "player#{playerId}"
 sk: "score"
 data: { score: 15420, updated: "2024-05-28T..." }
 
-// Score buckets (for ranking)
-pk: "bucket#15000"  // Bucket for scores 15000-15999
-sk: "count"
+// Bucket metadata, lets us query counts in score order
+pk: "leaderboard#global"
+sk: "bucket#15000"  // Bucket for scores 15000-15999
 data: { count: 4827 }  // 4827 players have scores in this range
 
 // Top 100 cache
@@ -70,7 +78,7 @@ data: { players: [...] }  // Cached, updated every few seconds
 
 ### Score Updates
 
-When a player's score changes:
+When a player's score changes, we update the player record first, then adjust the bucket counts if the score moved into a new range:
 ```csharp
 public async Task UpdateScore(string playerId, int newScore)
 {
@@ -96,15 +104,15 @@ public async Task UpdateScore(string playerId, int newScore)
             new TransactWriteItem
             {
                 Action = TransactAction.Update,
-                PartitionKey = $"bucket#{oldBucket}",
-                SortKey = "count",
+                PartitionKey = "leaderboard#global",
+                SortKey = $"bucket#{oldBucket}",
                 UpdateExpression = "SET #count = #count - 1"
             },
             new TransactWriteItem
             {
                 Action = TransactAction.Update,
-                PartitionKey = $"bucket#{newBucket}",
-                SortKey = "count",
+                PartitionKey = "leaderboard#global",
+                SortKey = $"bucket#{newBucket}",
                 UpdateExpression = "SET #count = if_not_exists(#count, 0) + 1"
             }
         });
@@ -126,8 +134,8 @@ public async Task<int> GetPlayerRank(string playerId)
 
     var buckets = await _db.QueryAsync(new QueryFilter
     {
-        PartitionKey = "buckets",
-        SortKeyCondition = SortKeyCondition.GreaterThan($"{playerBucket}")
+        PartitionKey = "leaderboard#global",
+        SortKeyCondition = SortKeyCondition.GreaterThan($"bucket#{playerBucket}")
     });
 
     var higherPlayers = buckets.Value.Items.Sum(b => b.GetAttribute<int>("count"));
@@ -135,7 +143,7 @@ public async Task<int> GetPlayerRank(string playerId)
 }
 ```
 
-This requires at most ~100 bucket reads instead of millions of player reads.
+This requires at most about 100 bucket reads instead of millions of player reads.
 
 ### Top 100 Leaderboard
 
@@ -163,6 +171,8 @@ public async Task RefreshTop100()
 
 Reading the top 100 is now a single fast read.
 
+Why this matters: a good leaderboard design does more work at write time so reads stay predictable. That trade-off is usually worth it because players read rankings far more often than they inspect the exact mechanics behind them.
+
 ## The Results
 
 I load tested this with [k6](https://k6.io/) simulating 10,000 score updates per second:
@@ -178,6 +188,8 @@ Not bad for a side project.
 
 ## Key Insight
 
-Leaderboards aren't just about storing scores. They're about pre-computing the queries you'll need to answer. TerraScale's fast transactions make those pre-computations practical.
+Leaderboards aren't just about storing scores. They're about precomputing the queries you'll need to answer. TerraScale's fast transactions make those precomputations practical.
+
+If you build your own version, I'd also recommend reading the [transactions guide](/blog/transactions-deep-dive/) and the [querying guide](/guides/querying/).
 
 Happy gaming!

@@ -5,7 +5,7 @@ sidebar:
   order: 8
 ---
 
-Rate limits protect the platform and ensure fair usage across all customers.
+Rate limits protect the platform and help keep performance predictable for everyone using TerraScale. This page shows the request caps, payload limits, and plan quotas you should design around.
 
 ---
 
@@ -33,6 +33,8 @@ Rate limits depend on your plan tier:
 | Pro | 1,000 requests/second |
 | Enterprise | Custom (contact sales) |
 
+These request limits are enforced per second. Monthly request quotas, listed later on this page, are tracked separately.
+
 ---
 
 ## Rate Limit Response
@@ -51,6 +53,8 @@ Content-Type: application/json
   "retryAfter": 5
 }
 ```
+
+When you hit a limit, TerraScale rejects the request instead of queueing it for you. Your client should pause, wait for the `Retry-After` value or the rate-limit reset time, then retry with backoff.
 
 ### Headers
 
@@ -96,6 +100,8 @@ Content-Type: application/json
 
 ## Handling Rate Limits
 
+If you burst past the configured window, expect a `429 Too Many Requests` response. Short spikes usually clear quickly. Repeated throttling is a sign that you should lower concurrency, batch more work, or move to a higher plan.
+
 ### Retry with Exponential Backoff
 ```csharp
 async Task<Result<T>> ExecuteWithRetry<T>(Func<Task<Result<T>>> operation)
@@ -140,6 +146,8 @@ var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 });
 ```
 
+If you build your own retry layer, prefer jittered exponential backoff and respect the server-provided retry window whenever it is present.
+
 ---
 
 ## Best Practices
@@ -157,6 +165,8 @@ foreach (var key in keys)
 // Good: Single batch request
 await client.BatchGetAsync(keys);
 ```
+
+This is especially helpful in TerraScale because fewer round trips usually means fewer chances to hit per-second request caps.
 
 ### Request Queuing
 
@@ -178,6 +188,8 @@ async Task<T> ExecuteWithThrottle<T>(Func<Task<T>> operation)
 }
 ```
 
+Start with conservative concurrency and increase gradually. That gives you cleaner latency data and helps prevent bursts from overwhelming one hot partition or one client instance.
+
 ### Monitor Usage
 
 Track your usage to stay within limits:
@@ -188,13 +200,15 @@ Console.WriteLine($"Requests this month: {usage.Value.TotalRequests}");
 Console.WriteLine($"Storage used: {usage.Value.TotalStorageGb} GB");
 ```
 
+Watch both dimensions: short-term request rate and long-term monthly quota. They solve different problems, and you can hit either one first.
+
 ---
 
 ## Increasing Limits
 
 ### Upgrade Plan
 
-Higher plans have higher limits. See [Plans](/reference/plans/) for details.
+Higher plans have higher limits. See [How to Choose a Plan](/guides/how-to-choose-a-plan/) for guidance.
 
 ### Enterprise Custom Limits
 
@@ -209,6 +223,6 @@ Contact sales@terrascale.io for:
 
 ## Next Steps
 
-- [Plans](/reference/plans/) - Compare plan limits
-- [Error Handling](/reference/error-handling/) - Handle errors gracefully
+- [How to Choose a Plan](/guides/how-to-choose-a-plan/) - Compare plan fit and capacity
 - [Best Practices](/reference/best-practices/) - Optimize your usage
+- [API Reference](/reference/api/) - Review related endpoint behavior

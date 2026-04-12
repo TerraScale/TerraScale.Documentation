@@ -1,5 +1,5 @@
 ---
-title: Migrating from DynamoDB to TerraScale - A Complete Guide
+title: Migrating from DynamoDB to TerraScale: A Complete Guide
 date: 2024-05-10
 authors:
   - name: Mario Gabriell Karaziaki Belchior
@@ -9,7 +9,7 @@ tags:
   - migration
   - dynamodb
   - guide
-excerpt: TerraScale offers a DynamoDB-compatible API that makes migration straightforward. Here's the complete playbook for moving your data.
+excerpt: TerraScale offers a DynamoDB-compatible API that makes migration more straightforward. Here's the complete playbook for moving your data.
 cover:
   wide: /images/blog/migrating-from-dynamodb/cover-wide.svg
   square: /images/blog/migrating-from-dynamodb/cover-square.svg
@@ -20,6 +20,14 @@ One of the questions I get most often is: "How do I migrate from DynamoDB to Ter
 
 The good news is that we designed TerraScale with migration in mind. Our DynamoDB-compatible API means you can often switch with minimal code changes. Here's the complete guide.
 
+## What you'll learn
+
+- Which migration strategy fits your system best
+- How to implement a dual-write rollout without rushing the cutover
+- What to verify before you finally switch traffic
+
+If you're actively planning a migration, keep the [migrations reference](/reference/migrations/), [comparisons page](/reference/comparisons/), and [best practices reference](/reference/best-practices/) close by.
+
 ## Why Migrate?
 
 Before diving into how, let's talk about why you might want to migrate:
@@ -29,11 +37,11 @@ Before diving into how, let's talk about why you might want to migrate:
 3. **Better developer experience** - First-class SDKs with modern patterns like Result types
 4. **Transparent costs** - No surprise bills from forgotten auto-scaling policies
 
-That said, DynamoDB is excellent. If it's working for you, there's no urgent need to switch.
+That said, DynamoDB is excellent. If it's working for you, there's no urgent need to switch. Migrations are worth doing when the long-term benefits are clear, not because switching databases sounds exciting on a Friday afternoon.
 
 ## Migration Strategies
 
-There are three main approaches, each with trade-offs:
+There are three main approaches, each with trade-offs. Pick the one that matches your tolerance for downtime, complexity, and rollback risk.
 
 ### Strategy 1: Big Bang
 
@@ -73,11 +81,11 @@ Migrate one table at a time. Each table goes through its own dual-write cycle.
 
 ## The Dual Write Pattern
 
-Since dual write is the safest approach for most production systems, here's how to implement it:
+Since dual write is the safest approach for most production systems, here's how to implement it.
 
 ### Step 1: Set Up TerraScale
 
-Create your database and generate an API key. Make sure your table structure matches DynamoDB.
+Create your database and generate an API key. Make sure your table structure matches DynamoDB. This is also the right time to review your partition and sort key choices instead of blindly copying every old mistake forward.
 
 ### Step 2: Implement Dual Write
 ```csharp
@@ -165,7 +173,7 @@ public async Task<Item?> GetItemAsync(string pk, string sk)
 }
 ```
 
-Start with 1% of traffic, monitor, then increase to 10%, 50%, 100%.
+Start with 1% of traffic, monitor, then increase to 10%, 50%, and 100%. Give yourself time between steps to compare correctness and latency, not just throughput.
 
 ### Step 5: Verify and Cutover
 
@@ -219,7 +227,9 @@ TerraScale has fewer reserved words than DynamoDB, but check your attribute name
 
 ### Condition Expressions
 
-The syntax is nearly identical, but test your complex conditions during migration.
+The syntax is nearly identical, but test your complex conditions during migration. Small edge cases are exactly the kind of thing you want to catch before full cutover.
+
+Why this matters: most migration failures are not caused by the export or import step. They come from hidden assumptions in application code, stale data paths, or a cutover that happened before enough verification.
 
 ## Verification Checklist
 

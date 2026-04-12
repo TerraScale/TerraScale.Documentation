@@ -9,7 +9,7 @@ tags:
   - optimization
   - cost
   - tips
-excerpt: TerraScale's pricing is simple, but that doesn't mean you can't optimize. Here are 10 tips to get the most value from your database.
+excerpt: TerraScale's pricing is simple, but that doesn't mean you can't optimize. Here are 10 practical tips to get more value from your database.
 cover:
   wide: /images/blog/cost-optimization-tips/cover-wide.svg
   square: /images/blog/cost-optimization-tips/cover-square.svg
@@ -17,6 +17,14 @@ cover:
 ---
 
 TerraScale's pricing is straightforward: you pay for storage and operations. But that doesn't mean you can't optimize. Here are 10 tips I share with developers to help them get the most value.
+
+## What you'll learn
+
+- Which common query patterns cost more than they need to
+- How data modeling decisions affect both performance and spend
+- Where to look in the dashboard when costs start creeping up
+
+If you want to compare this advice with the product docs, keep the [pricing reference](/reference/pricing/), [billing reference](/reference/billing/), and [best practices guide](/reference/best-practices/) open.
 
 ## 1. Use Queries, Not Scans
 
@@ -32,7 +40,7 @@ var orders = await client.QueryAsync(new QueryFilter
 var allOrders = await client.ScanAsync(new ScanOptions());
 ```
 
-If you're scanning regularly, redesign your data model.
+If you're scanning regularly, redesign your data model. Most cost problems start as modeling problems.
 
 ## 2. Use Projection
 
@@ -48,7 +56,7 @@ var user = await client.GetItemAsync("user#123", "profile", new GetOptions
 });
 ```
 
-Less data transferred = lower costs.
+Less data transferred means lower costs and usually faster responses too.
 
 ## 3. Batch Your Operations
 
@@ -64,11 +72,11 @@ foreach (var key in keys)
 var items = await client.BatchGetAsync(keys);
 ```
 
-BatchGet supports up to 100 items. BatchWrite supports up to 25.
+BatchGet supports up to 100 items. BatchWrite supports up to 25. The [batch operations reference](/reference/api/batch-operations/) has the exact limits and behavior.
 
 ## 4. Don't Store Logs in TerraScale
 
-TerraScale is optimized for operational data - things you query frequently with low latency requirements. Logs are append-only, rarely queried, and don't need sub-10ms response times.
+TerraScale is optimized for operational data, things you query frequently with low latency requirements. Logs are append-only, rarely queried, and usually don't need sub-10ms response times.
 
 Use a dedicated logging service instead. You'll save money and get better log-specific features.
 
@@ -84,7 +92,7 @@ await client.PutItemAsync("doc#123", "content", new Dictionary<string, object>
 });
 ```
 
-Typical compression ratios of 3-4x mean significant storage savings.
+Typical compression ratios of 3 to 4x can mean meaningful storage savings.
 
 ## 6. Set TTL for Temporary Data
 
@@ -97,7 +105,7 @@ await client.PutItemAsync("session#abc", "data", new Dictionary<string, object>
 });
 ```
 
-Expired items are deleted automatically at no cost.
+Expired items are deleted automatically at no cost. TTL is one of the easiest wins for session data, temporary tokens, and short-lived caches.
 
 ## 7. Use the Right Item Size
 
@@ -110,7 +118,7 @@ If you have items over 100KB, consider:
 
 ## 8. Consolidate Small Items
 
-The flip side: if you have many tiny items that you always read together, consider combining them:
+The flip side is that if you have many tiny items that you always read together, consider combining them:
 ```csharp
 // 10 individual items = 10 read operations
 await client.GetItemAsync("user#123", "setting#theme");
@@ -123,7 +131,7 @@ await client.GetItemAsync("user#123", "settings");
 
 ## 9. Use Staging Wisely
 
-Your staging environment doesn't need a full copy of production data. A representative subset (10GB instead of 500GB) works fine for testing and saves storage costs.
+Your staging environment doesn't need a full copy of production data. A representative subset works fine for testing and saves storage costs.
 
 ## 10. Monitor Your Usage
 
@@ -135,10 +143,12 @@ The dashboard shows exactly where your costs come from:
 
 Check it monthly. You'll often find quick wins.
 
+Why this matters: the cheapest database setup is not always the best one. The real goal is to spend on the reads and writes that move your product forward, and avoid paying for accidental work.
+
 ## The Philosophy
 
 TerraScale's pricing is designed to be predictable. You pay for what you use, and you can always see what you're using.
 
-The goal isn't to minimize your bill at all costs - it's to make sure you're getting value for what you spend. A $100/month database bill that powers a $10,000/month business is a great deal.
+The goal isn't to minimize your bill at all costs. It's to make sure you're getting value for what you spend. A database bill that supports a healthy business is a good trade.
 
 Focus on building great software. Optimize costs when they become meaningful. And if you're ever unsure about the best approach, reach out at mariogk@terrascale.tech.

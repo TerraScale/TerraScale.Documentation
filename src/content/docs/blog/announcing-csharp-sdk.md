@@ -9,7 +9,7 @@ tags:
   - announcement
   - sdk
   - dotnet
-excerpt: Today we're releasing the official TerraScale C# SDK. Here's what's in the box and why we built it.
+excerpt: Today we're releasing the official TerraScale C# SDK. Here's what's in the box, why we built it, and how to get started.
 cover:
   wide: /images/blog/announcing-csharp-sdk/cover-wide.svg
   square: /images/blog/announcing-csharp-sdk/cover-square.svg
@@ -18,9 +18,17 @@ cover:
 
 Today we're releasing the official TerraScale C# SDK. It's been in Public Alpha for three months and I'm genuinely proud of how it turned out.
 
+## What you'll learn
+
+- Why we started with C# before other SDKs
+- What the SDK gives you out of the box
+- Where to go next if you want to build a real app with it
+
+For the full product docs, keep the [C# SDK guide](/guides/sdks/csharp/), [repository guide](/guides/repository/), and [error handling reference](/reference/error-handling/) nearby.
+
 ## Why C# First?
 
-When we started building SDKs, we had to pick a language to start with. JavaScript would have been the obvious choice - it's everywhere. But we looked at our early users and noticed something interesting: a disproportionate number were .NET shops.
+When we started building SDKs, we had to pick a language to start with. JavaScript would have been the obvious choice, it's everywhere. But we looked at our early users and noticed something interesting: a disproportionate number were .NET shops.
 
 The Venn diagram of "developers who want a DynamoDB-like experience" and "developers building with C#" has a lot of overlap. Many developers are migrating from Azure Cosmos DB or building high-performance backends where C# shines.
 
@@ -33,7 +41,7 @@ So C# it was.
 dotnet add package TerraScale.Client
 ```
 
-That's it. No native dependencies, no complex setup. Works on .NET 6, 7, and 8.
+That's it. No native dependencies, no complex setup. It works on .NET 6, 7, and 8.
 
 ### Basic Usage
 ```csharp
@@ -121,6 +129,8 @@ var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 
 ## Performance
 
+These numbers come from our internal benchmarking. They are best used as directional guidance, not a promise that every workload will behave exactly the same.
+
 | Operation | Throughput | Memory |
 |-----------|------------|--------|
 | PutItem (1KB) | 15,000/sec | ~2KB/op |
@@ -142,6 +152,6 @@ The [SDK documentation](/guides/sdks/csharp/) has everything you need. But hones
 dotnet add package TerraScale.Client
 ```
 
-If you run into issues, reach out at mariogk@terrascale.tech.
+If you run into issues, reach out at mariogk@terrascale.tech. If you're new to TerraScale itself, pair the SDK docs with the [Getting Started guide](/guides/getting-started/).
 
 Happy coding!

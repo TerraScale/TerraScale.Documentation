@@ -1,1 +1,5 @@
 /guides/SDKs/* /guides/sdks/:splat 301
+/roadmap/summary/ /roadmap/ 301
+/roadmap/public-alpha/ /roadmap/ 301
+/roadmap/public-alpha-roadmap/ /roadmap/ 301
+/roadmap/release/ /roadmap/ 301

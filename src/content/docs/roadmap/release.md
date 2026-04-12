@@ -1,20 +1,37 @@
 ---
 title: Release
-description: Version 1 features and improvements in TerraScale.
+description: What TerraScale aims to achieve before moving from Public Alpha to a stable release.
+draft: true
 sidebar:
   order: 4
 ---
 
-We do not plan to add any new features on this version.
-This is means that every feature that we have works as expected and just needs some better UX/DX and some polishing.
+Stable release is the point where TerraScale should feel dependable under real production pressure, not just feature complete. This stage is about proving that the platform behaves consistently when systems are healthy, stressed, or recovering.
 
-### Stability
+For the current stage, see [Public Alpha](/roadmap/public-alpha/). For the broader product view, see the [Public Roadmap](/roadmap/).
 
-When we release we want to be stable as possible and the fear of TerraScale deleting your data, replacing it for another
-users data(looking at you Turso), downtimes are over and you can confidently use TerraScale and trust it will work.
+## Release Goals
 
-One advantage we have is by having the same data on multiple regions if we are updating a specific region your data
-will still be available, or if there are regional blackouts we will route your requests to the next closest region
-it will increase the latency but you will still have access to your data.
-If there is an problem between two regions and replication stops, our replication engine is robust enough to conciliate all
-the differences once the networking(or other) issue is resolved.
+- Deliver a stable and predictable platform for production workloads
+- Strengthen reliability across replication, failover, and recovery paths
+- Improve developer experience with polish, clearer behavior, and fewer rough edges
+
+## Reliability Focus
+
+Stable release depends on operational trust. TerraScale needs to show durable replication, reliable regional failover, and automatic reconciliation after outages or transient network problems. The system should recover cleanly and keep operator intervention low when conditions are less than ideal.
+
+## What Changes from Alpha
+
+The goal of stable release is not to add a wave of new features. It is to harden what already exists. That means closing edge cases, reducing ambiguity, validating recovery paths, and improving the consistency of the overall platform experience.
+
+The feature roadmap for Alpha remains on the [Public Alpha Roadmap](/roadmap/public-alpha-roadmap/).
+
+## Stability Guarantees
+
+Stable release should give users confidence in a few key areas:
+
+- Data durability under normal operations and recovery scenarios
+- Multi-region consistency that behaves predictably under replication pressure
+- Graceful degradation when part of the system is impaired, rather than sudden or confusing failure modes
+
+That is the standard TerraScale aims to meet before it should be presented as stable.

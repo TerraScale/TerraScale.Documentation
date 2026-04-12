@@ -8,7 +8,15 @@ sidebar:
   order: 8
 ---
 
-Health endpoints for monitoring API status. No authentication required.
+Health endpoints help you confirm that TerraScale is reachable, ready for traffic, and still running normally. No authentication is required.
+
+---
+
+## Why health checks matter
+
+Health checks give load balancers, orchestration platforms, and your own monitoring a fast way to understand service state. In TerraScale, they are often the first signal you will use during deploys, failover tests, and incident response.
+
+Keep these endpoints lightweight and call them on a steady interval so you can catch problems early without adding unnecessary traffic.
 
 ---
 
@@ -16,7 +24,7 @@ Health endpoints for monitoring API status. No authentication required.
 
 ### GET /health
 
-Overall health check for the API.
+Overall health check for the API. Use this when you want a simple signal that the service and its core dependencies are healthy.
 
 **Response (200 OK):**
 ```json
@@ -67,12 +75,20 @@ Use this endpoint for:
 
 ### GET /health/live
 
-Liveness probe to confirm the application is running.
+Liveness probe to confirm the application is running. This endpoint is useful when you want your platform to restart a stuck process instead of routing around it.
 
 **Response (200 OK):**
 ```json
 {
   "status": "Alive"
+}
+```
+
+**Response (503 Service Unavailable):**
+```json
+{
+  "status": "Dead",
+  "details": "Process is shutting down"
 }
 ```
 
@@ -141,15 +157,16 @@ fi
 
 ## Best Practices
 
-1. **Use appropriate endpoints** - `/live` for container restarts, `/ready` for traffic routing
-2. **Set reasonable timeouts** - Health checks should complete within 5 seconds
-3. **Monitor response times** - Slow health checks may indicate issues
-4. **Don't over-check** - Every 10-30 seconds is usually sufficient
+1. **Use the right endpoint**: `/health/live` for restart decisions, `/health/ready` for traffic routing, `/health` for general monitoring.
+2. **Set tight latency expectations**: aim for p95 under 500 ms in normal conditions, and investigate anything that regularly exceeds 1 second.
+3. **Use short timeouts**: most checks should fail fast, usually within 2 to 5 seconds.
+4. **Watch response time, not just status**: a slow health check often shows trouble before outright failures appear.
+5. **Avoid aggressive polling**: every 10 to 30 seconds is usually enough for external monitoring.
 
 ---
 
 ## Next Steps
 
 - [API Overview](/reference/api/) - Full API documentation
-- [Error Handling](/reference/error-handling/) - Handle API errors
+- [Best Practices](/reference/best-practices/) - Design healthier client behavior
 - [Rate Limits](/reference/rate-limits/) - Understand limits

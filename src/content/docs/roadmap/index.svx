@@ -1,0 +1,116 @@
+---
+title: Public Roadmap
+description: What TerraScale supports in Public Alpha, what is prioritized next, and what stable release needs before it earns broader trust.
+draft: true
+sidebar:
+  order: 1
+headingBadge:
+  text: Public Alpha
+  variant: secondary
+---
+
+import { LinkCard, RoadmapGrid, RoadmapLegend, RoadmapStageBand } from '$lib/mdx';
+import { exploringItems, liveNowItems, nextUpItems, roadmapLegend, roadmapStages, stableReleaseGoalItems } from '$lib/content/roadmap';
+
+<div class="relative my-2 overflow-hidden rounded-[1.8rem] border border-white/10 bg-[linear-gradient(145deg,rgba(37,99,235,0.16),rgba(8,145,178,0.06)_38%,rgba(255,255,255,0.04)_100%)] px-6 py-7 shadow-[0_20px_60px_rgba(0,0,0,0.3)] sm:px-8 sm:py-8">
+	<div class="pointer-events-none absolute -left-16 top-0 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl"></div>
+	<div class="pointer-events-none absolute right-0 top-8 h-40 w-40 rounded-full bg-cyan-500/12 blur-3xl"></div>
+	<div class="relative">
+		<div class="flex flex-wrap items-center gap-3">
+			<span class="inline-flex items-center rounded-full border border-emerald-400/28 bg-emerald-500/10 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-emerald-200">
+				Public Alpha
+			</span>
+			<span class="inline-flex items-center rounded-full border border-white/10 bg-white/6 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-slate-300">
+				Prospect-first roadmap
+			</span>
+		</div>
+
+		<p class="mb-0 mt-5 max-w-3xl text-[1.06rem] leading-[1.9] tracking-[0.01em] text-slate-200">
+			This roadmap is the canonical source for what TerraScale supports today, what is prioritized next,
+			and what the platform still needs before a stable release deserves broad production trust.
+		</p>
+
+		<div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Current stage</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">Public Alpha</p>
+			</div>
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Primary focus</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">Performance automation</p>
+			</div>
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Current guardrail</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">100 GB per database</p>
+			</div>
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Feedback loop</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">Discord-driven priorities</p>
+			</div>
+		</div>
+
+		<div class="mt-7 flex flex-wrap gap-3">
+			<a
+				href="https://discord.gg/8Zr2Nw9g"
+				class="inline-flex items-center justify-center rounded-[0.7rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.07em] text-blue-50 shadow-[0_12px_28px_rgba(37,99,235,0.28)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400"
+			>
+				Join Discord
+			</a>
+			<a
+				href="/guides/getting-started/"
+				class="inline-flex items-center justify-center rounded-[0.7rem] border border-white/10 bg-white/6 px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.07em] text-slate-200 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400"
+			>
+				Start Building
+			</a>
+		</div>
+	</div>
+</div>
+
+## How to Read This Roadmap
+
+The roadmap is grouped by confidence, not by calendar promises. That keeps the page honest while still making product direction clear.
+
+<RoadmapLegend items={roadmapLegend} />
+
+## From Public Alpha to Stable Release
+
+The path is straightforward: keep shipping core performance automation, tighten operational trust, and only call the product stable when reliability and daily operator experience both hold up.
+
+<RoadmapStageBand stages={roadmapStages} />
+
+## Live Now
+
+These capabilities are part of the Public Alpha story today. They define what you can already evaluate, build on, and pressure-test.
+
+<RoadmapGrid items={liveNowItems} tone="live" statusLabel="Live now" />
+
+## Next Up
+
+This is the near-term work that should make TerraScale faster and easier to trust without asking every team to hand-tune the platform first.
+
+<RoadmapGrid items={nextUpItems} tone="next" statusLabel="Next up" />
+
+## Exploring
+
+These ideas matter, but they need more usage data before they should be treated like commitments.
+
+<RoadmapGrid items={exploringItems} tone="exploring" statusLabel="Exploring" />
+
+## Stable Release Goals
+
+Stable release is not a marketing label. It is the point where data safety, failover behavior, recovery, and operator experience all feel dependable enough for broader production use.
+
+<RoadmapGrid items={stableReleaseGoalItems} tone="goal" statusLabel="Stable release goal" />
+
+## Help Shape It
+
+The roadmap is strongest when it reflects real workloads, not guesses from a whiteboard. If you want a feature, have a query pattern that needs to be faster, or need stronger reliability guarantees for a use case, tell us.
+
+<div class="my-8 grid gap-4 md:grid-cols-2">
+	<LinkCard href="https://discord.gg/8Zr2Nw9g" title="Join the Discord">
+		Bring feature requests, edge cases, and performance pain points directly into the feedback loop.
+	</LinkCard>
+	<LinkCard href="/guides/getting-started/" title="Try the current platform">
+		Use the existing docs and APIs first, then compare that experience against the roadmap direction above.
+	</LinkCard>
+</div>

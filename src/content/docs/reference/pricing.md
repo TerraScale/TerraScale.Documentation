@@ -1,71 +1,107 @@
 ---
 title: Pricing
-description: Pricing information for TerraScale products and services.
+description: How TerraScale counts operations, replication, queries, and storage for billing.
 ---
 
+TerraScale pricing is built around simple, understandable usage. We try to keep the billing model close to the work the database is actually doing, while avoiding hard to explain billing units.
+
+The billing and usage APIs expose customer facing metrics such as requests and storage. The examples on this page explain the relative amount of database work behind those metrics, especially for globally replicated workloads.
+
 ## Database Operations
-We want to be really transparent about datbase operations, for us it is more expansive to write than read
-because the way we architected our database engine.
-But for the sake of making it simpler in the pricing plan and metrics for the end user we united all database operations
-together and we also didnt want to create a made up unit like Cosmos DB did, we are open to feedback before we do the 
-first stable version of TerraScale to change this.
 
-### Global Replication
-So how many database operations really takes to have our main feature which is replicating and having the same data
-on multiple regions?
+In TerraScale, writes are more expensive for the system to process than reads because writes must be replicated and coordinated across regions. Even so, TerraScale keeps customer facing usage reporting simpler than the internal work model so plans are easier to understand.
 
-For this example let's use some made up numbers multiple of 10 so you can easily adapt the calculations for your use case
+That means you can reason about usage without learning a custom billing language, while still understanding that some operations place more work on the platform than others.
 
-Let's say that we have a database replicating to 10 regions when you write (create/update) any document you can 
-consider that you are writing to all of them, so it is going to cost 10 database operations.
+## Global Replication Costs
 
-But if you are reading an document it will cost only one operation because you are reading only from the closest region.
+Global replication is one of TerraScale's core features. Replication affects pricing because a write must be applied in every configured region.
 
-#### What about querying?
+### How writes are counted
 
-Well querying is a more difficult to calculate before doing the operation than all the other operations.
+If your database replicates to 10 regions, a single write can be thought of as work performed 10 times, once per region.
 
-Depending on the query that you are doing it is going to cost different amount of datbase operations.
+For example:
 
-Again to simplify the pricing for you the end user we will only charge a datbase operation for the returned documents
-(this can be changed before stable release)
-So for example you are querying using regex we cannnot use our index to execute the query so we are basically doing a
-for each document we evaluate the regex to see if the document qualifies for the query then we return; this also
-means that this query is going to take longer to execute, the higher the document count on your datbase the longer it
-is going to take to execute queries like regex and operators that do not use our index.
+- 1 document write in 10 regions: roughly 10 write operations of work
+- 1 document update in 10 regions: roughly 10 write operations of work
 
-TODO: are we going to charge for scanned documents or just the result?
+### How reads are counted
 
+Reads are different. A read is typically served from the closest region, so a single document read usually counts as one operation of work.
 
-If you use queries that can leverage our indexing engine for example equals, less than, greater than the query is going
-to be really fast independent of the amount of documents you have on your database.
+This is why globally distributed write heavy workloads cost more to operate than read heavy workloads.
 
-Some optimizations that you can do with hand written queries let's say for example
+## Query Costs
+
+Queries are harder to predict than simple reads and writes because cost and latency depend on whether TerraScale can use an index efficiently.
+
+For customers, the important guidance is that indexed queries are cheaper for the platform to serve and usually faster in practice than scan heavy queries.
+
+### Indexed queries
+
+Queries that use index friendly operators, such as equality and range comparisons, are generally fast and scale well.
+
+Examples of index friendly operators include:
+
+- `$eq`
+- `$gt`
+- `$gte`
+- `$lt`
+- `$lte`
+
+### Scan heavy queries
+
+Queries that cannot use an index efficiently, such as broad regex searches, may require the database to inspect many documents before returning a result. These queries are slower and place more load on the system.
+
+### Query example
+
+This query can often use an index efficiently:
+
 ```json
 {
-    "_id": {
-        "$ne" : null
-    }
-}
-```
-Instead write like this:
-```json
-{
-{
-    "_id": {
-        "$gt" : 1
-    }
-}
+  "_id": {
+    "$gt": 1
+  }
 }
 ```
 
-Why? because null is not a simple check, we need to iterate/scan all documents and run an `if` to check if the value 
-is considered null or not, if instead you use greater than we can use our index to evaluate the query.
-
-OBS: That is why we limit the query to a max of 100 items and we highly recommend using our pagination feature.
+By contrast, a condition that forces broad scanning or per document evaluation may cost more in latency and system work, even when it returns only a small result set.
 
 ## Storage
-### Why is storage priced the way it is?
 
-We store on each region 2 copies of your database for higly availability, so when we are updating the datbase version
-we rollout one node by one and we wait for that node to be healthy and available before moving on with the rest of the nodes
+Storage pricing reflects the fact that TerraScale keeps multiple copies of your data in each region for availability and operational safety.
+
+For each region, TerraScale maintains redundant copies so upgrades and maintenance can be rolled out without taking the database offline. That redundancy is part of the service you are paying for, and it is one reason storage is not priced the same way as a single disk on a single server.
+
+## Optimizing Costs
+
+You can usually lower cost and improve performance with a few straightforward habits.
+
+### Prefer indexed filters
+
+Use filters based on indexed fields whenever possible. Equality and range queries are usually much more efficient than regex or broad negative conditions.
+
+### Keep result sets small
+
+Avoid fetching more data than you need. TerraScale limits query responses to 100 items per request, and pagination is strongly recommended.
+
+### Be deliberate with replication
+
+Replicate to the regions your application actually needs. More regions improve geographic coverage, but they also multiply write work.
+
+### Review expensive query patterns
+
+If a query must scan large portions of a collection, consider:
+
+- adding or adjusting indexes
+- changing the access pattern
+- precomputing common views
+- narrowing the filter before applying expensive operators
+
+## Related
+
+- [Compensation Policy](/reference/compesation/)
+- [Plans](/reference/plans/)
+- [Replication](/reference/replication/)
+- [Best Practices](/reference/best-practices/)

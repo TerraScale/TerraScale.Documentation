@@ -9,7 +9,7 @@ tags:
   - multi-region
   - replication
   - tutorial
-excerpt: Your users are everywhere. Your database should be too. Here's how to set up multi-region replication in TerraScale.
+excerpt: Your users are everywhere. Your database should be too. Here's how to set up multi-region replication in TerraScale with the right expectations.
 cover:
   wide: /images/blog/multi-region-setup/cover-wide.svg
   square: /images/blog/multi-region-setup/cover-square.svg
@@ -22,9 +22,17 @@ TerraScale supports 19 regions worldwide. With multi-region replication, your da
 
 Here's how to set it up.
 
+## What you'll learn
+
+- When multi-region replication is worth the added complexity
+- How to add regions through the dashboard, SDK, or API
+- What changes for reads, writes, consistency, and cost
+
+If you want the product docs alongside this walkthrough, open the [replication reference](/reference/replication/) and [regions reference](/reference/regions/).
+
 ## Why Multi-Region?
 
-Three main reasons:
+There are three main reasons teams reach for multi-region:
 
 1. **Latency** - A user in Tokyo accessing data in us-east-1 adds 150-200ms of round-trip time. With a replica in ap-northeast-1, it's under 10ms.
 
@@ -41,7 +49,7 @@ Three main reasons:
 3. Select the region(s) you want
 4. Click "Enable Replication"
 
-That's it. Existing data starts syncing immediately.
+That's it. Existing data starts syncing immediately. For a new database, this usually feels nearly instant. For a larger one, expect the first sync to take longer while the initial copy catches up.
 
 ### Via SDK
 ```csharp
@@ -61,7 +69,7 @@ POST /api/v1/management/databases/my-database/regions
 
 ## How Replication Works
 
-When you write to TerraScale:
+When you write to TerraScale, this is the flow:
 
 1. The write goes to your primary region
 2. It's acknowledged as soon as it's durable there
@@ -91,7 +99,7 @@ var result = await client.GetItemAsync("user#123", "profile", new GetOptions
 
 ## Choosing Regions
 
-Here's my mental model for choosing regions:
+Here's my mental model for choosing regions. Start with where your users are today, not where you hope they might be next year.
 
 | User Location | Primary Region | Replica Regions |
 |---------------|----------------|-----------------|
@@ -101,7 +109,7 @@ Here's my mental model for choosing regions:
 | Europe-focused | eu-west-1 | eu-central-1 |
 | Asia-focused | ap-southeast-1 | ap-northeast-1 |
 
-Start with your primary user base, then add regions as you grow.
+Start with your primary user base, then add regions as you grow. A second well-chosen region usually gives you more value than spreading too early across many of them.
 
 ## Available Regions
 
@@ -133,9 +141,6 @@ TerraScale runs in 19 regions:
 - me-south-1 (Bahrain)
 - af-south-1 (Cape Town)
 
-**Australia:**
-- ap-southeast-2 (Sydney)
-
 ## Conflict Resolution
 
 What happens if the same item is written in two regions simultaneously?
@@ -143,6 +148,8 @@ What happens if the same item is written in two regions simultaneously?
 TerraScale uses last-writer-wins based on timestamp. The write with the later timestamp becomes the authoritative version.
 
 For most use cases, this is fine. Users rarely update the same item from different continents at the exact same moment.
+
+Why this matters: multi-region gives you better user experience and better resilience, but it also means you should be intentional about where writes originate and what consistency your application really needs.
 
 If you need stronger consistency, designate writes to go to your primary region:
 ```csharp
@@ -165,7 +172,7 @@ For a 10GB database with 3 regions:
 - Storage: 10GB × 3 = 30GB total
 - Replication: Depends on write volume
 
-The latency improvement is usually worth it for user-facing applications.
+The latency improvement is usually worth it for user-facing applications. If you're cost-sensitive, compare this with the [billing reference](/reference/billing/) before turning on more regions than you need.
 
 ## Removing a Region
 
@@ -197,4 +204,4 @@ Healthy replication lag is under 1 second. If you see sustained lag over 5 secon
 4. Last-writer-wins for conflict resolution
 5. Monitor replication lag in the dashboard
 
-Questions about multi-region setup? Email mariogk@terrascale.tech.
+Questions about multi-region setup? Email mariogk@terrascale.tech. If you're planning global reads and writes together, the [best practices reference](/reference/best-practices/) can help you avoid common modeling mistakes.

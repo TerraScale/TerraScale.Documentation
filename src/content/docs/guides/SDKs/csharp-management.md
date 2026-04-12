@@ -8,18 +8,59 @@ sidebar:
     variant: tip
 ---
 
-import { Tabs, TabItem } from '$lib/mdx';
+The TerraScale Management Client helps you handle login, profile data, organizations, billing, and other account-level operations from C#.
 
-The TerraScale Management Client provides access to user accounts, organizations, billing, and administrative operations.
+If you want the shortest path to a working session, use the quickstart first. The rest of the guide expands on each area in more detail.
 
----
+## Quickstart
+
+### 1. Install the package
+```bash
+dotnet add package TerraScale.Management.Client
+```
+
+### 2. Create the client
+```csharp
+using TerraScale.Management.Client;
+
+var client = new ManagementClient(new ManagementClientOptions
+{
+    ApiBaseUrl = "https://api.terrascale.io"
+});
+```
+
+### 3. Log in
+```csharp
+var loginResult = await client.Auth.LoginWithPasswordAsync(new PasswordLoginRequest(
+    Email: "john@example.com",
+    Password: "SecurePassword123!"
+));
+
+if (loginResult.IsSuccess && loginResult.Value.Status == PasswordLoginStatus.Success)
+{
+    client.SetAccessToken(loginResult.Value.AuthResponse!.AccessToken);
+}
+```
+
+### 4. Fetch your profile and organizations
+```csharp
+var profileResult = await client.Users.GetCurrentUserAsync();
+var orgsResult = await client.Organizations.ListAsync();
+```
+
+### 5. Create an API key
+```csharp
+var keyResult = await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(
+    Name: "Local Development",
+    Scopes: new[] { "database:read", "database:write" },
+    ExpiresAt: DateTime.UtcNow.AddMonths(6)
+));
+```
 
 ## Installation
 ```bash
 dotnet add package TerraScale.Management.Client
 ```
-
----
 
 ## Configuration
 ```csharp
@@ -35,7 +76,27 @@ var client = new ManagementClient(new ManagementClientOptions
 client.SetAccessToken("eyJhbGci...");
 ```
 
----
+## Error Handling Conventions
+
+Most management operations return `Result<T>` values. Check `IsSuccess` before reading `Value`, and surface the returned error messages to users or logs.
+
+```csharp
+var profileResult = await client.Users.GetCurrentUserAsync();
+
+if (profileResult.IsSuccess)
+{
+    Console.WriteLine($"Hello, {profileResult.Value.Name}!");
+}
+else
+{
+    foreach (var error in profileResult.Errors)
+    {
+        Console.WriteLine($"Request failed: {error.Message}");
+    }
+}
+```
+
+For login flows, check both the result and the returned status. A successful HTTP call can still require MFA or email verification before the session is ready.
 
 ## Available Sub-Clients
 
@@ -50,8 +111,6 @@ client.SetAccessToken("eyJhbGci...");
 | `Plans` | `IPlanClient` | Available plans |
 | `Items` | `IItemClient` | Database item operations |
 | `Repositories` | `IRepositoryClient` | Repository operations |
-
----
 
 ## Authentication
 
@@ -112,8 +171,6 @@ var switchResult = await client.Auth.SwitchOrganizationAsync(new SwitchOrganizat
 ));
 ```
 
----
-
 ## User Operations
 
 ### Get Profile
@@ -144,8 +201,6 @@ var prefsResult = await client.Users.UpdatePreferencesAsync(new UpdateUserPrefer
     DefaultRegion: "us-east-1"
 ));
 ```
-
----
 
 ## Organization Operations
 
@@ -187,8 +242,6 @@ var roleResult = await client.Organizations.UpdateMemberAsync("org_abc123", "usr
 var removeResult = await client.Organizations.RemoveMemberAsync("org_abc123", "usr_def456");
 ```
 
----
-
 ## Database Operations
 
 ### Create Database
@@ -218,8 +271,6 @@ foreach (var db in listResult.Value.Databases)
 ```csharp
 var deleteResult = await client.Databases.DeleteAsync("db_abc123");
 ```
-
----
 
 ## API Key Operations
 
@@ -252,8 +303,6 @@ foreach (var key in listResult.Value.Keys)
 ```csharp
 var revokeResult = await client.ApiKeys.RevokeAsync("key_abc123");
 ```
-
----
 
 ## Payment Operations
 
@@ -301,9 +350,7 @@ if (portalResult.IsSuccess)
 }
 ```
 
----
-
-## Plans Operations
+## Plan Operations
 
 ### List Plans
 ```csharp
@@ -326,8 +373,6 @@ if (plansResult.IsSuccess)
 ```csharp
 var planResult = await client.Plans.GetAsync("plan_pro");
 ```
-
----
 
 ## Complete Login Example
 ```csharp
@@ -388,8 +433,6 @@ Console.WriteLine($"Welcome, {userResult.Value.Name}!");
 // Cleanup
 await client.DisposeAsync();
 ```
-
----
 
 ## Next Steps
 

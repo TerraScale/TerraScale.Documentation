@@ -22,6 +22,7 @@ export const iconManifest = [
 	{ name: 'heart-pulse', source: 'lucide:heart-pulse' },
 	{ name: 'key-round', source: 'lucide:key-round' },
 	{ name: 'laptop', source: 'lucide:laptop' },
+	{ name: 'linkedin', source: 'simple-icons:linkedin' },
 	{ name: 'list', source: 'lucide:list' },
 	{ name: 'mail', source: 'lucide:mail' },
 	{ name: 'menu', source: 'lucide:menu' },
@@ -31,6 +32,7 @@ export const iconManifest = [
 	{ name: 'settings', source: 'lucide:settings-2' },
 	{ name: 'shield', source: 'lucide:shield' },
 	{ name: 'star', source: 'lucide:star' },
+	{ name: 'twitter', source: 'simple-icons:twitter' },
 	{ name: 'users', source: 'lucide:users' },
 	{ name: 'zap', source: 'lucide:zap' }
 ];

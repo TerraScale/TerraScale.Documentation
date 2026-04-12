@@ -9,7 +9,7 @@ tags:
   - architecture
   - deep-dive
   - performance
-excerpt: An honest look at TerraScale's architecture - what works, what's hard, and how we achieve low latency globally.
+excerpt: An honest look at TerraScale's architecture, what works, what's hard, and how we achieve low latency globally.
 cover:
   wide: /images/blog/how-we-achieve-global-latency/cover-wide.svg
   square: /images/blog/how-we-achieve-global-latency/cover-square.svg
@@ -18,7 +18,15 @@ cover:
 
 "How is TerraScale fast everywhere?"
 
-I get this question a lot. The honest answer is: it's not magic, but it is deliberate. Every architectural decision we've made optimizes for latency. Here's how it works.
+I get this question a lot. The honest answer is simple: it's not magic, but it is deliberate. Every architectural decision we've made optimizes for latency. Here's how it works.
+
+## What you'll learn
+
+- How requests move through TerraScale from edge to storage
+- Why replication and consistency choices affect latency so much
+- Which small engineering decisions add up to the biggest wins
+
+If you want to pair this with product docs, the [replication reference](/reference/replication/), [regions reference](/reference/regions/), and [API overview](/reference/api/) are useful companions.
 
 ## The Basic Architecture
 
@@ -29,7 +37,7 @@ TerraScale runs in 19 regions globally. Each region has:
 - **Storage nodes** - Actually store and retrieve data
 - **Replication layer** - Sync data between regions
 
-When you create a database, you pick a primary region. That's where your data lives authoritatively. But here's the key: reads can be served from any region where you've enabled replication.
+When you create a database, you pick a primary region. That's where your data lives authoritatively. But here's the key point: reads can be served from any region where you've enabled replication.
 
 ## Why Edge Nodes Matter
 
@@ -42,7 +50,7 @@ The edge node handles:
 3. **Rate limiting** - Abusive traffic gets blocked at the edge
 4. **Routing** - Determines which region should handle this request
 
-This typically adds 1-3ms to a request, but it saves much more. A TLS handshake to a distant server can take 100ms+. Doing it at the edge makes everything else faster.
+This typically adds 1 to 3ms to a request, but it saves much more. A TLS handshake to a distant server can take 100ms or more. Doing it at the edge makes everything else faster.
 
 ## The Query Path
 
@@ -61,13 +69,13 @@ User in Tokyo → Edge (Tokyo) → Coordinator (ap-northeast-1) → Storage (wri
 
 Total: ~12ms for the write, plus background replication
 
-The key insight: we never make the user wait for cross-region operations. Writes are acknowledged as soon as they're durable in the primary region. Replication happens asynchronously.
+The key insight is that we never make the user wait for cross-region operations. Writes are acknowledged as soon as they're durable in the primary region. Replication happens asynchronously.
 
 ## Consistency Trade-offs
 
 This async replication means TerraScale offers eventual consistency for cross-region reads. If you write in Tokyo and immediately read in Frankfurt, you might get stale data.
 
-For most applications, this is fine. User profiles, product catalogs, session data - a few hundred milliseconds of staleness doesn't matter.
+For most applications, this is fine. User profiles, product catalogs, session data, a few hundred milliseconds of staleness doesn't matter.
 
 But sometimes you need strong consistency:
 ```csharp
@@ -79,9 +87,11 @@ var result = await client.GetItemAsync("user#123", "profile", new ReadOptions
 
 With `ConsistentRead = true`, we route the read to the primary region, even if there's a closer replica. You pay the latency cost, but you get the freshest data.
 
+Why this matters: low latency is never free. Every time you tighten consistency or increase coordination, you usually give some latency back. Good systems let you choose the trade-off instead of forcing one answer for every request.
+
 ## What Makes Storage Fast
 
-Our storage layer is where most of the magic happens:
+Our storage layer is where most of the real gains happen:
 
 ### SSDs Everywhere
 
@@ -123,4 +133,4 @@ There's no single trick to low latency. It's the compound effect of dozens of de
 - Connection pooling
 - Efficient replication protocol
 
-Each saves a few milliseconds. Together, they add up to a database that's fast everywhere.
+Each saves a few milliseconds. Together, they add up to a database that's fast in the places your users actually feel.

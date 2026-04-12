@@ -8,18 +8,68 @@ sidebar:
     variant: tip
 ---
 
-import { Tabs, TabItem, Steps } from '$lib/mdx';
+The TerraScale Database Client gives you a typed, practical way to read and write data from C# and .NET applications.
 
-The TerraScale Database Client provides a strongly-typed, high-performance SDK for C# and .NET applications.
+This guide starts with a quick path to your first successful request, then walks through the main operations you'll use in production.
 
----
+## Quickstart
+
+If you want to get from install to your first read fast, start here.
+
+### 1. Install the package
+```bash
+dotnet add package TerraScale.Database.Client
+```
+
+### 2. Configure the client
+```csharp
+using TerraScale.Database.Client;
+using TerraScale.Database.Client.Configuration;
+
+var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+{
+    ApiKey = "ts_live_your_api_key",
+    Endpoint = "https://api.terrascale.io",
+    Region = "us-east-1",
+    DefaultDatabase = "my-database"
+});
+```
+
+### 3. Create your first item
+```csharp
+var writeResult = await client.PutItemAsync(new DatabaseItem
+{
+    PartitionKey = "user#123",
+    SortKey = "profile",
+    Attributes = new Dictionary<string, object?>
+    {
+        ["name"] = "John Doe",
+        ["email"] = "john@example.com",
+        ["age"] = 30
+    }
+});
+```
+
+### 4. Read the item back
+```csharp
+var readResult = await client.GetItemAsync("user#123", "profile");
+
+if (readResult.IsSuccess)
+{
+    var item = readResult.Value;
+    Console.WriteLine($"Loaded {item.GetAttribute<string>("name")}");
+}
+```
+
+### 5. Dispose the client
+```csharp
+await client.DisposeAsync();
+```
 
 ## Installation
 ```bash
 dotnet add package TerraScale.Database.Client
 ```
-
----
 
 ## Configuration
 
@@ -75,8 +125,6 @@ var client = TerraScaleDatabase.Create(options => options
 );
 ```
 
----
-
 ## Item Operations
 
 ### Put Item
@@ -119,7 +167,7 @@ if (result.IsSuccess)
     var item = result.Value;
     var name = item.GetAttribute<string>("name");
     var age = item.GetAttribute<int>("age", defaultValue: 0);
-    Console.WriteLine($"User: \{name\}, Age: {age}");
+    Console.WriteLine($"User: {name}, Age: {age}");
 }
 ```
 
@@ -132,8 +180,6 @@ if (result.IsSuccess)
     Console.WriteLine("Item deleted!");
 }
 ```
-
----
 
 ## Query Operations
 
@@ -204,8 +250,6 @@ if (result.IsSuccess)
 }
 ```
 
----
-
 ## Batch Operations
 
 ### Batch Write
@@ -246,8 +290,6 @@ foreach (var item in result.Value.Items)
     Console.WriteLine($"{item.PartitionKey}: {item.GetAttribute<string>("name")}");
 }
 ```
-
----
 
 ## Transactions
 
@@ -302,8 +344,6 @@ foreach (var item in result.Value.Items)
 }
 ```
 
----
-
 ## Repository Pattern
 
 For typed entities, use the repository pattern:
@@ -347,8 +387,6 @@ var exists = await customers.ExistsAsync(customer.Id);
 
 See [Repository Pattern Guide](/guides/repository/) for more details.
 
----
-
 ## Error Handling
 
 All operations return `Result<T>` objects:
@@ -384,7 +422,13 @@ result.Match(
 );
 ```
 
----
+## Common Mistakes
+
+- Using a partition key for writes and a different partition key for reads. Your read keys must match what you wrote.
+- Forgetting the sort key when your item uses one. `GetItemAsync("user#123")` and `GetItemAsync("user#123", "profile")` are different lookups.
+- Assuming `result.Value` is safe before checking `result.IsSuccess`.
+- Storing inconsistent attribute types, such as writing `age` as a string in one place and an integer in another.
+- Skipping disposal in long-running tools or tests. Prefer `await using` when you can.
 
 ## Cleanup
 
@@ -395,8 +439,6 @@ await client.DisposeAsync();
 // Or use 'using' statement
 await using var client = new TerraScaleDatabase(options);
 ```
-
----
 
 ## Next Steps
 

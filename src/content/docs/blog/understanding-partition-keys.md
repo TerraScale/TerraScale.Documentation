@@ -1,5 +1,5 @@
 ---
-title: Partition Keys and Sort Keys - A Mental Model That Actually Makes Sense
+title: Partition Keys and Sort Keys: A Mental Model That Actually Makes Sense
 date: 2024-04-18
 authors:
   - name: Mario Gabriell Karaziaki Belchior
@@ -15,9 +15,17 @@ cover:
   alt: Ordered shelves and compartments with one highlighted retrieval path, visualizing partition and sort key logic.
 ---
 
-I've explained partition keys to many developers over the years. Some get it immediately. Most don't, and that's not their fault - most explanations are terrible.
+I've explained partition keys to many developers over the years. Some get it immediately. Most don't, and that's not their fault, most explanations are terrible.
 
 Here's the mental model that finally clicks for most people.
+
+## What you'll learn
+
+- What partition keys and sort keys actually do
+- How to spot a key design that will cause pain later
+- When to reach for indexes or denormalization instead
+
+If you want a shorter reference alongside this post, keep the [data models reference](/reference/data-models/) and [best practices guide](/reference/best-practices/) open in another tab.
 
 ## Forget Databases for a Second
 
@@ -64,11 +72,13 @@ var orders = await client.QueryAsync(new QueryFilter
 });
 ```
 
-This returns all three orders. It's fast because TerraScale knows exactly which servers to ask - the ones holding the "user#123" partition.
+This returns all three orders. It's fast because TerraScale knows exactly which servers to ask, the ones holding the `user#123` partition.
+
+That is the core idea. Good keys reduce the amount of work the database has to do on every request.
 
 ## The Most Common Mistake
 
-Here's where people go wrong: they make their partition key too broad or too narrow.
+Here's where people go wrong: they make their partition key too broad or too narrow. You want a grouping that matches how your app naturally reads and writes data.
 
 **Too broad:**
 ```
@@ -94,6 +104,8 @@ Sort Key: "order#2024-001"
 
 Orders are grouped by user. You can efficiently get all orders for a user, but the load is distributed across many partitions.
 
+Why this matters: partition keys are not just a query concern. They also shape how traffic spreads across the system. A healthy key design usually helps both performance and cost.
+
 ## A Rule of Thumb
 
 Your partition key should answer the question: "What do I usually query together?"
@@ -111,7 +123,7 @@ Your sort key should answer: "Within that group, how do I want to filter or sort
 
 ## When This Model Breaks Down
 
-This mental model covers 90% of use cases. But sometimes you need to query across partitions.
+This mental model covers most use cases. But sometimes you need to query across partitions.
 
 Example: "Show me all orders over $100 across all users."
 
@@ -119,9 +131,9 @@ With the partition-by-user design, this query is expensive. You'd need to scan e
 
 Solutions:
 
-1. **Secondary indexes** - Create an index with a different partition key (like order amount)
-2. **Denormalization** - Store data in multiple formats
-3. **Accept the cost** - Sometimes a full scan is fine if it's infrequent
+1. **Secondary indexes** - Create an index with a different partition key, like order amount. The [query operations reference](/reference/api/query-operations/) covers the mechanics.
+2. **Denormalization** - Store data in multiple formats so your common reads stay cheap.
+3. **Accept the cost** - Sometimes a full scan is fine if it's infrequent.
 
 We'll cover these patterns in a future post. For now, just know that partition key design has trade-offs, and that's okay.
 
@@ -134,6 +146,6 @@ You can always change your data model later. I know that sounds scary with a dat
 3. Update your application to use new keys
 4. Delete old items when ready
 
-It's not zero-cost, but it's not catastrophic either. So don't overthink your initial design. Start with something reasonable, measure how it performs, and iterate.
+It's not free, but it doesn't have to be catastrophic either. So don't overthink your initial design. Start with something reasonable, measure how it performs, and iterate.
 
 That's how real systems get built.

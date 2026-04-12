@@ -9,18 +9,28 @@ tags:
   - transactions
   - deep-dive
   - tutorial
-excerpt: Transactions let you update multiple items atomically. Here's when you need them, when you don't, and how to use them effectively.
+excerpt: Transactions let you update multiple items atomically. Here's when you need them, when you don't, and how to use them well in TerraScale.
 cover:
   wide: /images/blog/transactions-deep-dive/cover-wide.svg
   square: /images/blog/transactions-deep-dive/cover-square.svg
   alt: Two bright atomic forms locked in a balanced frame, expressing precise all-or-nothing transactions.
 ---
 
-Transactions are one of TerraScale's most powerful features - and one of the most misunderstood. Let me clear up when you need them, when you don't, and how to use them effectively.
+Transactions are one of TerraScale's most powerful features, and one of the most misunderstood. Let me clear up when you need them, when you don't, and how to use them effectively.
+
+## What you'll learn
+
+- When a transaction is the right tool
+- When a batch write or single conditional update is enough
+- How to handle transaction failures without surprising your users
+
+If you want the API surface next to this walkthrough, keep the [transactions reference](/reference/api/transactions/) and [error handling guide](/reference/error-handling/) handy.
 
 ## What Are Transactions?
 
 A transaction lets you perform multiple operations that either all succeed or all fail. There's no middle ground.
+
+That all-or-nothing behavior is what makes transactions so useful, and also why they cost more than simpler operations.
 ```csharp
 await client.TransactWriteAsync(new[]
 {
@@ -102,7 +112,7 @@ await client.TransactWriteAsync(new[]
 
 ### Independent Operations
 
-If operations don't depend on each other, use batch writes instead:
+If operations don't depend on each other, use batch writes instead. You'll usually get lower latency and lower cost.
 ```csharp
 // These are independent - use BatchWrite, not Transaction
 await client.BatchWriteAsync(new[]
@@ -113,11 +123,11 @@ await client.BatchWriteAsync(new[]
 });
 ```
 
-BatchWrite is faster and cheaper than TransactWrite.
+BatchWrite is faster and cheaper than TransactWrite. The [batch operations reference](/reference/api/batch-operations/) goes deeper on those trade-offs.
 
 ### Single Item Updates
 
-For a single item, a regular PutItem or UpdateItem with a condition expression is sufficient:
+For a single item, a regular PutItem or UpdateItem with a condition expression is usually enough:
 ```csharp
 await client.UpdateItemAsync("account#123", "balance",
     "SET balance = balance - 100",
@@ -133,6 +143,8 @@ var items = await client.BatchGetAsync(keys);
 ```
 
 TransactGet exists for cases where you need a consistent snapshot across items, but it's rarely necessary.
+
+Why this matters: transactions are not a badge of architectural maturity. They are a tool for protecting invariants. If there is no invariant to protect, keep it simpler.
 
 ## Transaction Limits
 
@@ -162,11 +174,11 @@ new TransactWriteItem
 }
 ```
 
-If the condition fails, the entire transaction is cancelled. This prevents race conditions.
+If the condition fails, the entire transaction is canceled. This prevents race conditions.
 
 ## Handling Transaction Failures
 
-Transactions can fail for several reasons:
+Transactions can fail for several reasons. Plan for that upfront so your application can respond cleanly.
 ```csharp
 var result = await client.TransactWriteAsync(items);
 
@@ -209,7 +221,7 @@ Transactions are more expensive than regular operations:
 - ~2x the cost in write units
 - Lock contention on hot items
 
-Use them when you need atomicity, not as a default.
+Use them when you need atomicity, not as a default. For most systems, that means keeping transactions focused, small, and easy to retry.
 
 ## A Real Example
 
@@ -266,4 +278,4 @@ All three operations succeed together, or none of them do.
 - Use condition expressions to prevent race conditions
 - Handle failures gracefully with retries
 
-Questions? Reach out at mariogk@terrascale.tech.
+Questions? Reach out at mariogk@terrascale.tech. If you're still shaping your data model, read [Partition Keys and Sort Keys: A Mental Model That Actually Makes Sense](/blog/understanding-partition-keys/) next.

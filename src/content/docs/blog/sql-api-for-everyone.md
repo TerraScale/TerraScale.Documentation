@@ -9,7 +9,7 @@ tags:
   - sql
   - tutorial
   - api
-excerpt: Not everyone wants to learn a new query language. That's why we built the SQL API. It's SQL. It works. Here's how to use it.
+excerpt: Not everyone wants to learn a new query language. That's why we built the SQL API. Here's how to use it well in TerraScale.
 cover:
   wide: /images/blog/sql-api-for-everyone/cover-wide.svg
   square: /images/blog/sql-api-for-everyone/cover-square.svg
@@ -21,6 +21,14 @@ I'll be honest: I love TerraScale's native API. It's powerful, it's fast, and on
 But not everyone wants to learn a new query paradigm. Sometimes you just want to write SQL.
 
 That's why we built the SQL API.
+
+## What you'll learn
+
+- How to run SQL queries through the API, SDK, and dashboard
+- Which SQL operations TerraScale supports today
+- When SQL is the right fit, and when the native API is a better choice
+
+If you're deciding between interfaces, pair this post with the [API strategy guide](/guides/api-strategy/) and the [SQL API reference](/reference/api/sql-api/).
 
 ## The SQL API
 
@@ -63,7 +71,7 @@ The Query Explorer in the dashboard has a SQL mode. Just flip the toggle and sta
 
 ## What SQL Looks Like in TerraScale
 
-TerraScale tables are a bit different from relational tables. Here's how they map:
+TerraScale tables are a bit different from relational tables. Here's how they map.
 
 | SQL Concept | TerraScale Concept |
 |-------------|-------------------|
@@ -72,7 +80,7 @@ TerraScale tables are a bit different from relational tables. Here's how they ma
 | Column | Attribute |
 | Row | Item |
 
-When you write SQL, think of the partition key as part of the WHERE clause:
+When you write SQL, think of the partition key as part of the `WHERE` clause:
 ```sql
 -- This is efficient (uses partition key)
 SELECT * FROM orders
@@ -85,6 +93,8 @@ WHERE total > 100
 ```
 
 The query optimizer is smart, but it can't work miracles. If you're not filtering by partition key, you're doing a scan.
+
+Why this matters: SQL can make TerraScale feel familiar, but the underlying database is still distributed and partitioned. A familiar query language doesn't remove the need for a good data model.
 
 ## Supported Operations
 
@@ -141,7 +151,7 @@ Let's be upfront about the limitations:
 | Aggregate functions | COUNT only |
 | UNION | Not supported |
 
-TerraScale is a NoSQL database with a SQL interface, not a relational database. If your query needs JOINs, you probably want to denormalize your data or use multiple queries.
+TerraScale is a NoSQL database with a SQL interface, not a relational database. If your query needs JOINs, you probably want to denormalize your data or use multiple queries. The [data models reference](/reference/data-models/) is the best place to think through those trade-offs.
 
 ## When to Use SQL vs Native API
 
@@ -157,10 +167,10 @@ TerraScale is a NoSQL database with a SQL interface, not a relational database. 
 - You need transactions
 - You want full type safety with the SDK
 
-Both interfaces hit the same data. You can mix and match freely.
+Both interfaces hit the same data. You can mix and match freely. Many teams use SQL for exploration and the native API for hot paths.
 
 ## Try It Yourself
 
-Head to the [dashboard](https://dashboard.terrascale.io), create a database, and open the Query Explorer. Write some SQL. It just works.
+Head to the [dashboard](https://dashboard.terrascale.io), create a database, and open the Query Explorer. Write some SQL, then compare the results with the [querying guide](/guides/querying/) if you want to understand what TerraScale is doing under the hood.
 
 Questions? Reach out at mariogk@terrascale.tech.

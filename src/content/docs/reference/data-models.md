@@ -7,6 +7,10 @@ sidebar:
 
 Data structures and types used in the TerraScale C# SDK.
 
+The snippets on this page are illustrative reference shapes based on the current SDK concepts and common usage patterns. They are meant to help you understand the model surface quickly, not to replace IntelliSense or the exact package source for your installed version.
+
+Unless noted otherwise, these examples assume the current C# SDK documented in this site. If you are on an older prerelease or an earlier package version, property names, defaults, and helper methods may differ slightly.
+
 ---
 
 ## DatabaseItem
@@ -26,6 +30,13 @@ public sealed record DatabaseItem
     public T GetAttribute<T>(string name, T defaultValue);
 }
 ```
+
+### Required vs optional fields
+
+- Required: `PartitionKey`, `Attributes`
+- Optional: `SortKey`, `CreatedAt`, `UpdatedAt`
+
+Use `DatabaseItem` when you want maximum flexibility and you do not need a strongly typed entity class.
 
 ### Usage
 ```csharp
@@ -61,6 +72,13 @@ public sealed record QueryFilter
 }
 ```
 
+### Required vs optional fields
+
+- Required: `PartitionKey`
+- Optional: `SortKeyCondition`, `FilterExpression`, `ExpressionAttributeValues`
+
+`PartitionKey` is the only required input because every TerraScale query starts from a partition.
+
 ### Usage
 ```csharp
 var filter = new QueryFilter
@@ -95,6 +113,13 @@ public enum SortKeyOperator
 }
 ```
 
+### Required vs optional fields
+
+- Required: `Operator`, `Value`
+- Optional: `Value2`, used for `Between`
+
+Helper methods such as `BeginsWith` and `Between` are the easiest way to build these conditions correctly.
+
 ### Factory Methods
 ```csharp
 // Exact match
@@ -127,6 +152,13 @@ public record PaginationOptions
 }
 ```
 
+### Required vs optional fields
+
+- Required: none
+- Optional: `Limit`, `NextToken`, `IncludeTotalCount`
+
+If you do not set `Limit`, the SDK uses its default page size. Keep page sizes modest when you want lower latency and cheaper retries.
+
 ---
 
 ## QueryOptions
@@ -140,6 +172,13 @@ public sealed record QueryOptions : PaginationOptions
     public IReadOnlyList<string>? ProjectionAttributes { get; init; }
 }
 ```
+
+### Required vs optional fields
+
+- Required: none
+- Optional: `IndexName`, `ScanForward`, `ProjectionAttributes`, plus inherited pagination fields
+
+`QueryOptions` extends `PaginationOptions`, so you can combine sort direction, projection, and paging in one request.
 
 ### Usage
 ```csharp
@@ -165,6 +204,13 @@ public sealed record PaginatedResult<T>
     public long? TotalCount { get; init; }
 }
 ```
+
+### Required vs optional fields
+
+- Required: `Items`
+- Optional: `NextToken`, `TotalCount`
+
+`HasMore` is a derived convenience property, so you can check for another page without inspecting `NextToken` directly.
 
 ### Pagination Example
 ```csharp
@@ -211,6 +257,14 @@ public abstract record EntityBase : IEntity
 }
 ```
 
+### Required vs optional fields
+
+- `IEntity` requires an implementation of `GetPartitionKey()`
+- `EntityBase` requires `Id`
+- `UpdatedAt` is optional, `CreatedAt` and `Version` have defaults
+
+Use `EntityBase` when you want a typed domain model with sensible defaults for timestamps and optimistic version tracking.
+
 ### Custom Entity Example
 ```csharp
 public record Customer : EntityBase
@@ -253,6 +307,13 @@ public enum BatchOperation
 }
 ```
 
+### Required vs optional fields
+
+- Required: `Operation`, `PartitionKey`
+- Optional: `SortKey`, `Data`
+
+Provide `Data` for `Put` operations. For `Delete`, keys are usually enough.
+
 ---
 
 ## TransactWriteItem
@@ -277,6 +338,13 @@ public enum TransactAction
 }
 ```
 
+### Required vs optional fields
+
+- Required: `Action`, `PartitionKey`
+- Optional: `SortKey`, `Data`, `ConditionExpression`
+
+Transactions are best reserved for changes that must succeed or fail together.
+
 ---
 
 ## ItemKey
@@ -285,6 +353,13 @@ Simple key reference for batch get operations.
 ```csharp
 public record ItemKey(string PartitionKey, string? SortKey = null);
 ```
+
+### Required vs optional fields
+
+- Required: `PartitionKey`
+- Optional: `SortKey`
+
+This lightweight type is handy when you need to batch fetch known records without sending full item payloads.
 
 ### Usage
 ```csharp
@@ -304,4 +379,4 @@ var result = await client.BatchGetAsync(keys);
 
 - [C# SDK](/guides/sdks/csharp/) - Full SDK documentation
 - [Repository Pattern](/guides/repository/) - Typed entity storage
-- [API Reference](/reference/api/) - API documentation
+- [Best Practices](/reference/best-practices/) - Apply these models in production workloads

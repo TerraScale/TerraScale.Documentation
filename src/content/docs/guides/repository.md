@@ -5,11 +5,18 @@ sidebar:
   order: 3
 ---
 
-import { Tabs, TabItem } from '$lib/mdx';
+The repository pattern gives you a clean way to work with typed entities in TerraScale, while keeping schema validation, timestamps, and versioning built in.
 
-The repository pattern provides typed entity storage with schema validation, automatic timestamps, and versioning.
+If you already know the C# SDK basics, this guide will help you move from raw items to a more structured model that is easier to maintain.
 
----
+## Before You Start
+
+Make sure you have:
+
+- The TerraScale C# SDK installed
+- Authentication and client configuration working
+- A database selected or configured as the default
+- Basic C# knowledge, especially records, async/await, and collections
 
 ## Overview
 
@@ -21,8 +28,6 @@ Repositories offer:
 - **Automatic Timestamps**: `createdAt` and `updatedAt` fields
 - **Versioning**: Built-in optimistic concurrency
 
----
-
 ## When to Use Repositories
 
 | Use Case | Repository | Raw Items |
@@ -32,8 +37,6 @@ Repositories offer:
 | Dynamic/flexible data | - | Yes |
 | Single-table design patterns | - | Yes |
 | Type-safe SDKs | Yes | - |
-
----
 
 ## Defining Entities
 
@@ -93,8 +96,6 @@ public record Order : EntityBase
     public override string? GetSortKey() => $"order#{OrderNumber}";
 }
 ```
-
----
 
 ## Repository Operations
 
@@ -206,15 +207,12 @@ if (result.IsSuccess && result.Value)
 }
 ```
 
----
-
 ## Complete Example
 ```csharp
 using TerraScale.Database.Client;
 using TerraScale.Database.Client.Abstractions;
 using TerraScale.Database.Client.Configuration;
 
-// Define entity
 public record Product : EntityBase
 {
     public required string Name { get; init; }
@@ -224,18 +222,14 @@ public record Product : EntityBase
     public List<string> Tags { get; init; } = new();
 }
 
-// Create client
-var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+await using var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
 {
     ApiKey = "ts_live_your_api_key",
     Endpoint = "https://api.terrascale.io",
     DefaultDatabase = "my-database"
 });
 
-// Get repository
 var products = client.GetRepository<Product>("repo_products");
-
-// Create product
 var product = new Product
 {
     Id = "prod_001",
@@ -245,25 +239,60 @@ var product = new Product
     Tags = new() { "computer", "accessories" }
 };
 
-await products.CreateAsync(product);
-
-// Update price
-var updated = product with { Price = 24.99m };
-await products.UpdateAsync(updated);
-
-// List all products
-var allProducts = await products.ListAsync(new PaginationOptions { Limit = 100 });
-
-foreach (var p in allProducts.Value.Items)
+var createResult = await products.CreateAsync(product);
+if (!createResult.IsSuccess)
 {
-    Console.WriteLine($"{p.Name}: ${p.Price}");
+    foreach (var error in createResult.Errors)
+    {
+        Console.WriteLine($"Create failed: {error.Message}");
+    }
+
+    return;
 }
 
-// Clean up
-await client.DisposeAsync();
+var getResult = await products.GetAsync(product.Id);
+if (!getResult.IsSuccess)
+{
+    foreach (var error in getResult.Errors)
+    {
+        Console.WriteLine($"Load failed: {error.Message}");
+    }
+
+    return;
+}
+
+var loadedProduct = getResult.Value;
+var updatedProduct = loadedProduct with { Price = 24.99m, InStock = false };
+
+var updateResult = await products.UpdateAsync(updatedProduct);
+if (!updateResult.IsSuccess)
+{
+    foreach (var error in updateResult.Errors)
+    {
+        Console.WriteLine($"Update failed: {error.Message}");
+    }
+
+    return;
+}
+
+var listResult = await products.ListAsync(new PaginationOptions { Limit = 100 });
+if (listResult.IsSuccess)
+{
+    foreach (var item in listResult.Value.Items)
+    {
+        Console.WriteLine($"{item.Name}: ${item.Price}");
+    }
+}
+else
+{
+    foreach (var error in listResult.Errors)
+    {
+        Console.WriteLine($"List failed: {error.Message}");
+    }
+}
 ```
 
----
+This example shows the full flow you will usually need, create, read, update, and list, while checking each result before moving on.
 
 ## Schema Validation
 
@@ -283,8 +312,6 @@ When creating a repository via the Management API, define a schema:
 ```
 
 Entities that don't match the schema will be rejected.
-
----
 
 ## Best Practices
 
@@ -325,7 +352,13 @@ Override key methods to optimize queries:
 public override string GetPartitionKey() => $"customer#{CustomerId}";
 ```
 
----
+## Common Mistakes
+
+- Calling `result.Value` before checking `result.IsSuccess`
+- Forgetting to set `Id` when your entity requires one
+- Treating repositories like raw item storage when your access pattern needs custom keys
+- Updating stale entities without accounting for the `Version` field
+- Skipping schema alignment between your C# entity and the repository schema
 
 ## Next Steps
 

@@ -12,8 +12,13 @@
 		{ href: '/blog/', label: 'Blog', icon: 'pencil-line' },
 		{ href: '/guides/getting-started/', label: 'Get Started', primary: true, icon: 'rocket' }
 	];
+	const statusLink = {
+		href: 'https://status.terrascale.tech',
+		label: 'Status'
+	} as const;
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	const socialLinks = [
+		{ href: 'https://discord.gg/terrascale', label: 'Discord', icon: 'discord' },
 		{ href: 'https://github.com/TerraScale', label: 'GitHub', icon: 'github' }
 	];
 
@@ -72,7 +77,7 @@
 		<div class="ml-auto flex items-center gap-2">
 			<div class="flex items-center gap-2 max-[860px]:hidden">
 				{#each socialLinks as link}
-					<a href={link.href} aria-label={link.label} class={link.icon
+					<a href={link.href} target="_blank" rel="noreferrer" aria-label={link.label} class={link.icon
 						? 'inline-flex min-h-8 items-center justify-center rounded-md px-[0.35rem] py-[0.3rem] text-[0.8rem] text-blue-500 transition-colors hover:text-blue-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400'
 						: 'inline-flex min-h-8 items-center justify-center rounded-md px-[0.45rem] py-[0.3rem] text-[0.8rem] text-blue-500 transition-colors hover:text-blue-400 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400'}>
 						{#if link.icon}
@@ -88,6 +93,16 @@
 			<div class="h-[1.2rem] w-px bg-white/8 max-[860px]:hidden" aria-hidden="true"></div>
 
 			<nav class="hidden items-center gap-[0.15rem] max-[860px]:hidden min-[861px]:flex" aria-label="Primary">
+				<a
+					href={statusLink.href}
+					target="_blank"
+					rel="noreferrer"
+					class="group inline-flex items-center gap-2 rounded-[0.45rem] px-[0.9rem] py-[0.6rem] text-[0.8rem] font-medium uppercase tracking-[0.05em] text-slate-300 transition-[color,transform,background-color] duration-200 hover:-translate-y-0.5 hover:bg-white/4 hover:text-slate-50 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400"
+				>
+					<span class="inline-flex size-2 rounded-[0.2rem] bg-emerald-400 shadow-[0_0_12px_rgba(74,222,128,0.55)] animate-pulse"></span>
+					<span>{statusLink.label}</span>
+				</a>
+
 				{#each navItems as item}
 					<a
 						class={`relative flex items-center gap-1.5 rounded-[0.45rem] px-[0.9rem] py-[0.6rem] text-[0.8rem] font-medium uppercase tracking-[0.05em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${item.primary ? 'bg-linear-to-b from-emerald-400 to-emerald-500 text-[#04130d]' : isActive(item.href) ? 'bg-white/4 text-slate-50' : 'text-slate-300 hover:bg-white/4 hover:text-slate-50'}`}
@@ -142,8 +157,19 @@
 					</a>
 				{/each}
 				<div class="flex flex-wrap gap-3 pt-2">
+					<a
+						class="inline-flex items-center gap-2 rounded-xl border border-white/8 bg-white/4 px-4 py-3 text-[0.82rem] tracking-[0.01em] text-slate-300 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400"
+						href={statusLink.href}
+						target="_blank"
+						rel="noreferrer"
+						on:click={closeMobile}
+					>
+						<span class="inline-flex size-2 rounded-[0.2rem] bg-emerald-400 shadow-[0_0_12px_rgba(74,222,128,0.55)] animate-pulse"></span>
+						<span>{statusLink.label}</span>
+					</a>
+
 					{#each socialLinks as link}
-						<a class="inline-flex items-center gap-2 rounded-xl border border-white/8 bg-white/4 px-4 py-3 text-[0.82rem] tracking-[0.01em] text-slate-300 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400" href={link.href} on:click={closeMobile}>
+						<a class="inline-flex items-center gap-2 rounded-xl border border-white/8 bg-white/4 px-4 py-3 text-[0.82rem] tracking-[0.01em] text-slate-300 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400" href={link.href} target="_blank" rel="noreferrer" on:click={closeMobile}>
 							{#if link.icon}
 								<Icon name={link.icon} size={15} />
 							{/if}

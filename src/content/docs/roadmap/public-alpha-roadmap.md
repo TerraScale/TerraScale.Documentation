@@ -1,35 +1,43 @@
 ---
 title: Public Alpha Roadmap
-description: Planned improvements for TerraScale during Public Alpha.
+description: Planned improvements for TerraScale during Public Alpha, including performance automation and higher database limits.
+draft: true
 sidebar:
   order: 3
 ---
 
-Public Alpha is the release stage we are focused on today, and these are the next improvements we plan to ship.
+This page covers the main improvements planned during Public Alpha. The focus is straightforward: make TerraScale faster to adopt, easier to tune, and more capable under real workloads.
 
-# Planned features
+For the full product view, see the [Public Roadmap](/roadmap/). For the current release stage, see [Public Alpha](/roadmap/public-alpha/).
 
-- Auto index
-We want to create an auto index algorithm so for example you have query X that is executed at least 100 times per day we
-can create a groupped index of all the properties that you are using on that query to make future queries faster
+## Overview
 
-- Auto caching
-We want to agressively cache all queries that we can and automatically invalidate them as well
+Public Alpha is already usable, but several important improvements are still ahead. The roadmap in this stage is centered on performance automation, better cache behavior, and more room to grow before teams need to think about database size limits.
 
-#### Replication
+## Planned Features
 
-#### Storage limitation
-In Public Alpha we currently limit each database to 100gb, and we plan to raise that limit to 500gb.
+### Auto Indexing
 
-#### Caching
-We want to add manual memory caching feature to our database so you can cache queries and invalidate them,
-you are the one that controls it and we are going to use a LRU (Least recently used) system so let's say you have
-1gb ram of cache allowence in your plan, you do not have to delete the queries manually as soon as you use more than 1gb ram
-we are going to delete that oldest cached query to store the new query.
+TerraScale plans to automatically create indexes for frequently queried fields. The goal is to reduce manual tuning and help workloads reach good performance sooner, especially for teams that are still learning their query patterns.
 
+### Auto Caching with Invalidation
 
+Automatic query result caching is planned to improve read performance without requiring teams to hand-manage every cache decision. Cache invalidation is part of the design so cached results stay aligned with underlying data changes.
 
-#### Suggest new features in discord
+### Storage Limit Increase
 
-Feel free to join our Discord and message me with requests or questions.
-I review every request, but I can’t promise we can implement every feature.
+The current Public Alpha limit is 100 GB per database. The roadmap includes increasing that limit to 500 GB per database so larger early workloads can stay on the platform without hitting the current guardrail too quickly.
+
+### Manual Cache Controls
+
+Alongside automatic caching, TerraScale plans to add manual cache controls for teams that want tighter control over behavior. That includes LRU eviction and explicit cache management for workloads that need predictable tuning.
+
+## Timeline Notes
+
+This roadmap is prioritized by user feedback and real usage patterns. There are no fixed public dates yet, and the order may shift as the team learns more from production-like workloads during Public Alpha.
+
+## Request a Feature
+
+Want to influence the roadmap? Join the [Discord community](https://discord.gg/8Zr2Nw9g) and share what your workload needs next.
+
+For direct requests or follow-up questions, email [support@terrascale.com](mailto:support@terrascale.com).

@@ -8,20 +8,28 @@ authors:
 tags:
   - security
   - best-practices
-excerpt: Security isn't optional. Here's how to keep your TerraScale databases secure with API key management, MFA, and access controls.
+excerpt: Security isn't optional. Here's how to keep your TerraScale databases secure with sensible API key management, MFA, and access controls.
 cover:
   wide: /images/blog/security-best-practices/cover-wide.svg
   square: /images/blog/security-best-practices/cover-square.svg
   alt: Layered shield geometry and guarded perimeter nodes, conveying enterprise-grade database security.
 ---
 
-Security isn't optional. Here's everything you need to know to keep your TerraScale databases secure.
+Security isn't optional. Here's a practical checklist to help you keep your TerraScale databases secure.
+
+## What you'll learn
+
+- How to manage API keys without creating unnecessary risk
+- Which account and team controls matter most
+- What to review regularly so security stays boring, in the best way
+
+If you're configuring access as you read, keep the [authentication reference](/reference/authentication/), [API keys reference](/reference/management/api-keys/), and [MFA guide](/reference/mfa/) nearby.
 
 ## API Key Security
 
 ### Use Specific Scopes
 
-Never use `*` (full access) in production. Grant only the permissions each service needs:
+Never use `*` for production workloads. Grant only the permissions each service actually needs:
 ```csharp
 // Bad: Full access
 { "scopes": ["*"] }
@@ -34,7 +42,7 @@ Never use `*` (full access) in production. Grant only the permissions each servi
 
 ### Separate Keys by Environment
 
-Use different API keys for different environments:
+Use different API keys for different environments. That way, a problem in one environment doesn't automatically become a problem everywhere.
 
 | Environment | Key Name | Scopes |
 |-------------|----------|--------|
@@ -66,7 +74,7 @@ var apiKey = Environment.GetEnvironmentVariable("TERRASCALE_API_KEY");
 var apiKey = await secretManager.GetSecretAsync("terrascale-api-key");
 ```
 
-Add to your `.gitignore`:
+Add these patterns to your `.gitignore` if they aren't already there:
 ```
 .env
 .env.local
@@ -96,7 +104,7 @@ Requirements:
 - Mix of uppercase, lowercase, numbers, symbols
 - Unique to TerraScale (not reused from other services)
 
-Consider using a password manager.
+Consider using a password manager. If one person on your team is still reusing passwords, now is the time to fix it.
 
 ### Review Active Sessions
 
@@ -152,13 +160,13 @@ ServicePointManager.ServerCertificateValidationCallback = (s, c, ch, e) => true;
 
 ### IP Allowlisting (Enterprise)
 
-Enterprise customers can restrict API access to specific IP ranges. Contact support to enable this feature.
+Enterprise customers can restrict API access to specific IP ranges. Contact support to enable this feature. It is especially useful for internal tools and back-office systems with predictable network paths.
 
 ## Data Security
 
 ### Sensitive Data Handling
 
-Don't store highly sensitive data directly:
+Don't store highly sensitive data directly unless you have a clear reason and a documented handling plan:
 ```csharp
 // Bad: Storing raw SSN
 ["ssn"] = "123-45-6789"
@@ -176,6 +184,8 @@ All data in TerraScale is encrypted at rest using AES-256. This is automatic and
 ### Encryption in Transit
 
 All data in transit uses TLS 1.3. This is automatic and required.
+
+Why this matters: infrastructure defaults can protect you from broad classes of mistakes, but they don't replace application-level decisions like scoping secrets correctly or choosing what data should live in the database at all.
 
 ## Monitoring and Alerting
 
@@ -228,7 +238,7 @@ Monthly security checklist:
 
 ## Summary
 
-Security is everyone's responsibility:
+Security is everyone's responsibility. The goal is not perfection. The goal is to make the safe path the normal path.
 
 1. Use specific API key scopes
 2. Rotate keys every 90 days
@@ -238,4 +248,4 @@ Security is everyone's responsibility:
 6. Monitor for unusual activity
 7. Have an incident response plan
 
-Questions about security? Contact mariogk@terrascale.tech.
+Questions about security? Contact mariogk@terrascale.tech. For general operational guidance, the [best practices reference](/reference/best-practices/) is also worth bookmarking.

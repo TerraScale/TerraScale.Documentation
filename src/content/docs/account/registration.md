@@ -5,31 +5,27 @@ sidebar:
   order: 1
 ---
 
-Create a new TerraScale account by providing your email, password, and optional profile information.
-
----
+Create a new TerraScale account with your email, password, and optional profile details.
 
 ## Registration Flow
 
 ### Step 1: Submit Registration
 
-Visit [dashboard.terrascale.io](https://dashboard.terrascale.io) and click **Sign Up**, or use the API directly.
+Visit [dashboard.terrascale.io](https://dashboard.terrascale.io) and click **Sign Up**, or call the API directly.
 
 ### Step 2: Verify Email
 
-Check your inbox for a verification code and enter it to activate your account.
+Check your inbox for a verification code, then enter it to activate your account.
 
 ### Step 3: Start Using TerraScale
 
-After verification, you'll have a personal organization ready for creating databases.
-
----
+After verification, you'll have a personal organization ready for your first database.
 
 ## API Reference
 
 ### POST /auth/signup
 
-Creates a new user account.
+Creates a new user account and starts the email verification flow.
 
 **Request:**
 ```json
@@ -62,10 +58,8 @@ Creates a new user account.
 |-------|------|-------------|
 | `success` | boolean | Whether signup was successful |
 | `requiresEmailVerification` | boolean | If true, user must verify email before login |
-| `pendingAuthenticationToken` | string | Token for email verification flow |
+| `pendingAuthenticationToken` | string | Token for the email verification flow. This token expires, so store it temporarily and use it promptly |
 | `email` | string | The registered email address |
-
----
 
 ## Password Requirements
 
@@ -81,8 +75,6 @@ Your password must meet these requirements:
 - `MyPassword1`
 - `TerraScale2024!`
 
----
-
 ## After Registration
 
 Once you register:
@@ -92,11 +84,13 @@ Once you register:
 3. Your account is inactive until email verification is complete
 4. A **personal organization** is created automatically upon verification
 
----
+If the `pendingAuthenticationToken` expires before you finish verification, start the signup flow again to request a fresh token and code.
 
 ## Error Responses
 
-### Email Already Exists
+The signup endpoint can return these common errors:
+
+### 409 Conflict, Email Already Exists
 ```json
 {
   "success": false,
@@ -104,7 +98,9 @@ Once you register:
 }
 ```
 
-### Invalid Password
+Use the [Login](/account/login/) page if you already have an account.
+
+### 400 Bad Request, Invalid Password
 ```json
 {
   "success": false,
@@ -112,7 +108,9 @@ Once you register:
 }
 ```
 
-### Invalid Email
+Review the [Password Requirements](#password-requirements) section above before trying again.
+
+### 400 Bad Request, Invalid Email
 ```json
 {
   "success": false,
@@ -120,7 +118,7 @@ Once you register:
 }
 ```
 
----
+Check the request payload and make sure the email address is formatted correctly.
 
 ## C# SDK Example
 ```csharp
@@ -139,12 +137,11 @@ var signupResult = await client.Auth.SignupAsync(new SignupRequest(
 if (signupResult.IsSuccess && signupResult.Value.RequiresEmailVerification)
 {
     Console.WriteLine("Check your email for a verification code!");
-    // Store the pending token for the verification step
+    // Store the pending token for the verification step.
+    // If it expires, start signup again to get a fresh token.
     var pendingToken = signupResult.Value.PendingAuthenticationToken;
 }
 ```
-
----
 
 ## Next Steps
 

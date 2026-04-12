@@ -7,7 +7,7 @@ export interface Announcement {
 }
 
 export const activeAnnouncement: Announcement | null = {
-	text: 'TerraScale Public Alpha is here',
-	link: '/roadmap/release/',
+	text: 'See the TerraScale public roadmap',
+	link: '/roadmap/',
 	variant: 'warning'
 };
