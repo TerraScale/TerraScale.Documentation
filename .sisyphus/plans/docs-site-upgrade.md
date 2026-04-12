@@ -66,7 +66,7 @@ Transform the existing repo from a custom markdown-rendering docs shell into a d
 - Remove committed repo tests and replace them with execution-time QA only.
 - Include a dedicated post-implementation QA section with curl-first checks.
 
-### Must NOT Have (guardrails, AI slop patterns, scope boundaries)
+### Must NOT Have (guardrails, quality patterns, scope boundaries)
 - Must NOT introduce Astro, React, Next.js, Vue, SSR, or Cloudflare Workers.
 - Must NOT keep runtime markdown parsing via `marked`/`gray-matter` in the serving path once mdsvex is adopted.
 - Must NOT keep both Pagefind search and the legacy JSON-search endpoint active long-term.
@@ -744,15 +744,15 @@ Wave 3: specialized surfaces and polish
 
   **Commit**: YES | Message: `chore(site): finalize docs ux polish and cleanup` | Files: affected UI components/styles/routes/content helpers/dependency manifests
 
-## Final Verification Wave (MANDATORY — after ALL implementation tasks)
+## Final Verification Wave (MANDATORY: after ALL implementation tasks)
 > 4 review agents run in PARALLEL. ALL must APPROVE. Present consolidated results to user and get explicit "okay" before completing.
 > **Do NOT auto-proceed after verification. Wait for user's explicit approval before marking work complete.**
 > **Never mark F1-F4 as checked before getting user's okay.** Rejection or user feedback -> fix -> re-run -> present again -> wait for okay.
 > Curl-first matrix is mandatory here: home, key docs pages, key blog pages, API reference, deferred explorer shell, pagefind assets, fonts, sitemap/robots/llms outputs, redirects/canonical surfaces, and draft exclusion checks.
-- [x] F1. Plan Compliance Audit — oracle
-- [x] F2. Code Quality Review — unspecified-high
-- [x] F3. Real Manual QA — unspecified-high (+ curl-first; browser only for interaction-only checks)
-- [x] F4. Scope Fidelity Check — deep
+- [x] F1. Plan Compliance Audit (oracle)
+- [x] F2. Code Quality Review (unspecified-high)
+- [x] F3. Real Manual QA (unspecified-high, curl-first; browser only for interaction-only checks)
+- [x] F4. Scope Fidelity Check (deep)
 
 ## Commit Strategy
 - Commit 1: `refactor(content): adopt mdsvex pipeline and metadata contract`

@@ -16,7 +16,7 @@ export function GET() {
 		output += `### ${section.label}\n\n`;
 		const entries = flattenSection(section);
 		for (const entry of entries) {
-			const desc = entry.description ? ` — ${entry.description}` : '';
+			const desc = entry.description ? `: ${entry.description}` : '';
 			output += `- [${entry.title}](${baseUrl}${entry.route})${desc}\n`;
 		}
 		output += '\n';
@@ -25,7 +25,7 @@ export function GET() {
 	if (allBlogEntries.length > 0) {
 		output += '## Blog\n\n';
 		for (const entry of allBlogEntries) {
-			const desc = entry.description ? ` — ${entry.description}` : '';
+			const desc = entry.description ? `: ${entry.description}` : '';
 			output += `- [${entry.title}](${baseUrl}${entry.route})${desc}\n`;
 		}
 		output += '\n';
@@ -36,7 +36,7 @@ export function GET() {
 		output += '## API Reference\n\n';
 		const entries = flattenSection(referenceSection);
 		for (const entry of entries) {
-			const desc = entry.description ? ` — ${entry.description}` : '';
+			const desc = entry.description ? `: ${entry.description}` : '';
 			output += `- [${entry.title}](${baseUrl}${entry.route})${desc}\n`;
 		}
 		output += '\n';

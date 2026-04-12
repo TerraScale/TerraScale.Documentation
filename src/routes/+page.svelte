@@ -123,6 +123,8 @@
 			<span>Now in Public Alpha</span>
 		</div>
 
+		<img src="/logo-principal.svg" alt="TerraScale" class="mb-8 w-full max-w-sm sm:max-w-lg" />
+
 		<h1 class="text-[2.45rem] leading-[1.12] tracking-[0.01em] text-ts-text sm:text-[3.35rem] md:text-[4.1rem]">
 			Scale Your <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Database</span>
 			<br />Effortlessly

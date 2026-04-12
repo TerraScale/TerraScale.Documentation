@@ -54,4 +54,4 @@ If you try TerraScale and love it, tell your friends. If you try it and somethin
 
 Here's to building something great together.
 
-— Mario
+- Mario

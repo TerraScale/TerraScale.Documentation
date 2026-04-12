@@ -77,22 +77,21 @@
 								{@const groupKey = getNodeKey(child.label, sectionKey)}
 								<button
 									type="button"
-									class={`mt-2 flex w-full items-center justify-between rounded-[0.8rem] border px-[0.75rem] py-[0.58rem] text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${isNodeActive(child) ? 'border-blue-500/18 bg-blue-500/8 text-slate-100' : 'border-white/6 bg-white/[0.03] text-slate-300 hover:border-white/10 hover:bg-white/[0.05]'}`}
-									onclick={() => toggleSection(child, groupKey, true)}
-									aria-expanded={!isCollapsed(child, groupKey, true)}
+									class={`mt-1.5 flex w-full items-center justify-between bg-transparent pl-3 py-1.5 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${isNodeActive(child) ? 'text-slate-100' : 'text-slate-400 hover:text-slate-200'}`}
+									onclick={() => toggleSection(child, groupKey, false)}
+									aria-expanded={!isCollapsed(child, groupKey, false)}
 								>
-									<span class="flex min-w-0 items-center gap-2">
-										<span class="text-[0.66rem] font-semibold uppercase tracking-[0.14em]">{child.label}</span>
+									<h3 class="flex items-center gap-2 text-[0.64rem] font-semibold uppercase tracking-[0.1em]">
+										<span class="h-px w-3 shrink-0 bg-current opacity-25"></span>
+										<span>{child.label}</span>
 										{#if child.badge}
 											<span class={`inline-flex items-center rounded-full px-[0.52rem] py-[0.25rem] text-[0.62rem] font-medium uppercase tracking-[0.05em] ${getBadgeTone(child.badge.variant)}`}>{child.badge.text}</span>
 										{/if}
-									</span>
-									<span class={`ml-3 inline-flex size-5 shrink-0 items-center justify-center rounded-full border ${isNodeActive(child) ? 'border-blue-400/30 bg-blue-500/14 text-blue-200' : 'border-white/8 bg-white/[0.04] text-slate-400'}`}>
-										<Icon name={isCollapsed(child, groupKey, true) ? 'chevron-right' : 'chevron-down'} size={11} />
-									</span>
+									</h3>
+									<Icon name={isCollapsed(child, groupKey, false) ? 'chevron-down' : 'chevron-up'} size={12} />
 								</button>
-								{#if !isCollapsed(child, groupKey, true)}
-									<ul class="mt-1 grid gap-[0.15rem] pl-[0.55rem]">
+								{#if !isCollapsed(child, groupKey, false)}
+									<ul class="mt-0.5 grid gap-[0.15rem] pl-5">
 									{#each child.items as grandchild}
 										<li>
 											<a class={getLinkClasses(page.url.pathname === grandchild.href)} href={grandchild.href}>

@@ -14,5 +14,5 @@ For now we are limiting each database max storage to 100gb
 
 #### Suggest new features in discord
 
-Feel free and welcomed to join our discord and message me to ask any doubt or request any new features
-i promise that i will read all the requests but i do not promise that we will implement all of them.
+Feel free to join our Discord and message me with requests or questions.
+I review every request, but I can’t promise we can implement every feature.

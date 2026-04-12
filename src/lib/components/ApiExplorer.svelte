@@ -155,7 +155,7 @@
 
 	function summarizeSchema(schema?: SchemaObject, document?: SpecDocument): string {
 		if (!schema) {
-			return '—';
+			return 'Not available';
 		}
 
 		const resolved = document ? resolveRef(schema, document) : schema;
@@ -314,11 +314,11 @@
 			<div class="grid grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-3">
 				<div>
 					<span class="block text-[0.72rem] font-medium uppercase tracking-[0.08em] text-slate-400">Version</span>
-					<strong class="mt-1 block text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">{spec.info?.version ?? '—'}</strong>
+					<strong class="mt-1 block text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">{spec.info?.version ?? 'Not available'}</strong>
 				</div>
 				<div>
 					<span class="block text-[0.72rem] font-medium uppercase tracking-[0.08em] text-slate-400">Server</span>
-					<strong class="mt-1 block text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">{spec.servers?.[0]?.url ?? '—'}</strong>
+					<strong class="mt-1 block text-[0.98rem] font-semibold tracking-[0.01em] text-slate-50">{spec.servers?.[0]?.url ?? 'Not available'}</strong>
 				</div>
 				<div>
 					<span class="block text-[0.72rem] font-medium uppercase tracking-[0.08em] text-slate-400">Operations</span>
@@ -344,7 +344,7 @@
 										<code class="mt-1 block text-[0.84rem] text-slate-400">{operation.path}</code>
 									</div>
 								</div>
-								<span class="text-2xl leading-none text-slate-400">{expanded[operation.id] ? '−' : '+'}</span>
+								<span class="text-2xl leading-none text-slate-400">{expanded[operation.id] ? '-' : '+'}</span>
 							</button>
 
 							{#if expanded[operation.id]}
@@ -386,7 +386,7 @@
 											{#if getSchemaFields(operation.requestBody.schema, spec).length > 0}
 												<ul class="m-0 pl-[1.1rem] [&>li]:mb-2 [&>li]:grid [&>li]:gap-1">
 													{#each getSchemaFields(operation.requestBody.schema, spec) as field}
-														<li><code>{field.name}</code> — {field.type}{field.required ? ' · required' : ''}</li>
+														<li><code>{field.name}</code>: {field.type}{field.required ? ' · required' : ''}</li>
 													{/each}
 												</ul>
 											{/if}

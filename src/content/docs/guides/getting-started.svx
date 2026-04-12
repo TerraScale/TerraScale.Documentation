@@ -7,7 +7,7 @@ sidebar:
 
 import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
 
-This guide walks you through setting up TerraScale and storing your first data.
+This guide shows how to set up TerraScale and store your first data.
 
 ## Overview
 

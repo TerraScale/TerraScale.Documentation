@@ -8,9 +8,9 @@
 	let mobileOpen = false;
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	const navItems = [
-		{ href: '/guides/getting-started/', label: 'Docs' },
-		{ href: '/blog/', label: 'Blog' },
-		{ href: '/guides/getting-started/', label: 'Get Started', primary: true }
+		{ href: '/guides/getting-started/', label: 'Docs', icon: 'book-open' },
+		{ href: '/blog/', label: 'Blog', icon: 'pencil-line' },
+		{ href: '/guides/getting-started/', label: 'Get Started', primary: true, icon: 'rocket' }
 	];
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	const socialLinks = [
@@ -90,9 +90,12 @@
 			<nav class="hidden items-center gap-[0.15rem] max-[860px]:hidden min-[861px]:flex" aria-label="Primary">
 				{#each navItems as item}
 					<a
-						class={`relative rounded-[0.45rem] px-[0.9rem] py-[0.6rem] text-[0.8rem] font-medium uppercase tracking-[0.05em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${item.primary ? 'bg-linear-to-b from-emerald-400 to-emerald-500 text-[#04130d]' : isActive(item.href) ? 'bg-white/4 text-slate-50' : 'text-slate-300 hover:bg-white/4 hover:text-slate-50'}`}
+						class={`relative flex items-center gap-1.5 rounded-[0.45rem] px-[0.9rem] py-[0.6rem] text-[0.8rem] font-medium uppercase tracking-[0.05em] transition-colors focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${item.primary ? 'bg-linear-to-b from-emerald-400 to-emerald-500 text-[#04130d]' : isActive(item.href) ? 'bg-white/4 text-slate-50' : 'text-slate-300 hover:bg-white/4 hover:text-slate-50'}`}
 						href={item.href}
 					>
+						{#if item.icon}
+							<Icon name={item.icon} size={item.primary ? 14 : 13} />
+						{/if}
 						{item.label}
 						{#if isActive(item.href) && !item.primary}
 							<span class="absolute -bottom-1 left-1/2 h-0.5 w-6 -translate-x-1/2 rounded-full bg-blue-500" aria-hidden="true"></span>
@@ -129,6 +132,9 @@
 				</button>
 				{#each navItems as item}
 					<a class={`flex items-center justify-start gap-[0.65rem] rounded-xl border px-4 py-[0.9rem] text-[0.82rem] font-medium uppercase tracking-[0.05em] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400 ${item.primary ? 'border-transparent bg-linear-to-b from-emerald-400 to-emerald-500 text-[#04130d]' : 'border-white/8 bg-white/4 text-slate-300'}`} href={item.href} on:click={closeMobile}>
+						{#if item.icon}
+							<Icon name={item.icon} size={15} />
+						{/if}
 						{item.label}
 						{#if isActive(item.href) && !item.primary}
 							<span class="ml-auto h-0.5 w-6 rounded-full bg-blue-500" aria-hidden="true"></span>
