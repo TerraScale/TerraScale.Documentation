@@ -1,0 +1,21 @@
+- 2026-04-11: For adapter-static locale rollout, keep root `/`, `/blog/`, `/roadmap/`, `/reference/api/explorer/`, and legacy deep content URLs as redirect shims, and mirror the real pages under `[locale=locale]` so prerendered localized routes exist before translations land.
+- 2026-04-11: `src/params/locale.ts` can validate `[locale=locale]` directly from the shared locale registry, and dynamic localized routes need explicit `entries()` generation for each locale so static prerender emits `/en/*`, `/pt-br/*`, and `/es/*` pages.
+- 2026-04-12: The content pipeline can stay route-stable by deriving routes from `src/content/docs/{locale}/...` and stripping the locale segment inside `routeFromFile`, which keeps content routes like `/guides/getting-started/` locale-agnostic while route handlers prepend the locale.
+- 2026-04-12: Locale-prefixed content loading should return empty locale indexes for untranslated trees, not English fallback data, so missing localized pages cleanly 404 while list pages can still render empty states.
+- 2026-04-12: Locale SEO can stay centralized by deriving a locale-stripped route in `[locale=locale]/+layout.ts`, then feeding shared `seo` data into each localized page wrapper for canonical, hreflang, and `og:locale` tags.
+- 2026-04-12: Dynamic `<html lang>` works cleanly for adapter-static output by keeping `%lang%` in `src/app.html` and replacing it in `hooks.server.ts` with `transformPageChunk`; Biome needs an inline suppression because the placeholder is not a valid static lang value.
+
+## Locale Link Helpers
+- `stripLocalePrefix` needs to handle the root path correctly (e.g., `/en/` -> `/`) to avoid returning empty strings.
+- When updating navigation links, it's important to use `toLocaleHref` to ensure users stay in their selected locale when navigating.
+- 2026-04-12: Sidebar trees and prev-next docs navigation should keep locale handling in the shared docs page shell by threading a `locale` prop into `DocsSidebar` and localizing entry routes before rendering `PrevNextNav`.
+- 2026-04-12: Pagefind locale scoping needs both a page-level locale marker and a Pagefind filter attribute. Setting `data-locale` plus `data-pagefind-filter="locale:${locale}"` on the shared `<main>` wrapper keeps search results filterable by the current locale from `SearchOverlay`.
+- 2026-04-12: Adapter-static redirect shims should not read `url.search` during prerender. Legacy catch-all redirects can safely use `toLocalePath(slug)` directly so static generation does not throw on prerendered entries.
+- 2026-04-12: Localized 404 handling works best with `src/routes/[locale=locale]/+error.svelte` using `$page.data.localeConfig` and `toLocaleHref('/', localePrefix)`, while root routes remain redirect shims through `+page.server.ts` files (`/`, `/blog/`, `/roadmap/`, `/reference/api/explorer/`).
+- 2026-04-12: Shared shell labels work best from a typed `getStrings(locale)` dictionary, while nav/social link labels can stay route-stable by generating `navigation.ts` items from localized string groups inside Header and MobileNav.
+- 2026-04-12: Dynamically mounted shell widgets like `CopyButton` need the active locale passed through mount props so toasts, titles, and aria labels stay localized outside normal route-level prop flow.
+
+- 2026-04-12: For localized docs rollout, translating mirrored `src/content/docs/{locale}/...` files directly preserves slug stability, while homepage `.svx` hero/card copy can be localized safely with targeted text replacement that leaves embedded code samples untouched.
+- 2026-04-12: Page-specific chrome like the API Explorer works cleanly with the existing `getStrings(locale)` dictionary by adding a focused string group and deriving the active locale from `$app/state` inside the shared route component.
+- 2026-04-12: Guide, account, and about docs can be localized safely by mirroring the English tree under `src/content/docs/pt-br/` and `src/content/docs/es/`, translating frontmatter and visible prose while keeping code samples, imports, CSS classes, and internal English slugs unchanged.
+- 2026-04-12: Empty locale placeholder `.gitkeep` files in `guides/`, `guides/SDKs/`, `account/`, and `about/` should be removed as soon as real translated docs land, otherwise the locale trees look incomplete even though the content loader works.

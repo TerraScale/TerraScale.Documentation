@@ -1,0 +1,105 @@
+---
+title: Primeiros passos
+description: Aprenda a configurar o TerraScale e armazenar seus primeiros dados em minutos.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
+
+Este guia mostra como configurar o TerraScale e armazenar seus primeiros dados.
+
+## Visão geral
+
+TerraScale é uma plataforma Database-as-a-Service (DBaaS) multitenant e multirregional que fornece instâncias de banco de dados NoSQL distribuídas globalmente e compatíveis com DynamoDB.
+
+### Principais recursos
+
+- **Distribuição global**: Implante bancos de dados em 19 regiões no mundo todo
+- **API compatível com DynamoDB**: Operações familiares de chave-valor e documentos
+- **Replicação multirregional**: Sincronização automática de dados entre regiões
+- **Roteamento inteligente**: Roteamento automático de requisições para as regiões ideais com base na localização do usuário
+- **Alta disponibilidade**: Padrões integrados de failover e circuit breaker
+- **Repositórios tipados**: Armazene e consulte entidades tipadas com validação de schema
+- **Operações transacionais**: Leituras e gravações atômicas compatíveis com ACID
+- **Gerenciamento de chaves de API**: Acesso programático com permissões com escopo
+
+---
+
+## Etapa 1: Crie uma conta
+
+1. Visite [dashboard.terrascale.io](https://dashboard.terrascale.io)
+2. Clique em **"Sign Up"**
+3. Informe seu email, senha e nome
+4. Verifique seu email para encontrar um **código de verificação**
+5. Informe o código para ativar sua conta
+
+Após o cadastro, uma **organização pessoal** será criada automaticamente para você, onde poderá começar a criar bancos de dados.
+
+## Etapa 2: Crie sua organização (opcional)
+
+Se você trabalha com uma equipe, crie uma organização dedicada:
+
+1. Clique no nome da sua organização no cabeçalho
+2. Selecione **"Create Organization"**
+3. Informe um **nome da organização** e um email de cobrança opcional
+4. Clique em **"Create"**
+
+## Etapa 3: Crie um banco de dados
+
+1. Vá até **Databases** na barra lateral
+2. Clique em **"Create Database"**
+3. Informe um **nome para o banco de dados** (por exemplo, `my-app-prod`)
+   - Use apenas letras minúsculas, números e hífens
+4. Selecione a **região** mais próxima dos seus usuários (por exemplo, `us-east-1`)
+5. Clique em **"Create Database"**
+
+Seu banco de dados ficará pronto em segundos com o status "Active".
+
+## Etapa 4: Gere uma chave de API
+
+As chaves de API permitem que suas aplicações acessem bancos de dados do TerraScale.
+
+1. Vá até **API Keys** na barra lateral
+2. Clique em **"Create API Key"**
+3. Informe um **nome** descritivo (por exemplo, "Backend Production")
+4. Selecione os **escopos** com base no que seu app precisa:
+   - `database:read` - Para acesso somente leitura
+   - `database:write` - Para acesso de gravação (inclui leitura)
+   - `database:*` - Para acesso total (recomendado para backends)
+5. Defina uma **data de expiração** (opcional, recomendada por segurança)
+6. Clique em **"Create"**
+
+:::caution[Salve sua chave de API]
+Copie e salve sua chave de API imediatamente. Por motivos de segurança, a chave completa é exibida apenas uma vez.
+:::
+
+Sua chave de API terá esta aparência: `ts_live_abc123xyz789...`
+
+## Etapa 5: Instale a biblioteca cliente
+
+Instale a biblioteca cliente do TerraScale para sua plataforma:
+
+<Tabs items={[{"label":"C# / .NET","content":"<pre><code class=\"language-bash\">    dotnet add package TerraScale.Database.Client\n</code></pre>"},{"label":"REST API","content":"<p>Use a REST API diretamente com qualquer cliente HTTP. Consulte a seção de <a href=\"/reference/api/\">Referência da API</a>.</p>"}]} />
+
+## Etapa 6: Escreva seu primeiro código
+
+<Tabs items={[{"label":"C# / .NET","content":"<pre><code class=\"language-csharp\">    using TerraScale.Database.Client;\n    using TerraScale.Database.Client.Configuration;\n    using TerraScale.Database.Client.Models;\n\n    // Create the client\n    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions\n    {\n        ApiKey = &quot;ts_live_your_api_key&quot;,\n        Endpoint = &quot;https://api.terrascale.io&quot;,\n        DefaultDatabase = &quot;my-database&quot;\n    });\n\n    // Store an item\n    var item = new DatabaseItem\n    {\n        PartitionKey = &quot;user#123&quot;,\n        SortKey = &quot;profile&quot;,\n        Attributes = new Dictionary&lt;string, object?&gt;\n        {\n            [&quot;name&quot;] = &quot;John Doe&quot;,\n            [&quot;email&quot;] = &quot;john@example.com&quot;,\n            [&quot;age&quot;] = 30\n        }\n    };\n\n    var putResult = await client.PutItemAsync(item);\n    if (putResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Item stored successfully!&quot;);\n    }\n\n    // Retrieve the item\n    var getResult = await client.GetItemAsync(&quot;user#123&quot;, &quot;profile&quot;);\n    if (getResult.IsSuccess)\n    {\n        var user = getResult.Value;\n        Console.WriteLine($&quot;Name: {user.GetAttribute&lt;string&gt;(&quot;name&quot;)}&quot;);\n    }\n\n    // Clean up\n    await client.DisposeAsync();\n</code></pre>"},{"label":"REST API","content":"<pre><code class=\"language-bash\">    # Store an item\n    curl -X PUT &quot;https://api.terrascale.io/api/v1/databases/my-database/items&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;pk&quot;: &quot;user#123&quot;,\n        &quot;sk&quot;: &quot;profile&quot;,\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;John Doe&quot;,\n          &quot;email&quot;: &quot;john@example.com&quot;,\n          &quot;age&quot;: 30\n        }\n      }&#39;\n\n    # Retrieve the item\n    curl &quot;https://api.terrascale.io/api/v1/databases/my-database/items/user%23123/profile&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n</code></pre>"}]} />
+
+---
+
+## Próximos passos
+
+<CardGrid items={[{"title":"Estratégia de API","icon":"rocket","content":"<p>Conheça os <a href=\"/guides/api-strategy/\">três padrões de API</a> disponíveis no TerraScale.</p>"},{"title":"Guia do SDK C#","icon":"seti:csharp","content":"<p>Aprofunde-se no <a href=\"/guides/sdks/csharp/\">SDK C#</a> com exemplos avançados.</p>"},{"title":"Padrão Repository","icon":"document","content":"<p>Use <a href=\"/guides/repository/\">repositórios tipados</a> para entidades com validação de schema.</p>"},{"title":"Consultando dados","icon":"magnifier","content":"<p>Aprenda <a href=\"/guides/querying/\">operações de consulta</a> para recuperar dados com eficiência.</p>"}]} />
+
+---
+
+## Casos de uso
+
+O TerraScale é ideal para:
+
+- **Aplicações SaaS multitenant** que exigem presença global
+- **Aplicações em tempo real** que precisam de acesso a dados com baixa latência
+- **Armazenamento de documentos** com schemas flexíveis
+- **Microservices** que exigem persistência confiável de dados
+- **Aplicações** que precisam de transações atômicas em vários itens

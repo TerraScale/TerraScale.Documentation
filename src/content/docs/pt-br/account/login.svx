@@ -1,0 +1,141 @@
+---
+title: Login
+description: Autentique-se com sua conta TerraScale usando email e senha.
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Autentique-se com email e senha para receber tokens de acesso.
+
+---
+
+## Login com senha
+
+### POST /auth/password
+
+Faz login com email e senha.
+
+**Request:**
+```json
+{
+  "email": "john@example.com",
+  "password": "SecurePassword123!"
+}
+```
+
+---
+
+## Respostas de login
+
+### Sucesso
+
+Quando o login é bem-sucedido, você recebe tokens de acesso e refresh:
+```json
+{
+  "status": "Success",
+  "authResponse": {
+    "accessToken": "eyJhbGci...",
+    "refreshToken": "rt_abc123...",
+    "expiresIn": 3600,
+    "userId": "usr_abc123",
+    "email": "john@example.com",
+    "name": "John Doe",
+    "avatarUrl": null,
+    "personalOrgId": "org_abc123",
+    "permissions": ["database:read", "database:write"],
+    "roles": ["member"]
+  }
+}
+```
+
+### Verificação de email necessária
+
+Se o email ainda não foi verificado:
+```json
+{
+  "status": "EmailVerificationRequired",
+  "pendingInfo": {
+    "pendingAuthenticationToken": "pat_abc123...",
+    "email": "john@example.com"
+  }
+}
+```
+
+Conclua a verificação usando o fluxo de [Verificação de email](/account/email-verification/).
+
+### MFA necessária
+
+Se a autenticação multifator estiver habilitada:
+```json
+{
+  "status": "MfaRequired",
+  "pendingInfo": {
+    "pendingAuthenticationToken": "pat_abc123...",
+    "availableFactors": [
+      { "id": "fac_abc123", "type": "totp" },
+      { "id": "fac_def456", "type": "email" }
+    ],
+    "challenge": {
+      "id": "chl_abc123",
+      "factorId": "fac_abc123",
+      "expiresAt": "2024-01-15T10:05:00Z"
+    }
+  }
+}
+```
+
+Conclua a autenticação usando o fluxo de [Verificação MFA](/reference/mfa/).
+
+---
+
+## Valores de status de login
+
+| Status | Description | Next Step |
+|--------|-------------|-----------|
+| `Success` | Login successful, tokens returned | Use the access token |
+| `InvalidCredentials` | Wrong email or password | Retry with correct credentials |
+| `EmailVerificationRequired` | Must verify email first | Complete email verification |
+| `MfaRequired` | Must complete MFA challenge | Verify MFA code |
+| `Error` | An error occurred | Check error message |
+
+---
+
+## Fluxo completo de login
+
+<Tabs items={[{"label":"SDK C#","content":"<pre><code class=\"language-csharp\">    var client = new ManagementClient(new ManagementClientOptions\n    {\n        ApiBaseUrl = &quot;https://api.terrascale.io&quot;\n    });\n\n    var loginResult = await client.Auth.LoginWithPasswordAsync(\n        new PasswordLoginRequest(\n            Email: &quot;john@example.com&quot;,\n            Password: &quot;SecurePassword123!&quot;\n        )\n    );\n\n    if (loginResult.IsSuccess)\n    {\n        switch (loginResult.Value.Status)\n        {\n            case PasswordLoginStatus.Success:\n                client.SetAccessToken(loginResult.Value.AuthResponse!.AccessToken);\n                Console.WriteLine($&quot;Welcome, {loginResult.Value.AuthResponse.Name}!&quot;);\n                break;\n\n            case PasswordLoginStatus.EmailVerificationRequired:\n                Console.WriteLine(&quot;Please verify your email first.&quot;);\n                // Redirect to email verification\n                break;\n\n            case PasswordLoginStatus.MfaRequired:\n                Console.Write(&quot;Enter MFA code: &quot;);\n                var code = Console.ReadLine();\n\n                var mfaResult = await client.Auth.VerifyMfaAsync(\n                    new MfaVerifyRequest(\n                        PendingAuthenticationToken: loginResult.Value.PendingInfo!.PendingAuthenticationToken,\n                        ChallengeId: loginResult.Value.PendingInfo.Challenge!.Id,\n                        Code: code!\n                    )\n                );\n\n                if (mfaResult.IsSuccess)\n                {\n                    client.SetAccessToken(mfaResult.Value.AccessToken);\n                    Console.WriteLine(&quot;Login successful!&quot;);\n                }\n                break;\n\n            case PasswordLoginStatus.InvalidCredentials:\n                Console.WriteLine(&quot;Invalid email or password&quot;);\n                break;\n        }\n    }\n</code></pre>"},{"label":"JavaScript","content":"<pre><code class=\"language-javascript\">    async function login(email, password) {\n      const response = await fetch(&#39;https://api.terrascale.io/auth/password&#39;, {\n        method: &#39;POST&#39;,\n        headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },\n        body: JSON.stringify({ email, password })\n      });\n\n      const data = await response.json();\n\n      switch (data.status) {\n        case &#39;Success&#39;:\n          localStorage.setItem(&#39;accessToken&#39;, data.authResponse.accessToken);\n          localStorage.setItem(&#39;refreshToken&#39;, data.authResponse.refreshToken);\n          return { success: true, user: data.authResponse };\n\n        case &#39;EmailVerificationRequired&#39;:\n          return {\n            success: false,\n            requiresVerification: true,\n            pendingToken: data.pendingInfo.pendingAuthenticationToken\n          };\n\n        case &#39;MfaRequired&#39;:\n          return {\n            success: false,\n            requiresMfa: true,\n            pendingInfo: data.pendingInfo\n          };\n\n        case &#39;InvalidCredentials&#39;:\n          return { success: false, error: &#39;Invalid email or password&#39; };\n\n        default:\n          return { success: false, error: &#39;An error occurred&#39; };\n      }\n    }\n</code></pre>"}]} />
+
+---
+
+## Gerenciamento de tokens
+
+### Access Token
+
+- Válido por 1 hora
+- Usado no cabeçalho `Authorization`: `Bearer eyJhbGci...`
+- Atualize antes da expiração para manter a sessão
+
+### Refresh Token
+
+- Válido por 7 dias
+- Usado para obter novos tokens de acesso
+- Consulte [Authentication](/reference/authentication/) para o fluxo de refresh
+
+---
+
+## Boas práticas de segurança
+
+1. **Nunca armazene senhas** - Armazene apenas tokens
+2. **Use HTTPS** - Todas as requisições devem usar conexões seguras
+3. **Implemente refresh de token** - Atualize antes da expiração
+4. **Limpe tokens no logout** - Remova do armazenamento
+5. **Habilite MFA** - Adicione mais segurança à sua conta
+
+---
+
+## Próximos passos
+
+- [Redefinição de senha](/account/password-reset/) - Recupere o acesso à sua conta
+- [Perfil](/account/profile/) - Gerencie as configurações do seu perfil
+- [MFA](/reference/mfa/) - Habilite autenticação em dois fatores

@@ -33,7 +33,7 @@
 		</p>
 	</div>
 
-	<div class="mt-12 flex items-center justify-center gap-2">
+	<div class="mt-12 flex flex-wrap items-center justify-center gap-2">
 		{#each roadmapStages as stage, i}
 			{@const isActive = stage.state === 'current'}
 			{@const isPast = stage.state === 'completed'}

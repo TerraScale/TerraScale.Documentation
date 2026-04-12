@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { addToast } from '$lib/stores/toast.svelte';
+	import { getStrings } from '$lib/i18n/strings';
 
-	let { text = '' } = $props<{ text: string }>();
+	let { text = '', locale = 'en' } = $props<{ text: string; locale?: string }>();
+	const strings = $derived(getStrings(locale));
 
 	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	let copied = $state(false);
@@ -11,13 +13,13 @@
 		try {
 			await navigator.clipboard.writeText(text);
 			copied = true;
-			addToast('Copied to clipboard!', 'success');
+			addToast(strings.copy.success, 'success');
 			setTimeout(() => {
 				copied = false;
 			}, 2000);
 		} catch (err) {
 			console.error('Failed to copy text: ', err);
-			addToast('Failed to copy', 'error');
+			addToast(strings.copy.failed, 'error');
 		}
 	}
 </script>
@@ -25,8 +27,8 @@
 <button
 	data-copy-button
 	onclick={copy}
-	aria-label="Copy code to clipboard"
-	title="Copy code"
+	aria-label={strings.copy.ariaLabel}
+	title={strings.copy.title}
 	class="absolute top-2 right-2 z-10 flex h-8 w-8 cursor-pointer items-center justify-center rounded-[0.35rem] border border-white/10 bg-white/5 p-0 text-slate-400 opacity-0 transition-all duration-200 ease-in-out hover:bg-white/10 hover:text-slate-50 focus-visible:opacity-100"
 >
 	{#if copied}

@@ -1,0 +1,106 @@
+---
+title: Documentación de TerraScale
+description: La plataforma de bases de datos más avanzada para aplicaciones modernas. Implementa, escala y gestiona tus datos con seguridad y rendimiento de nivel empresarial.
+template: splash
+hero:
+  tagline: La plataforma de bases de datos más avanzada para aplicaciones modernas. Implementa, escala y gestiona tus datos con seguridad y rendimiento de nivel empresarial.
+  actions:
+    - text: Empezar a crear
+      link: /guides/getting-started/
+      icon: right-arrow
+      variant: primary
+    - text: Ver referencia de la API
+      link: /reference/api/
+      icon: external
+      variant: minimal
+---
+
+import { CardGrid, Tabs } from '$lib/mdx';
+import { FeatureGrid } from '$lib/mdx';
+
+<div class="relative flex min-h-[70vh] flex-col items-center justify-center overflow-hidden px-6 py-24 text-center">
+  <div class="pointer-events-none absolute left-1/2 top-0 h-[800px] w-[800px] -translate-x-1/2 -translate-y-1/2 bg-[radial-gradient(circle,rgba(37,99,235,0.15)_0,transparent_60%)]"></div>
+  <div class="pointer-events-none absolute right-0 top-1/2 h-[600px] w-[600px] -translate-y-1/2 bg-[radial-gradient(circle,rgba(139,92,246,0.1)_0,transparent_60%)]"></div>
+  <div class="relative z-10 flex flex-col items-center">
+    <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[0.76rem] font-medium uppercase tracking-[0.08em] text-slate-300">
+      <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
+      <span>Ahora en Alfa Pública</span>
+    </div>
+    <h1 class="text-[2.9rem] leading-[1.12] tracking-[0.01em] text-slate-50 sm:text-[4rem]">
+      Escala tu <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">Base de Datos</span><br/>sin Esfuerzo
+    </h1>
+    <p class="mx-auto mt-7 max-w-2xl text-[1.02rem] leading-[1.9] tracking-[0.01em] text-slate-400">
+      La plataforma de bases de datos más avanzada para aplicaciones modernas.<br/>
+      Implementa globalmente. Escala sin límites. Crea más rápido.
+    </p>
+    <div class="mt-10 flex flex-wrap items-center justify-center gap-4">
+      <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+        Comienza gratis
+      </a>
+      <a href="/reference/api/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+        Ver documentación
+      </a>
+    </div>
+  </div>
+</div>
+
+---
+
+## Por qué elegir <span class="bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">TerraScale</span>
+
+Creada para desarrolladores, confiable para empresas. Descubre la próxima generación de infraestructura de bases de datos.
+
+<FeatureGrid features={[
+  {
+    icon: "lightning",
+    title: "Velocidad Relámpago",
+    description: "Consultas ultrarrápidas con caché global en el edge e indexación optimizada para una latencia inferior a 10 ms."
+  },
+  {
+    icon: "chart",
+    title: "Analítica en Tiempo Real",
+    description: "Supervisa tus datos y rendimiento con información en tiempo real y paneles completos."
+  },
+  {
+    icon: "shield",
+    title: "Seguridad Empresarial",
+    description: "Cumple con SOC 2, con cifrado de extremo a extremo y controles de acceso avanzados."
+  },
+  {
+    icon: "globe",
+    title: "Escala Global",
+    description: "Implementa en todo el mundo en 19 regiones, con failover automático y distribución geográfica."
+  }
+]} />
+
+---
+
+## Empieza en Segundos
+
+APIs simples, funciones potentes. Implementa tu base de datos con solo unas pocas líneas de código.
+
+<Tabs items={[{"label":"C#","content":"<pre><code class=\"language-csharp\">    using TerraScale.Database.Client;\n\n    // Initialize the client\n    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions\n    {\n        ApiKey = &quot;ts_live_your_api_key&quot;,\n        Endpoint = &quot;https://api.terrascale.io&quot;,\n        DefaultDatabase = &quot;my-database&quot;\n    });\n\n    // Store an item\n    await client.PutItemAsync(new DatabaseItem\n    {\n        PartitionKey = &quot;user#123&quot;,\n        SortKey = &quot;profile&quot;,\n        Attributes = new Dictionary&lt;string, object?&gt;\n        {\n            [&quot;name&quot;] = &quot;John Doe&quot;,\n            [&quot;email&quot;] = &quot;john@example.com&quot;\n        }\n    });\n\n    // Query items\n    var result = await client.QueryAsync(new QueryFilter\n    {\n        PartitionKey = &quot;user#123&quot;\n    });\n</code></pre>"},{"label":"TypeScript","content":"<pre><code class=\"language-typescript\">    import { TerraScaleClient } from &#39;@terrascale/sdk&#39;;\n\n    // Initialize the client\n    const client = new TerraScaleClient({\n      apiKey: &#39;ts_live_your_api_key&#39;,\n      endpoint: &#39;https://api.terrascale.io&#39;,\n      defaultDatabase: &#39;my-database&#39;\n    });\n\n    // Store an item\n    await client.putItem({\n      partitionKey: &#39;user#123&#39;,\n      sortKey: &#39;profile&#39;,\n      attributes: {\n        name: &#39;John Doe&#39;,\n        email: &#39;john@example.com&#39;\n      }\n    });\n\n    // Query items\n    const result = await client.query({\n      partitionKey: &#39;user#123&#39;\n    });\n</code></pre>"},{"label":"Go","content":"<pre><code class=\"language-go\">    package main\n\n    import (\n        &quot;github.com/terrascale/go-sdk&quot;\n    )\n\n    func main() {\n        // Initialize the client\n        client := terrascale.NewClient(&amp;terrascale.Config{\n            APIKey:          &quot;ts_live_your_api_key&quot;,\n            Endpoint:        &quot;https://api.terrascale.io&quot;,\n            DefaultDatabase: &quot;my-database&quot;,\n        })\n\n        // Store an item\n        client.PutItem(&amp;terrascale.Item{\n            PartitionKey: &quot;user#123&quot;,\n            SortKey:      &quot;profile&quot;,\n            Attributes: map[string]interface{}{\n                &quot;name&quot;:  &quot;John Doe&quot;,\n                &quot;email&quot;: &quot;john@example.com&quot;,\n            },\n        })\n\n        // Query items\n        result, _ := client.Query(&amp;terrascale.QueryInput{\n            PartitionKey: &quot;user#123&quot;,\n        })\n    }\n</code></pre>"},{"label":"REST API","content":"<pre><code class=\"language-bash\">    # Store an item\n    curl -X PUT &quot;https://api.terrascale.io/api/v1/databases/my-database/items&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;pk&quot;: &quot;user#123&quot;,\n        &quot;sk&quot;: &quot;profile&quot;,\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;John Doe&quot;,\n          &quot;email&quot;: &quot;john@example.com&quot;\n        }\n      }&#39;\n\n    # Query items\n    curl &quot;https://api.terrascale.io/api/v1/databases/my-database/query?pk=user%23123&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n</code></pre>"}]} />
+
+---
+
+## Explora la Documentación
+
+<CardGrid items={[{"title":"Primeros pasos","icon":"rocket","content":"<p>Configura tu cuenta de TerraScale y realiza tu primera llamada a la API en minutos.</p>\n<pre><code>[Iniciar la guía →](/guides/getting-started/)\n</code></pre>"},{"title":"Referencia de la API","icon":"document","content":"<p>Documentación completa de la API con ejemplos para todos los endpoints.</p>\n<pre><code>[Abrir la referencia de la API →](/reference/api/)\n</code></pre>"},{"title":"SDKs y bibliotecas","icon":"puzzle","content":"<p>Bibliotecas cliente oficiales para C#, Go y TypeScript.</p>\n<pre><code>[Explorar SDKs →](/guides/sdks/csharp/)\n</code></pre>"},{"title":"Guía del panel","icon":"laptop","content":"<p>Aprende a usar el panel de TerraScale para gestionar tus bases de datos.</p>\n<pre><code>[Abrir la guía →](/dashboard/why-open-source/)\n</code></pre>"}]} />
+<CardGrid items={[{"title":"Primeros pasos","icon":"rocket","content":"<p>Configura tu cuenta de TerraScale y realiza tu primera llamada a la API en minutos.</p>\n<pre><code>[Iniciar la guía →](/guides/getting-started/)\n</code></pre>"},{"title":"Referencia de la API","icon":"document","content":"<p>Documentación completa de la API con ejemplos para todos los endpoints.</p>\n<pre><code>[Abrir la referencia de la API →](/reference/api/)\n</code></pre>"},{"title":"SDKs y bibliotecas","icon":"puzzle","content":"<p>Bibliotecas cliente oficiales para C#, Go y TypeScript.</p>\n<pre><code>[Explorar SDKs →](/guides/sdks/csharp/)\n</code></pre>"}]} />
+
+---
+
+<div class="py-12 text-center">
+  <h2>¿Listo para Construir el Futuro?</h2>
+  <p class="mb-8 text-[0.98rem] leading-[1.85] tracking-[0.01em] text-slate-400">
+    Únete a miles de desarrolladores que crean aplicaciones escalables y confiables con TerraScale.
+  </p>
+  <div class="flex flex-wrap justify-center gap-4">
+    <a href="/guides/getting-started/" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-blue-50 shadow-[0_10px_24px_rgba(37,99,235,0.25)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+      Empieza a crear hoy
+    </a>
+    <a href="https://terrascale.tech/pricing" class="inline-flex items-center justify-center gap-2 rounded-[0.45rem] border border-white/8 bg-white/5 px-5 py-3 text-[0.84rem] leading-[1.2] font-medium uppercase tracking-[0.06em] text-slate-300 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400">
+      Ver precios
+    </a>
+  </div>
+</div>

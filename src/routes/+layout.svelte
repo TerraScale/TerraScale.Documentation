@@ -1,17 +1,41 @@
 <script lang="ts">
+	// biome-ignore-all assist/source/organizeImports: layout imports are grouped for readability
+	// biome-ignore-all lint/correctness/noUnusedImports: referenced in component markup
+	// biome-ignore-all lint/correctness/noUnusedVariables: referenced in component markup
+	import { beforeNavigate } from '$app/navigation';
+	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import '$lib/../app.css';
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
-	import SearchOverlay from '$lib/components/SearchOverlay.svelte';
 	import Icon from '$lib/components/Icon.svelte';
+	import MobileNav from '$lib/components/MobileNav.svelte';
+	import SearchOverlay from '$lib/components/SearchOverlay.svelte';
 	import Toast from '$lib/components/Toast.svelte';
 	import { activeAnnouncement } from '$lib/content/announcements';
 
 	let { children } = $props();
 
 	let searchOpen = $state(false);
+	let mobileNavOpen = $state(false);
 	let announcementDismissed = $state(false);
+
+	function closeMobileNav() {
+		mobileNavOpen = false;
+	}
+
+	function toggleMobileNav() {
+		mobileNavOpen = !mobileNavOpen;
+	}
+
+	function openSearch() {
+		mobileNavOpen = false;
+		searchOpen = true;
+	}
+
+	beforeNavigate(() => {
+		mobileNavOpen = false;
+	});
 
 	onMount(() => {
 		const handler = (event: Event) => {
@@ -99,8 +123,13 @@
 			</div>
 		</div>
 	{/if}
-	<Header openSearch={() => (searchOpen = true)} />
-	<main class="relative z-10">
+	<Header openSearch={openSearch} mobileNavOpen={mobileNavOpen} toggleMobileNav={toggleMobileNav} />
+	<MobileNav open={mobileNavOpen} onClose={closeMobileNav} openSearch={openSearch} />
+	<main
+		class="relative z-10"
+		data-locale={page.data.localeConfig?.prefix ?? 'en'}
+		data-pagefind-filter={`locale:${page.data.localeConfig?.prefix ?? 'en'}`}
+	>
 		{@render children()}
 	</main>
 	<Footer />

@@ -5,6 +5,7 @@ export const iconManifest = [
 	{ name: 'blocks', source: 'lucide:blocks' },
 	{ name: 'book-open', source: 'lucide:book-open' },
 	{ name: 'chart-column', source: 'lucide:chart-column' },
+	{ name: 'check', source: 'lucide:check' },
 	{ name: 'chevron-down', source: 'lucide:chevron-down' },
 	{ name: 'chevron-left', source: 'lucide:chevron-left' },
 	{ name: 'chevron-right', source: 'lucide:chevron-right' },

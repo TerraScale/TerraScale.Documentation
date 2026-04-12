@@ -1,0 +1,171 @@
+---
+title: Perfil
+description: Gestiona tu perfil de usuario y tus preferencias de TerraScale.
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Gestiona la información de tu perfil y tus preferencias.
+
+---
+
+## Obtén el usuario actual
+
+### GET /api/v1/users/me
+
+Obtiene el perfil del usuario autenticado actual.
+
+**Headers:**
+```http
+Authorization: Bearer eyJhbGci...
+```
+
+**Response (200 OK):**
+```json
+{
+  "userId": "usr_abc123",
+  "email": "john@example.com",
+  "name": "John Doe",
+  "avatarUrl": "https://example.com/avatar.jpg",
+  "role": "member",
+  "status": "active",
+  "preferences": {
+    "theme": "dark",
+    "timezone": "America/New_York",
+    "notificationsEnabled": true,
+    "defaultRegion": "us-east-1"
+  },
+  "lastLoginAt": "2024-01-15T10:00:00Z",
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}
+```
+
+---
+
+## Actualiza el perfil
+
+### PUT /api/v1/users/me
+
+Actualiza el perfil del usuario actual.
+
+**Request:**
+```json
+{
+  "name": "John D. Doe",
+  "avatarUrl": "https://example.com/new-avatar.jpg"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `name` | string | No | Display name |
+| `avatarUrl` | string | No | URL to avatar image |
+
+**Response (200 OK):** Devuelve el perfil de usuario actualizado.
+
+---
+
+## Actualiza preferencias
+
+### PUT /api/v1/users/me/preferences
+
+Actualiza las preferencias del usuario.
+
+**Request:**
+```json
+{
+  "theme": "dark",
+  "timezone": "America/Los_Angeles",
+  "notificationsEnabled": false,
+  "defaultRegion": "us-west-1"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `theme` | string | UI theme: `light`, `dark`, or `system` |
+| `timezone` | string | IANA timezone (e.g., `America/New_York`) |
+| `notificationsEnabled` | boolean | Whether to receive email notifications |
+| `defaultRegion` | string | Default region for new databases |
+
+**Response (200 OK):** Devuelve el perfil de usuario actualizado.
+
+---
+
+## Opciones de preferencia
+
+### Tema
+
+| Value | Description |
+|-------|-------------|
+| `light` | Light mode |
+| `dark` | Dark mode |
+| `system` | Follow system preference |
+
+### Zona horaria
+
+Usa identificadores de zona horaria IANA:
+
+- `America/New_York` - Hora del este de EE. UU.
+- `America/Los_Angeles` - Hora del Pacífico
+- `Europe/London` - GMT/BST
+- `Europe/Paris` - Hora de Europa Central
+- `Asia/Tokyo` - Hora estándar de Japón
+- `Australia/Sydney` - Hora del este de Australia
+
+[Lista completa de zonas horarias](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)
+
+### Región predeterminada
+
+Elige cualquier [región disponible](/reference/regions/):
+
+- `us-east` - Newark, NJ
+- `us-west` - Fremont, CA
+- `eu-west` - Londres, Reino Unido
+- `eu-central` - Frankfurt, Alemania
+- Y más...
+
+---
+
+## Ejemplo con SDK C#
+
+<Tabs items={[{"label":"Obtener perfil","content":"<pre><code class=\"language-csharp\">    var userResult = await client.Users.GetCurrentUserAsync();\n\n    if (userResult.IsSuccess)\n    {\n        var user = userResult.Value;\n        Console.WriteLine($&quot;Name: {user.Name}&quot;);\n        Console.WriteLine($&quot;Email: {user.Email}&quot;);\n        Console.WriteLine($&quot;Theme: {user.Preferences.Theme}&quot;);\n        Console.WriteLine($&quot;Timezone: {user.Preferences.Timezone}&quot;);\n    }\n</code></pre>"},{"label":"Actualizar perfil","content":"<pre><code class=\"language-csharp\">    var updateResult = await client.Users.UpdateCurrentUserAsync(\n        new UpdateUserRequest(\n            Name: &quot;John D. Doe&quot;,\n            AvatarUrl: &quot;https://example.com/new-avatar.jpg&quot;\n        )\n    );\n\n    if (updateResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Profile updated!&quot;);\n    }\n</code></pre>"},{"label":"Actualizar preferencias","content":"<pre><code class=\"language-csharp\">    var prefsResult = await client.Users.UpdatePreferencesAsync(\n        new UpdateUserPreferencesRequest(\n            Theme: &quot;dark&quot;,\n            Timezone: &quot;America/Los_Angeles&quot;,\n            NotificationsEnabled: false,\n            DefaultRegion: &quot;us-west-1&quot;\n        )\n    );\n\n    if (prefsResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Preferences updated!&quot;);\n    }\n</code></pre>"}]} />
+
+---
+
+## Campos del perfil
+
+| Field | Type | Editable | Description |
+|-------|------|----------|-------------|
+| `userId` | string | No | Unique user identifier |
+| `email` | string | No | Account email (contact support to change) |
+| `name` | string | Yes | Display name |
+| `avatarUrl` | string | Yes | Profile picture URL |
+| `role` | string | No | Role in current organization |
+| `status` | string | No | Account status |
+| `preferences` | object | Yes | User preferences |
+| `lastLoginAt` | datetime | No | Last login timestamp |
+| `createdAt` | datetime | No | Account creation date |
+| `updatedAt` | datetime | No | Last update timestamp |
+
+---
+
+## Valores de estado del usuario
+
+| Status | Description |
+|--------|-------------|
+| `active` | Account is fully operational |
+| `pending` | Email verification pending |
+| `suspended` | Account is suspended |
+| `deleted` | Account has been deleted |
+
+---
+
+## Próximos pasos
+
+- [Dashboard Settings](/dashboard/settings/) - Gestiona la configuración desde la interfaz
+- [Organizations](/reference/organizations/) - Gestiona el acceso del equipo
+- [MFA](/reference/mfa/) - Habilita autenticación de dos factores

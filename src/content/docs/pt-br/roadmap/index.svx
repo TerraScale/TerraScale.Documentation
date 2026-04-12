@@ -1,0 +1,116 @@
+---
+title: Roteiro Público
+description: O que a TerraScale oferece no Alfa Público, o que vem a seguir como prioridade e o que uma versão estável ainda precisa antes de conquistar confiança mais ampla.
+draft: true
+sidebar:
+  order: 1
+headingBadge:
+  text: Alfa Público
+  variant: secondary
+---
+
+import { LinkCard, RoadmapGrid, RoadmapLegend, RoadmapStageBand } from '$lib/mdx';
+import { exploringItems, liveNowItems, nextUpItems, roadmapLegend, roadmapStages, stableReleaseGoalItems } from '$lib/content/roadmap';
+
+<div class="relative my-2 overflow-hidden rounded-[1.8rem] border border-white/10 bg-[linear-gradient(145deg,rgba(37,99,235,0.16),rgba(8,145,178,0.06)_38%,rgba(255,255,255,0.04)_100%)] px-6 py-7 shadow-[0_20px_60px_rgba(0,0,0,0.3)] sm:px-8 sm:py-8">
+	<div class="pointer-events-none absolute -left-16 top-0 h-48 w-48 rounded-full bg-blue-500/20 blur-3xl"></div>
+	<div class="pointer-events-none absolute right-0 top-8 h-40 w-40 rounded-full bg-cyan-500/12 blur-3xl"></div>
+	<div class="relative">
+		<div class="flex flex-wrap items-center gap-3">
+			<span class="inline-flex items-center rounded-full border border-emerald-400/28 bg-emerald-500/10 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-emerald-200">
+				Alfa Público
+			</span>
+			<span class="inline-flex items-center rounded-full border border-white/10 bg-white/6 px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-slate-300">
+				Roteiro guiado por prospects
+			</span>
+		</div>
+
+		<p class="mb-0 mt-5 max-w-3xl text-[1.06rem] leading-[1.9] tracking-[0.01em] text-slate-200">
+			Este roteiro é a fonte canônica do que a TerraScale oferece hoje, do que vem a seguir como prioridade
+			e do que a plataforma ainda precisa antes que uma versão estável mereça ampla confiança em produção.
+		</p>
+
+		<div class="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Estágio atual</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">Alfa Público</p>
+			</div>
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Foco principal</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">Automação de desempenho</p>
+			</div>
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Limite atual</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">100 GB por banco de dados</p>
+			</div>
+			<div class="rounded-[1rem] border border-white/10 bg-black/16 p-4">
+				<p class="mb-1 text-[0.72rem] font-semibold uppercase tracking-[0.09em] text-slate-500">Ciclo de feedback</p>
+				<p class="mb-0 text-[1rem] leading-[1.5] text-slate-100">Prioridades guiadas pelo Discord</p>
+			</div>
+		</div>
+
+		<div class="mt-7 flex flex-wrap gap-3">
+			<a
+				href="https://discord.gg/8Zr2Nw9g"
+				class="inline-flex items-center justify-center rounded-[0.7rem] border border-transparent bg-linear-to-b from-blue-600 to-blue-700 px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.07em] text-blue-50 shadow-[0_12px_28px_rgba(37,99,235,0.28)] transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400"
+			>
+				Entrar no Discord
+			</a>
+			<a
+				href="/guides/getting-started/"
+				class="inline-flex items-center justify-center rounded-[0.7rem] border border-white/10 bg-white/6 px-4 py-3 text-[0.8rem] font-semibold uppercase tracking-[0.07em] text-slate-200 transition-transform hover:-translate-y-px focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400"
+			>
+				Começar a criar
+			</a>
+		</div>
+	</div>
+</div>
+
+## Como Ler Este Roteiro
+
+O roteiro é agrupado por confiança, não por promessas de calendário. Isso mantém a página honesta e, ao mesmo tempo, deixa a direção do produto clara.
+
+<RoadmapLegend items={roadmapLegend} />
+
+## Do Alfa Público à Versão Estável
+
+O caminho é direto: continuar entregando a automação principal de desempenho, reforçar a confiança operacional e só chamar o produto de estável quando a confiabilidade e a experiência diária dos operadores se sustentarem.
+
+<RoadmapStageBand stages={roadmapStages} />
+
+## Disponível Agora
+
+Esses recursos já fazem parte da história do Alfa Público. Eles definem o que você já pode avaliar, usar para criar e colocar sob pressão.
+
+<RoadmapGrid items={liveNowItems} tone="live" statusLabel="Disponível agora" />
+
+## Próximo Passo
+
+Este é o trabalho de curto prazo que deve tornar a TerraScale mais rápida e mais fácil de confiar, sem exigir que cada equipe ajuste a plataforma manualmente primeiro.
+
+<RoadmapGrid items={nextUpItems} tone="next" statusLabel="Próximo passo" />
+
+## Em Exploração
+
+Essas ideias importam, mas precisam de mais dados de uso antes de serem tratadas como compromissos.
+
+<RoadmapGrid items={exploringItems} tone="exploring" statusLabel="Em exploração" />
+
+## Metas da Versão Estável
+
+Versão estável não é um rótulo de marketing. É o ponto em que a segurança dos dados, o comportamento de failover, a recuperação e a experiência do operador parecem confiáveis o suficiente para um uso mais amplo em produção.
+
+<RoadmapGrid items={stableReleaseGoalItems} tone="goal" statusLabel="Meta da versão estável" />
+
+## Ajude a Moldar Isso
+
+O roteiro é mais forte quando reflete cargas de trabalho reais, não suposições de um quadro branco. Se você quer um recurso, tem um padrão de consulta que precisa ficar mais rápido ou precisa de garantias de confiabilidade mais fortes para um caso de uso, conte para nós.
+
+<div class="my-8 grid gap-4 md:grid-cols-2">
+	<LinkCard href="https://discord.gg/8Zr2Nw9g" title="Entre no Discord">
+		Traga pedidos de recursos, casos extremos e pontos de dor de desempenho diretamente para o ciclo de feedback.
+	</LinkCard>
+	<LinkCard href="/guides/getting-started/" title="Experimente a plataforma atual">
+		Use primeiro a documentação e as APIs existentes, depois compare essa experiência com a direção do roteiro acima.
+	</LinkCard>
+</div>

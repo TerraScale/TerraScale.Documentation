@@ -1,12 +1,15 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import type { HeadingLink } from '$lib/content/types';
+	import { getStrings } from '$lib/i18n/strings';
 
-	export let items: HeadingLink[] = [];
+	let { items = [] }: { items?: HeadingLink[] } = $props();
+	const strings = $derived(getStrings(page.data.localeConfig?.prefix ?? 'en'));
 </script>
 
 {#if items.length}
 	<aside class="sticky top-[4.25rem] max-h-[calc(100vh-4.5rem)] border-l border-white/6 pl-4 pt-6 max-[1100px]:hidden">
-		<h2 class="m-0 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-slate-50">On This Page</h2>
+		<h2 class="m-0 text-[0.68rem] font-semibold uppercase tracking-[0.1em] text-slate-50">{strings.toc.heading}</h2>
 		<ul class="mt-0 grid gap-[0.1rem]">
 			{#each items as item}
 				<li>

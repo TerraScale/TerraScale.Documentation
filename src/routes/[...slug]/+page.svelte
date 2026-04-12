@@ -1,4 +1,5 @@
 <script lang="ts">
+	// biome-ignore-all lint/correctness/noUnusedVariables: referenced in component markup
 	// biome-ignore assist/source/organizeImports: local ordering keeps markup imports grouped.
 	import { unmount, mount } from 'svelte';
 	import CopyButton from '$lib/components/CopyButton.svelte';
@@ -11,20 +12,28 @@
 	// biome-ignore lint/correctness/noUnusedImports: referenced in component markup
 	import TableOfContents from '$lib/components/TableOfContents.svelte';
 	import type { BadgeMeta, ContentEntry, SidebarNode } from '$lib/content/types';
+	import { toLocaleHref } from '$lib/i18n/links';
+	import { getStrings } from '$lib/i18n/strings';
 
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
-	let { data }: { data: { entry: ContentEntry; sidebar: SidebarNode[]; prev?: ContentEntry; next?: ContentEntry } } = $props();
+	let {
+		data,
+		locale = 'en'
+	}: {
+		data: { entry: ContentEntry; sidebar: SidebarNode[]; prev?: ContentEntry; next?: ContentEntry };
+		locale?: string;
+	} = $props();
 	const siteUrl = 'https://docs.terrascale.tech';
+	const strings = $derived(getStrings(locale));
 
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function toAbsoluteUrl(path?: string) {
 		return path ? new URL(path, siteUrl).toString() : undefined;
 	}
 
 	let socialImage = $derived(toAbsoluteUrl(data.entry.seo?.image ?? data.entry.cover?.wide));
 	let socialImageAlt = $derived(data.entry.cover?.alt ?? data.entry.title);
+	let localizedPrev = $derived(data.prev ? { ...data.prev, route: toLocaleHref(data.prev.route, locale) } : undefined);
+	let localizedNext = $derived(data.next ? { ...data.next, route: toLocaleHref(data.next.route, locale) } : undefined);
 
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function getBadgeClass(badge?: BadgeMeta) {
 		const tones = {
 			primary: 'bg-blue-500/16 text-blue-200',
@@ -36,7 +45,6 @@
 		return `inline-flex items-center rounded-full px-[0.65rem] py-[0.35rem] text-[0.68rem] font-medium uppercase tracking-[0.05em] ${tone}`;
 	}
 
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
 	function formatDate(dateStr?: string) {
 		if (!dateStr) return '';
 		return new Date(dateStr).toLocaleDateString('en-US', {
@@ -59,7 +67,7 @@
 
 			const instance = mount(CopyButton, {
 				target: pre,
-				props: { text }
+				props: { text, locale }
 			});
 			
 			mountedButtons[index] = instance;
@@ -120,7 +128,7 @@
 	<section class="mx-auto w-[calc(100%-1.25rem)] max-w-none px-0 pb-16 pt-7 sm:w-[calc(100%-3rem)] md:pb-20">
 		<div class="rounded-2xl border border-white/10 bg-white/6 p-7 shadow-[0_14px_40px_rgba(0,0,0,0.35)] backdrop-blur-[14px] max-[640px]:p-5">
 			<div class="mb-6 border-b border-white/6 pb-5">
-				<p class="mb-[0.85rem] text-[0.72rem] font-medium uppercase tracking-[0.12em] text-blue-300">Blog</p>
+				<p class="mb-[0.85rem] text-[0.72rem] font-medium uppercase tracking-[0.12em] text-blue-300">{strings.docsPage.blog}</p>
 				<h1 class="text-[2.2rem] leading-[1.14] tracking-[0.01em] text-slate-50 sm:text-[2.8rem]">{data.entry.title}</h1>
 				{#if data.entry.description}
 					<p class="m-0 text-[1rem] leading-[1.85] tracking-[0.01em] text-slate-400">{data.entry.description}</p>
@@ -165,12 +173,12 @@
 			<article data-prose class={proseShellClasses}>
 				{@html data.entry.html}
 			</article>
-			<PrevNextNav prev={data.prev} next={data.next} />
+			<PrevNextNav prev={localizedPrev} next={localizedNext} />
 		</div>
 	</section>
 {:else}
 	<section class="mx-auto grid w-[calc(100%-1.25rem)] max-w-none grid-cols-[16rem_minmax(0,1fr)_14rem] items-start gap-0 px-0 pb-16 pt-0 sm:w-[calc(100%-3rem)] md:pb-20 max-[1100px]:grid-cols-[14rem_minmax(0,1fr)] max-[860px]:grid-cols-1">
-		<DocsSidebar items={data.sidebar} />
+		<DocsSidebar items={data.sidebar} {locale} />
 		<div class="min-w-0 px-8 pb-8 pt-6 max-[860px]:px-0 max-[860px]:pt-5">
 			<div class="mb-5">
 				<h1 class="flex flex-wrap items-center gap-3 text-[2rem] leading-[1.14] tracking-[0.01em] text-slate-50 sm:text-[2.55rem]">
@@ -186,7 +194,7 @@
 			<article data-prose class={proseShellClasses}>
 				{@html data.entry.html}
 			</article>
-			<PrevNextNav prev={data.prev} next={data.next} />
+			<PrevNextNav prev={localizedPrev} next={localizedNext} />
 		</div>
 		<TableOfContents items={data.entry.headings} />
 	</section>

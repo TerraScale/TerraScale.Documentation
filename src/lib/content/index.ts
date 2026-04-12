@@ -1,6 +1,7 @@
 import readingTime from 'reading-time';
 import { render } from 'svelte/server';
 import type { Component } from 'svelte';
+import { getDefaultLocale, getLocales, isValidLocale, type LocalePrefix } from '$lib/i18n/locales';
 import type { ContentEntry, ContentMetadata, HeadingLink, SidebarNode } from './types';
 
 type FrontmatterData = Record<string, unknown>;
@@ -9,6 +10,19 @@ type CompiledContentModule = {
 	default: Component;
 	metadata?: FrontmatterData;
 	headings?: unknown;
+};
+
+type LocaleContentIndex = {
+	entries: ContentEntry[];
+	publicEntries: ContentEntry[];
+	listedEntries: ContentEntry[];
+	routeMap: Map<string, ContentEntry>;
+	docsEntries: ContentEntry[];
+	blogEntries: ContentEntry[];
+	sidebar: SidebarNode[];
+	orderedDocsRoutes: string[];
+	searchableEntries: ContentEntry[];
+	homeEntry?: ContentEntry;
 };
 
 const moduleMap = import.meta.glob('/src/content/docs/**/*.{md,svx}', {
@@ -21,9 +35,14 @@ const sourceMap = import.meta.glob('/src/content/docs/**/*.{md,svx}', {
 	import: 'default'
 }) as Record<string, string>;
 
+const localePrefixes = getLocales().map(({ prefix }) => prefix as LocalePrefix);
+const defaultLocalePrefix = getDefaultLocale().prefix as LocalePrefix;
+
 // Keep the placeholder source ignored so /reference/api/ resolves from
-// src/content/docs/reference/api/index.svx without duplicate route collisions.
-const IGNORED_SOURCE_PATHS = new Set(['/src/content/docs/reference/api.md']);
+// src/content/docs/<locale>/reference/api/index.svx without duplicate route collisions.
+const IGNORED_SOURCE_PATHS = new Set(
+	localePrefixes.map((prefix) => `/src/content/docs/${prefix}/reference/api.md`)
+);
 
 const SECTION_LABELS = {
 	guides: 'Guides',
@@ -261,12 +280,21 @@ function getContentMetadata(data: FrontmatterData, rawSegments: string[], source
 }
 
 function routeFromFile(filePath: string) {
-	const rel = filePath.replace('/src/content/docs/', '').replace(/\.(md|svx)$/, '');
-	const rawSegments = rel === 'index' ? [] : rel.replace(/\/index$/, '').split('/');
+	const rel = filePath.replace('/src/content/docs/', '');
+	const parts = rel.split('/');
+	const locale = parts[0];
+
+	if (!locale || !isValidLocale(locale)) {
+		throw new Error(`Invalid locale in content path: ${filePath}`);
+	}
+
+	const localizedPath = parts.slice(1).join('/').replace(/\.(md|svx)$/, '');
+	const rawSegments = localizedPath === 'index' ? [] : localizedPath.replace(/\/index$/, '').split('/');
 	const normalizedSegments = rawSegments.filter(Boolean).map((segment) => segment.toLowerCase());
 	const route = normalizedSegments.length ? `/${normalizedSegments.join('/')}/` : '/';
 
 	return {
+		locale,
 		route,
 		rawSegments,
 		normalizedSegments,
@@ -351,13 +379,8 @@ function createSidebarLeaf(entry: ContentEntry): SidebarNode {
 }
 
 function getFilesystemGroupPath(entry: ContentEntry) {
-	const sourceSegments = entry.sourcePath
-		.replace('/src/content/docs/', '')
-		.replace(/\.(md|svx)$/, '')
-		.split('/');
-
-	const groupSegments = sourceSegments.slice(1, -1).filter((segment, index) => {
-		return !(index === 0 && sourceSegments[0] === 'guides' && segment.toLowerCase() === 'sdks');
+	const groupSegments = entry.segmentPath.slice(1, -1).filter((segment, index) => {
+		return !(index === 0 && entry.segmentPath[0] === 'guides' && segment.toLowerCase() === 'sdks');
 	});
 
 	return groupSegments.map((segment) => titleCase(segment));
@@ -407,73 +430,6 @@ function createSidebarItems(entries: ContentEntry[], fallbackSection?: string) {
 	return nodes;
 }
 
-const entries = Object.entries(moduleMap)
-	.filter(([sourcePath]) => !IGNORED_SOURCE_PATHS.has(sourcePath))
-	.map(([sourcePath, module]) => {
-		const raw = sourceMap[sourcePath];
-		if (typeof raw !== 'string') {
-			throw new Error(`Missing raw source for ${sourcePath}`);
-		}
-
-		const { route, rawSegments, normalizedSegments, directory } = routeFromFile(sourcePath);
-		const metadata = getContentMetadata(
-			isRecord(module.metadata) ? module.metadata : {},
-			rawSegments,
-			sourcePath
-		);
-		const content = extractBodySource(raw);
-		const kind = route.startsWith('/blog/') ? 'blog' : 'docs';
-		const html = render(module.default).body;
-		return {
-			id: route === '/' ? 'home' : route.replaceAll('/', '-').replace(/^-|-$/g, ''),
-			route,
-			slug: normalizedSegments,
-			segmentPath: rawSegments,
-			sourcePath,
-			sourceDirectory: directory,
-			title: metadata.title,
-			description: metadata.description ?? metadata.excerpt ?? '',
-			kind,
-			date: metadata.date,
-			authors: metadata.authors ?? [],
-			tags: metadata.tags ?? [],
-			excerpt: metadata.excerpt,
-			template: metadata.template,
-			hero: metadata.hero,
-			cover: metadata.cover,
-			section: metadata.section,
-			sidebarOrder: metadata.sidebar?.order,
-			sidebarGroup: metadata.sidebar?.group,
-			sidebarBadge: metadata.sidebar?.badge,
-			sidebarHidden: metadata.sidebar?.hidden,
-			headingBadge: metadata.headingBadge,
-			draft: metadata.draft,
-			unlisted: metadata.unlisted,
-			openapi: metadata.openapi,
-			canonical: metadata.canonical,
-			seo: metadata.seo,
-			metadata,
-			raw,
-			content,
-			html,
-			plainText: stripHtml(html),
-			headings: extractHeadingsFromHtml(html),
-			readingTime: readingTime(content).text
-		} satisfies ContentEntry;
-	})
-	.sort((a, b) => {
-		if (a.kind === 'blog' && b.kind === 'blog') {
-			return new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime();
-		}
-		return a.route.localeCompare(b.route);
-	});
-
-const publicEntries = entries.filter(isPublicEntry);
-const listedEntries = publicEntries.filter(isListedEntry);
-const routeMap = new Map(publicEntries.map((entry) => [entry.route, entry]));
-const docsEntries = listedEntries.filter((entry) => entry.kind === 'docs' && entry.route !== '/');
-const blogEntries = listedEntries.filter((entry) => entry.kind === 'blog');
-
 function getSectionKey(entry: ContentEntry): SectionKey | undefined {
 	const firstSegment = entry.slug[0];
 	const secondSegment = entry.slug[1]?.toLowerCase();
@@ -485,7 +441,7 @@ function getSectionKey(entry: ContentEntry): SectionKey | undefined {
 	return sectionKey as SectionKey;
 }
 
-function buildAutoSidebar() {
+function buildAutoSidebar(docsEntries: ContentEntry[]) {
 	const sectionEntries = docsEntries.reduce<Map<SectionKey, ContentEntry[]>>((map, entry) => {
 		if (!isSidebarVisibleEntry(entry)) {
 			return map;
@@ -537,59 +493,211 @@ function flattenSidebar(nodes: SidebarNode[]): string[] {
 	return flat;
 }
 
-const sidebarNodes = buildAutoSidebar();
-const orderedDocsRoutes = flattenSidebar(sidebarNodes);
-
-export const allEntries = publicEntries;
-export const allDocsEntries = docsEntries;
-export const allBlogEntries = blogEntries;
-export const sidebar = sidebarNodes;
-export const searchableEntries = listedEntries.filter((entry) => entry.route !== '/');
-
-export function getEntryByRoute(route: string) {
-	if (route === '/') {
-		return routeMap.get(route);
-	}
-
-	const normalized = `/${route.replace(/^\/|\/$/g, '')}/`.replace(/\/\/+/, '/');
-	return routeMap.get(normalized);
-}
-
-export function getHomeEntry() {
-	const entry = routeMap.get('/');
-	if (!entry) {
-		throw new Error('Home entry not found');
-	}
-	return entry;
-}
-
-export function getPrevNext(entry: ContentEntry) {
-	if (entry.kind === 'blog') {
-		const index = blogEntries.findIndex((candidate) => candidate.route === entry.route);
-		return {
-			prev: index >= 0 ? blogEntries[index + 1] : undefined,
-			next: index > 0 ? blogEntries[index - 1] : undefined
-		};
-	}
-
-	const index = orderedDocsRoutes.findIndex((route) => route === entry.route);
+function createEmptyLocaleContentIndex(): LocaleContentIndex {
 	return {
-		prev: index > 0 ? getEntryByRoute(orderedDocsRoutes[index - 1]) : undefined,
-		next:
-			index >= 0 && index < orderedDocsRoutes.length - 1
-				? getEntryByRoute(orderedDocsRoutes[index + 1])
-				: undefined
+		entries: [],
+		publicEntries: [],
+		listedEntries: [],
+		routeMap: new Map(),
+		docsEntries: [],
+		blogEntries: [],
+		sidebar: [],
+		orderedDocsRoutes: [],
+		searchableEntries: [],
+		homeEntry: undefined
 	};
 }
 
-export function getPrerenderEntries() {
-	return publicEntries
+function buildLocaleContentIndex(entries: ContentEntry[]): LocaleContentIndex {
+	const publicEntries = entries.filter(isPublicEntry);
+	const listedEntries = publicEntries.filter(isListedEntry);
+	const routeMap = new Map(publicEntries.map((entry) => [entry.route, entry]));
+	const docsEntries = listedEntries.filter((entry) => entry.kind === 'docs' && entry.route !== '/');
+	const blogEntries = listedEntries.filter((entry) => entry.kind === 'blog');
+	const sidebar = buildAutoSidebar(docsEntries);
+	const orderedDocsRoutes = flattenSidebar(sidebar);
+
+	return {
+		entries,
+		publicEntries,
+		listedEntries,
+		routeMap,
+		docsEntries,
+		blogEntries,
+		sidebar,
+		orderedDocsRoutes,
+		searchableEntries: listedEntries.filter((entry) => entry.route !== '/'),
+		homeEntry: routeMap.get('/')
+	};
+}
+
+const groupedEntries = new Map<LocalePrefix, ContentEntry[]>(
+	localePrefixes.map((prefix) => [prefix, []])
+);
+
+for (const [sourcePath, module] of Object.entries(moduleMap)) {
+	if (IGNORED_SOURCE_PATHS.has(sourcePath)) {
+		continue;
+	}
+
+	const raw = sourceMap[sourcePath];
+	if (typeof raw !== 'string') {
+		throw new Error(`Missing raw source for ${sourcePath}`);
+	}
+
+	const { locale, route, rawSegments, normalizedSegments, directory } = routeFromFile(sourcePath);
+	const metadata = getContentMetadata(isRecord(module.metadata) ? module.metadata : {}, rawSegments, sourcePath);
+	const content = extractBodySource(raw);
+	const kind = route.startsWith('/blog/') ? 'blog' : 'docs';
+	const html = render(module.default).body;
+	const localeEntries = groupedEntries.get(locale);
+
+	if (!localeEntries) {
+		throw new Error(`Missing locale entry bucket for ${locale}`);
+	}
+
+	localeEntries.push({
+		id: `${locale}:${route === '/' ? 'home' : route.replaceAll('/', '-').replace(/^-|-$/g, '')}`,
+		route,
+		slug: normalizedSegments,
+		segmentPath: rawSegments,
+		sourcePath,
+		sourceDirectory: directory,
+		title: metadata.title,
+		description: metadata.description ?? metadata.excerpt ?? '',
+		kind,
+		date: metadata.date,
+		authors: metadata.authors ?? [],
+		tags: metadata.tags ?? [],
+		excerpt: metadata.excerpt,
+		template: metadata.template,
+		hero: metadata.hero,
+		cover: metadata.cover,
+		section: metadata.section,
+		sidebarOrder: metadata.sidebar?.order,
+		sidebarGroup: metadata.sidebar?.group,
+		sidebarBadge: metadata.sidebar?.badge,
+		sidebarHidden: metadata.sidebar?.hidden,
+		headingBadge: metadata.headingBadge,
+		draft: metadata.draft,
+		unlisted: metadata.unlisted,
+		openapi: metadata.openapi,
+		canonical: metadata.canonical,
+		seo: metadata.seo,
+		metadata,
+		raw,
+		content,
+		html,
+		plainText: stripHtml(html),
+		headings: extractHeadingsFromHtml(html),
+		readingTime: readingTime(content).text
+	} satisfies ContentEntry);
+}
+
+for (const entries of groupedEntries.values()) {
+	entries.sort((a, b) => {
+		if (a.kind === 'blog' && b.kind === 'blog') {
+			return new Date(b.date ?? 0).getTime() - new Date(a.date ?? 0).getTime();
+		}
+
+		return a.route.localeCompare(b.route);
+	});
+}
+
+const localeContent = new Map<LocalePrefix, LocaleContentIndex>(
+	localePrefixes.map((prefix) => [prefix, buildLocaleContentIndex(groupedEntries.get(prefix) ?? [])])
+);
+
+const emptyLocaleContent = createEmptyLocaleContentIndex();
+
+function getLocaleContent(locale: string) {
+	if (!isValidLocale(locale)) {
+		return emptyLocaleContent;
+	}
+
+	return localeContent.get(locale) ?? emptyLocaleContent;
+}
+
+function normalizeRoute(route: string) {
+	if (route === '/') {
+		return route;
+	}
+
+	return `/${route.replace(/^\/|\/$/g, '')}/`.replace(/\/\/+/, '/');
+}
+
+export const allEntries = getLocaleContent(defaultLocalePrefix).publicEntries;
+export const allDocsEntries = getLocaleContent(defaultLocalePrefix).docsEntries;
+export const allBlogEntries = getLocaleContent(defaultLocalePrefix).blogEntries;
+export const sidebar = getLocaleContent(defaultLocalePrefix).sidebar;
+export const searchableEntries = getLocaleContent(defaultLocalePrefix).searchableEntries;
+
+export function getLocaleSidebar(locale: string) {
+	return getLocaleContent(locale).sidebar;
+}
+
+export function getLocaleEntryByRoute(route: string, locale: string) {
+	return getLocaleContent(locale).routeMap.get(normalizeRoute(route));
+}
+
+export function getLocalePrerenderEntries(locale: string) {
+	return getLocaleContent(locale).publicEntries
 		.filter((entry) => entry.route !== '/')
 		.map((entry) => ({
 			slug: entry.slug.join('/')
 		}));
 }
 
+export function getLocaleBlogEntries(locale: string) {
+	return getLocaleContent(locale).blogEntries;
+}
+
+export function getLocaleHomeEntry(locale: string) {
+	return getLocaleContent(locale).homeEntry;
+}
+
+export function getLocalePrevNext(entry: ContentEntry, locale: string) {
+	const content = getLocaleContent(locale);
+
+	if (entry.kind === 'blog') {
+		const index = content.blogEntries.findIndex((candidate) => candidate.route === entry.route);
+		return {
+			prev: index >= 0 ? content.blogEntries[index + 1] : undefined,
+			next: index > 0 ? content.blogEntries[index - 1] : undefined
+		};
+	}
+
+	const index = content.orderedDocsRoutes.findIndex((route) => route === entry.route);
+	return {
+		prev: index > 0 ? getLocaleEntryByRoute(content.orderedDocsRoutes[index - 1], locale) : undefined,
+		next:
+			index >= 0 && index < content.orderedDocsRoutes.length - 1
+				? getLocaleEntryByRoute(content.orderedDocsRoutes[index + 1], locale)
+				: undefined
+	};
+}
+
+export function getEntryByRoute(route: string) {
+	return getLocaleEntryByRoute(route, defaultLocalePrefix);
+}
+
+export function getHomeEntry() {
+	const entry = getLocaleHomeEntry(defaultLocalePrefix);
+	if (!entry) {
+		throw new Error('Home entry not found');
+	}
+
+	return entry;
+}
+
+export function getPrevNext(entry: ContentEntry) {
+	return getLocalePrevNext(entry, defaultLocalePrefix);
+}
+
+export function getPrerenderEntries() {
+	return getLocalePrerenderEntries(defaultLocalePrefix);
+}
+
 export function getBlogHighlights(limit = 6) {
-	return blogEntries.slice(0, limit);
+	return getLocaleBlogEntries(defaultLocalePrefix).slice(0, limit);
 }

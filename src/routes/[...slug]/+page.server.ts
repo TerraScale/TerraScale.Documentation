@@ -1,21 +1,20 @@
-import { error } from '@sveltejs/kit';
-import { getEntryByRoute, getPrevNext, getPrerenderEntries, sidebar } from '$lib/content';
+import { error, redirect } from '@sveltejs/kit';
+import { getPrerenderEntries } from '$lib/content';
+import { toLocalePath } from '$lib/i18n/locales';
+
+const legacySectionPrefixes = new Set(['guides', 'blog', 'roadmap', 'reference', 'account', 'about']);
 
 export function entries() {
 	return getPrerenderEntries();
 }
 
 export function load({ params }) {
-	const route = `/${(params.slug ?? '').replace(/^\/|\/$/g, '')}/`;
-	const entry = getEntryByRoute(route);
+	const slug = (params.slug ?? '').replace(/^\/|\/$/g, '');
+	const [section] = slug.split('/');
 
-	if (!entry) {
+	if (!section || !legacySectionPrefixes.has(section)) {
 		throw error(404, 'Page not found');
 	}
 
-	return {
-		entry,
-		sidebar,
-		...getPrevNext(entry)
-	};
+	redirect(308, toLocalePath(slug));
 }

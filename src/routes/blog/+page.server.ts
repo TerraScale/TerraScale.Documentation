@@ -1,7 +1,5 @@
-import { allBlogEntries } from '$lib/content';
+import { redirect } from '@sveltejs/kit';
 
 export function load() {
-	return {
-		posts: allBlogEntries
-	};
+	redirect(308, '/en/blog/');
 }

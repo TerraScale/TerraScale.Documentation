@@ -1,11 +1,5 @@
-import { getHomeEntry } from '$lib/content';
+import { redirect } from '@sveltejs/kit';
 
 export function load() {
-	const entry = getHomeEntry();
-	return {
-		entry: {
-			title: entry.title,
-			description: entry.description
-		}
-	};
+	redirect(307, '/en/');
 }

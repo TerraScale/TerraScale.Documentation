@@ -1,0 +1,176 @@
+---
+title: Estratégia de API
+description: Escolha o padrão de API certo para sua aplicação TerraScale, TerraScale API, compatível com DynamoDB ou SQL.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem, Card, CardGrid } from '$lib/mdx';
+
+O TerraScale oferece três padrões de acesso à API. Cada um atende casos de uso diferentes e traz tradeoffs diferentes.
+
+---
+
+## TerraScale API (recomendada)
+
+A TerraScale API é o **método preferido** para acessar seus bancos de dados. Ela oferece:
+
+- **Melhor performance**: Otimizada para a arquitetura do TerraScale
+- **Acesso completo aos recursos**: Todas as capacidades da plataforma disponíveis
+- **Segurança de tipos**: Bibliotecas cliente fortemente tipadas
+- **Padrões nativos**: Repository pattern, operações em lote e transações
+
+**Use esta API quando:**
+- Estiver criando novas aplicações no TerraScale
+- Quiser a melhor performance e experiência de desenvolvimento
+- Precisar de acesso a todos os recursos do TerraScale
+```csharp
+// Example: Using the TerraScale API
+var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+{
+    ApiKey = "ts_live_your_api_key",
+    Endpoint = "https://api.terrascale.io",
+    DefaultDatabase = "my-database"
+});
+
+var result = await client.PutItemAsync(new DatabaseItem
+{
+    PartitionKey = "user#123",
+    SortKey = "profile",
+    Attributes = new Dictionary<string, object?>
+    {
+        ["name"] = "John Doe",
+        ["email"] = "john@example.com"
+    }
+});
+```
+
+---
+
+## API compatível com DynamoDB
+
+Uma API DynamoDB parcialmente compatível para facilitar a migração da AWS.
+
+:::note[Foco em migração]
+Esta API foi criada para **cenários de migração**. Ela oferece compatibilidade parcial para facilitar transições a partir do AWS DynamoDB.
+:::
+
+**Observações importantes:**
+- **Apenas compatibilidade parcial** - Não é um substituto completo do DynamoDB
+- **Foco em migração** - Use para facilitar a transição a partir da AWS
+- **Subconjunto de recursos** - Algumas operações do DynamoDB não são suportadas
+- **Transição gradual** - Considere migrar para a TerraScale API com o tempo
+
+### Operações suportadas
+
+| Operation | Status |
+|-----------|--------|
+| GetItem | Supported |
+| PutItem | Supported |
+| DeleteItem | Supported |
+| UpdateItem | Supported |
+| Query | Supported |
+| Scan | Supported |
+| BatchGetItem | Supported |
+| BatchWriteItem | Supported |
+| TransactGetItems | Supported |
+| TransactWriteItems | Supported |
+
+### Não suportado
+
+| Feature | Status |
+|---------|--------|
+| Global Secondary Indexes (GSI) | Not Supported |
+| Local Secondary Indexes (LSI) | Not Supported |
+| DynamoDB Streams | Not Supported |
+| PartiQL | Not Supported |
+| On-Demand/Provisioned capacity modes | Not Supported |
+
+**Use esta API quando:**
+- Estiver migrando aplicações existentes em DynamoDB
+- Já tiver código existente usando AWS SDK
+- Quiser um caminho de transição gradual
+
+---
+
+## SQL API
+
+Uma interface no estilo SQL para desenvolvedores que preferem consultas com estilo relacional.
+
+:::note[Uso exploratório]
+A SQL API oferece uma interface familiar, mas é um **subconjunto mínimo de SQL**. Ela é mais indicada para exploração e prototipagem.
+:::
+
+**Observações importantes:**
+- **Subconjunto mínimo de SQL** - Não é um banco SQL completo
+- **Consultas estruturadas** - Usa sintaxe semelhante a SQL para operações de dados
+- **Com reconhecimento de schema** - Exige CREATE TABLE antes das operações de dados
+- **Exploratória** - Boa para consultas ad hoc e exploração de schema
+
+### Instruções suportadas
+```sql
+-- Data Manipulation (DML)
+SELECT columns FROM table WHERE conditions [ORDER BY] [LIMIT]
+INSERT INTO table (columns) VALUES (values)
+UPDATE table SET assignments WHERE conditions
+DELETE FROM table WHERE conditions
+
+-- Data Definition (DDL)
+CREATE TABLE table (columns, PRIMARY KEY (pk [, ck...]))
+ALTER TABLE table ADD column type
+ALTER TABLE table DROP column
+DROP TABLE table
+CREATE INDEX name ON table (column)
+DROP INDEX name
+```
+
+### Limitações
+
+- Sem operações JOIN
+- Sem subconsultas
+- Sem GROUP BY ou funções agregadas (exceto COUNT)
+- Sem expressões complexas em SELECT
+- Cláusula WHERE limitada à chave primária e colunas indexadas
+- ORDER BY apenas em colunas de clustering
+
+**Use esta API quando:**
+- Preferir sintaxe SQL para operações simples
+- Estiver explorando dados ou schemas interativamente
+- Estiver criando protótipos ou ferramentas administrativas
+- Vier de um contexto SQL
+
+---
+
+## Comparação entre APIs
+
+| Feature | TerraScale API | DynamoDB API | SQL API |
+|---------|------------|--------------|---------|
+| Performance | Best | Good | Good |
+| Type Safety | Full | Partial | Minimal |
+| Feature Coverage | 100% | ~70% | ~40% |
+| Learning Curve | Low | Medium | Low |
+| Migration Path | Native | From AWS | From SQL |
+| Schema Required | No | No | Yes |
+| Best For | Production | Migration | Exploration |
+
+---
+
+## Escolhendo a API certa
+
+<CardGrid items={[{"title":"Novos projetos","icon":"rocket","content":"<p><strong>Use a TerraScale API</strong> desde o primeiro dia para obter melhor performance e acesso completo aos recursos.</p>"},{"title":"Migração da AWS","icon":"right-arrow","content":"<p><strong>Comece com a DynamoDB API</strong>, depois migre para a TerraScale API com o tempo.</p>"},{"title":"Experiência com SQL","icon":"document","content":"<p><strong>Use a SQL API</strong> para exploração e a <strong>TerraScale API</strong> para produção.</p>"}]} />
+
+### Recomendação
+
+**Comece com a TerraScale API** a menos que você tenha um motivo específico para usar as alternativas:
+
+1. **Novos projetos**: Use a TerraScale API desde o primeiro dia
+2. **Migração da AWS**: Comece com a DynamoDB API e migre para a TerraScale API com o tempo
+3. **Familiaridade com SQL**: Use a SQL API para exploração e a TerraScale API para produção
+
+---
+
+## Próximos passos
+
+- [Guia do SDK C#](/guides/sdks/csharp/) - Aprenda a TerraScale API com o SDK C#
+- [Referência da API](/reference/api/) - Documentação completa da API
+- [Referência da SQL API](/reference/api/sql-api/) - Referência de instruções SQL
