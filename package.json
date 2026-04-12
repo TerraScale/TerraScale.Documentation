@@ -10,7 +10,11 @@
     "preview": "npm run assets:sync && vite preview",
     "check": "npm run assets:sync && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
     "covers:generate": "node scripts/generate-blog-covers.mjs",
-    "icons:sync": "node scripts/icons-sync.mjs"
+    "icons:sync": "node scripts/icons-sync.mjs",
+    "test:e2e:smoke": "npx playwright test --config=playwright.config.ts --project=mobile-chromium --project=tablet-chromium --project=desktop-chromium tests/e2e/smoke",
+    "test:e2e:shared": "npx playwright test --config=playwright.config.ts --project=mobile-chromium --project=tablet-chromium --project=desktop-chromium tests/e2e/shared",
+    "test:e2e:a11y": "npx playwright test --config=playwright.config.ts --project=desktop-chromium tests/e2e/a11y",
+    "test:e2e:all": "npx playwright test --config=playwright.config.ts"
   },
   "dependencies": {
     "@shikijs/transformers": "^4.0.2",
@@ -31,7 +35,9 @@
     "yaml": "^2.8.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.0",
     "@iconify/json": "^2.2.460",
+    "@playwright/test": "^1.55.0",
     "@sveltejs/vite-plugin-svelte": "^7.0.0",
     "@tailwindcss/vite": "^4.2.2",
     "@tsconfig/svelte": "^5.0.8",
