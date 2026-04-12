@@ -27,6 +27,7 @@ const IGNORED_SOURCE_PATHS = new Set(['/src/content/docs/reference/api.md']);
 
 const SECTION_LABELS = {
 	guides: 'Guides',
+	sdks: 'SDKs',
 	account: 'Account',
 	reference: 'Reference',
 	dashboard: 'Dashboard',
@@ -356,7 +357,11 @@ function getFilesystemGroupPath(entry: ContentEntry) {
 		.replace(/\.(md|svx)$/, '')
 		.split('/');
 
-	return sourceSegments.slice(1, -1).map((segment) => titleCase(segment));
+	const groupSegments = sourceSegments.slice(1, -1).filter((segment, index) => {
+		return !(index === 0 && sourceSegments[0] === 'guides' && segment.toLowerCase() === 'sdks');
+	});
+
+	return groupSegments.map((segment) => titleCase(segment));
 }
 
 function getSidebarGroupPath(entry: ContentEntry, fallbackSection?: string) {
@@ -471,7 +476,9 @@ const docsEntries = listedEntries.filter((entry) => entry.kind === 'docs' && ent
 const blogEntries = listedEntries.filter((entry) => entry.kind === 'blog');
 
 function getSectionKey(entry: ContentEntry): SectionKey | undefined {
-	const sectionKey = entry.slug[0];
+	const firstSegment = entry.slug[0];
+	const secondSegment = entry.slug[1]?.toLowerCase();
+	const sectionKey = firstSegment === 'guides' && secondSegment === 'sdks' ? 'sdks' : firstSegment;
 	if (!sectionKey || !(sectionKey in SECTION_LABELS)) {
 		return undefined;
 	}
