@@ -1,6 +1,10 @@
 <script lang="ts">
+	// biome-ignore-all assist/source/organizeImports: component imports are grouped for readability.
+	// biome-ignore-all lint/correctness/noUnusedImports: referenced in component markup.
+	// biome-ignore-all lint/correctness/noUnusedVariables: referenced in component markup.
 	import { page } from '$app/state';
-	import { sidebar } from '$lib/content';
+	// biome-ignore lint/suspicious/noTsIgnore: Svelte language server resolves stale navigation typings here, runtime export is correct.
+	// @ts-ignore Svelte language server resolves stale navigation typings here, runtime export is correct.
 	import { getNavItems, getSocialLinks, getStatusLink, isActive } from '$lib/navigation';
 	import { getStrings } from '$lib/i18n/strings';
 	import { tick } from 'svelte';
@@ -8,22 +12,20 @@
 	import Icon from './Icon.svelte';
 	import { switchLocalePath, toLocaleHref } from '$lib/i18n/links';
 	import type { LocaleConfig } from '$lib/i18n/locales';
+	import type { SidebarNode } from '$lib/content/types';
 
-	// biome-ignore lint/correctness/noUnusedImports: referenced in component markup
-	// biome-ignore lint/correctness/noUnusedVariables: referenced in component markup
-	let {
-		open = false,
-		onClose,
-		openSearch
-	}: {
+	let props: {
 		open: boolean;
 		onClose: () => void;
 		openSearch: () => void;
+		sidebar?: SidebarNode[];
 	} = $props();
 
 	let panelEl: HTMLElement | null = $state(null);
 	let closeButtonEl: HTMLButtonElement | null = $state(null);
 
+	const isOpen = $derived(props.open ?? false);
+	const sidebarItems = $derived(props.sidebar ?? []);
 	const currentLocale = $derived(page.data.localeConfig as LocaleConfig);
 	const locales = $derived(page.data.locales as LocaleConfig[]);
 	const strings = $derived(getStrings(currentLocale?.prefix ?? 'en'));
@@ -58,7 +60,7 @@
 	}
 
 	function handleClose() {
-		onClose();
+		props.onClose();
 		focusTrigger();
 	}
 
@@ -96,7 +98,7 @@
 	}
 
 	$effect(() => {
-		if (!open || typeof document === 'undefined') {
+		if (!isOpen || typeof document === 'undefined') {
 			return;
 		}
 
@@ -109,7 +111,7 @@
 	});
 
 	$effect(() => {
-		if (!open) {
+		if (!isOpen) {
 			return;
 		}
 
@@ -117,7 +119,7 @@
 	});
 </script>
 
-{#if open}
+{#if isOpen}
 	<div
 		id="mobile-nav"
 		class="fixed inset-0 z-50"
@@ -173,7 +175,7 @@
 							<button
 								type="button"
 								class="flex min-h-12 items-center justify-start gap-[0.75rem] rounded-xl border border-white/8 bg-white/4 px-4 py-[0.95rem] text-left text-[0.92rem] tracking-[0.01em] text-slate-200 transition-[transform,border-color,background-color] duration-200 hover:-translate-y-0.5 hover:bg-white/6 focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-blue-400"
-								onclick={openSearch}
+								onclick={props.openSearch}
 							>
 								<Icon name="search" size={17} />
 								<div class="flex flex-1 items-center justify-between gap-3">
@@ -206,7 +208,7 @@
 									<span>{strings.mobile.documentation}</span>
 								</div>
 								<div class="rounded-xl border border-white/8 bg-white/4 p-3">
-									<DocsNavTree items={sidebar} locale={currentLocale?.prefix || 'en'} onNavigate={handleClose} />
+									<DocsNavTree items={sidebarItems} locale={currentLocale?.prefix || 'en'} onNavigate={handleClose} />
 								</div>
 							</section>
 

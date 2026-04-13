@@ -1,0 +1,208 @@
+---
+title: Planes
+description: Planes de suscripción de TerraScale, Free, Pro y Enterprise.
+sidebar:
+  order: 6
+---
+
+import { Card, CardGrid } from '$lib/mdx';
+
+TerraScale ofrece varios planes de suscripción para adaptarse a tus necesidades.
+
+---
+
+## Planes disponibles
+
+### GET /api/v1/plans
+
+Lista todos los planes de suscripción disponibles. **No requiere autenticación.**
+
+**Response (200 OK):**
+```json
+[
+  {
+    "planId": "plan_free",
+    "name": "Free",
+    "planType": "free",
+    "description": "Perfect for getting started",
+    "monthlyPriceCents": 0,
+    "yearlyPriceCents": 0,
+    "currency": "USD",
+    "trialDays": 0,
+    "isActive": true,
+    "sortOrder": 1,
+    "features": [
+      { "name": "3 Databases", "included": true },
+      { "name": "100MB Storage", "included": true },
+      { "name": "10K Requests/month", "included": true },
+      { "name": "Community Support", "included": true }
+    ],
+    "limits": {
+      "maxDatabases": 3,
+      "maxStorageGb": 0.1,
+      "maxRequestsPerMonth": 10000,
+      "maxTeamMembers": 1
+    }
+  },
+  {
+    "planId": "plan_pro",
+    "name": "Pro",
+    "planType": "pro",
+    "description": "For growing teams and projects",
+    "monthlyPriceCents": 2900,
+    "yearlyPriceCents": 29000,
+    "currency": "USD",
+    "trialDays": 14,
+    "isActive": true,
+    "sortOrder": 2,
+    "features": [
+      { "name": "10 Databases", "included": true },
+      { "name": "10GB Storage", "included": true },
+      { "name": "1M Requests/month", "included": true },
+      { "name": "Email Support", "included": true },
+      { "name": "Team Members", "included": true }
+    ],
+    "limits": {
+      "maxDatabases": 10,
+      "maxStorageGb": 10,
+      "maxRequestsPerMonth": 1000000,
+      "maxTeamMembers": 10
+    }
+  },
+  {
+    "planId": "plan_enterprise",
+    "name": "Enterprise",
+    "planType": "enterprise",
+    "description": "For large organizations with custom needs",
+    "monthlyPriceCents": 0,
+    "yearlyPriceCents": 0,
+    "currency": "USD",
+    "trialDays": 0,
+    "isActive": true,
+    "sortOrder": 3,
+    "features": [
+      { "name": "Unlimited Databases", "included": true },
+      { "name": "Unlimited Storage", "included": true },
+      { "name": "Unlimited Requests", "included": true },
+      { "name": "Priority Support", "included": true },
+      { "name": "Custom SLAs", "included": true },
+      { "name": "SSO / SAML", "included": true }
+    ],
+    "limits": null
+  }
+]
+```
+
+---
+
+## Comparación de planes
+
+<CardGrid items={[{"title":"Free","icon":"star","content":"<p><strong>$0/mes</strong>\n    - 3 bases de datos\n    - 100MB de storage\n    - 10K requests/mes\n    - Soporte de la comunidad</p>"},{"title":"Pro","icon":"rocket","content":"<p><strong>$29/mes</strong>\n    - 10 bases de datos\n    - 10GB de storage\n    - 1M requests/mes\n    - Soporte por email\n    - Miembros del equipo</p>"},{"title":"Enterprise","icon":"seti:config","content":"<p><strong>Custom</strong>\n    - Bases de datos ilimitadas\n    - Storage ilimitado\n    - Requests ilimitadas\n    - Soporte prioritario\n    - SLAs personalizados\n    - SSO / SAML</p>"}]} />
+
+---
+
+## Límites del plan
+
+| Feature | Free | Pro | Enterprise |
+|---------|------|-----|------------|
+| Databases | 3 | 10 | Unlimited |
+| Storage | 100MB | 10GB | Unlimited |
+| Requests/month | 10K | 1M | Unlimited |
+| Team Members | 1 | 10 | Unlimited |
+| Support | Community | Email | Priority |
+| SLA | - | 99.9% | Custom |
+| SSO/SAML | - | - | Yes |
+
+---
+
+## Obtener detalles del plan
+
+### GET /api/v1/plans/\{planId\}
+
+Obtiene los detalles de un plan específico.
+
+**Response (200 OK):** devuelve un único objeto de plan, con el mismo formato que la lista.
+
+---
+
+## Mejorar de plan
+
+Para mejorar tu plan:
+
+1. Llama a `POST /api/v1/payment/checkout` con el `planType` deseado
+2. Redirige al usuario al `checkoutUrl` devuelto
+3. El usuario completa el pago
+4. La suscripción se actualiza automáticamente
+```json
+// Upgrade to Pro
+POST /api/v1/payment/checkout
+{
+  "planType": "pro"
+}
+```
+
+---
+
+## Bajar de plan
+
+Para bajar de plan:
+
+1. Accede al portal de billing con `GET /api/v1/payment/portal`
+2. Administra la suscripción desde el portal
+3. Los cambios se aplican al final del período de facturación actual
+
+---
+
+## Período de prueba
+
+El plan Pro incluye una **prueba gratis de 14 días**:
+
+- Todas las funciones de Pro durante la prueba
+- No se necesita tarjeta de crédito para empezar
+- Bajada automática a Free si no se hace upgrade
+
+---
+
+## Contacto para Enterprise
+
+Para precios de Enterprise y requisitos personalizados:
+
+- Contacta con sales@terrascale.io
+- SLAs y acuerdos de soporte personalizados
+- Descuentos por volumen disponibles
+- Opciones de despliegue on-premise
+
+---
+
+## Ejemplo de código
+```csharp
+// List available plans
+var plansResult = await client.Plans.ListAsync();
+
+if (plansResult.IsSuccess)
+{
+    foreach (var plan in plansResult.Value)
+    {
+        Console.WriteLine($"{plan.Name}: ${plan.MonthlyPriceCents / 100}/month");
+        Console.WriteLine($"  {plan.Description}");
+
+        foreach (var feature in plan.Features)
+        {
+            var check = feature.Included ? "✓" : "✗";
+            Console.WriteLine($"  {check} {feature.Name}");
+        }
+    }
+}
+
+// Get specific plan
+var planResult = await client.Plans.GetAsync("plan_pro");
+```
+
+---
+
+## Próximos pasos
+
+- [Billing](/reference/billing/) - Administra tu suscripción
+- [Rate Limits](/reference/rate-limits/) - Entiende los límites del plan
+- [How to Choose a Plan](/guides/how-to-choose-a-plan/) - Guía para elegir un plan
+

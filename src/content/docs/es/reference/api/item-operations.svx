@@ -1,0 +1,172 @@
+---
+title: Operaciones de Elementos
+description: Operaciones CRUD para elementos individuales de la base de datos - Put, Get y Delete.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Items
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Todas las operaciones de elementos requieren el scope `database:read` o `database:write`, según la operación.
+
+---
+
+## Put Item
+
+### PUT /api/v1/databases/\{databaseId\}/items
+
+Guarda un elemento en la base de datos. Crea un elemento nuevo o reemplaza uno existente.
+
+**Request:**
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "data": {
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "conditionExpression": null
+}
+```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|----------|-------------|
+| `pk` | string | Sí | Clave de partición |
+| `sk` | string | No | Clave de ordenación |
+| `data` | object | Sí | Atributos del elemento |
+| `conditionExpression` | string | No | Expresión de escritura condicional |
+
+**Response (200 OK):**
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Escrituras Condicionales
+
+Usa `conditionExpression` para evitar sobrescrituras:
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "data": { "name": "John" },
+  "conditionExpression": "attribute_not_exists(pk)"
+}
+```
+
+Esto solo escribe si el elemento todavía no existe.
+
+---
+
+## Get Item
+
+### GET /api/v1/databases/\{databaseId\}/items/\{pk\}
+
+Obtiene un elemento solo por la clave de partición.
+
+**Response (200 OK):**
+```json
+{
+  "pk": "user#123",
+  "sk": null,
+  "data": {
+    "name": "John Doe",
+    "email": "john@example.com"
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### GET /api/v1/databases/\{databaseId\}/items/\{pk\}/\{sk\}
+
+Obtiene un elemento por la clave de partición y la clave de ordenación.
+
+**Respuesta:** El mismo formato de arriba.
+
+### Respuesta Not Found
+
+**Response (404 Not Found):**
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Item not found"
+}
+```
+
+---
+
+## Delete Item
+
+### DELETE /api/v1/databases/\{databaseId\}/items/\{pk\}
+
+Elimina un elemento solo por la clave de partición.
+
+**Response (204 No Content):** Cuerpo vacío en caso de éxito.
+
+### DELETE /api/v1/databases/\{databaseId\}/items/\{pk\}/\{sk\}
+
+Elimina un elemento por la clave de partición y la clave de ordenación.
+
+**Response (204 No Content):** Cuerpo vacío en caso de éxito.
+
+---
+
+## Ejemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Put Item\n    var item = new DatabaseItem\n    {\n        PartitionKey = &quot;user#123&quot;,\n        SortKey = &quot;profile&quot;,\n        Attributes = new Dictionary&lt;string, object?&gt;\n        {\n            [&quot;name&quot;] = &quot;John Doe&quot;,\n            [&quot;email&quot;] = &quot;john@example.com&quot;,\n            [&quot;age&quot;] = 30,\n            [&quot;tags&quot;] = new[] { &quot;premium&quot;, &quot;verified&quot; }\n        }\n    };\n\n    var putResult = await client.PutItemAsync(item);\n    if (putResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Item saved!&quot;);\n    }\n\n    // Get Item\n    var getResult = await client.GetItemAsync(&quot;user#123&quot;, &quot;profile&quot;);\n    if (getResult.IsSuccess)\n    {\n        var user = getResult.Value;\n        var name = user.GetAttribute&lt;string&gt;(&quot;name&quot;);\n        var age = user.GetAttribute&lt;int&gt;(&quot;age&quot;, defaultValue: 0);\n        Console.WriteLine($&quot;User: \\{name\\}, Age: {age}&quot;);\n    }\n\n    // Delete Item\n    var deleteResult = await client.DeleteItemAsync(&quot;user#123&quot;, &quot;profile&quot;);\n    if (deleteResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Item deleted!&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Put Item\n    curl -X PUT &quot;https://api.terrascale.io/api/v1/databases/my-db/items&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;pk&quot;: &quot;user#123&quot;,\n        &quot;sk&quot;: &quot;profile&quot;,\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;John Doe&quot;,\n          &quot;email&quot;: &quot;john@example.com&quot;\n        }\n      }&#39;\n\n    # Get Item\n    curl &quot;https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n\n    # Delete Item\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/databases/my-db/items/user%23123/profile&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n</code></pre>"}]} />
+
+---
+
+## Tipos de Datos
+
+Los elementos admiten los siguientes tipos de datos:
+
+| Tipo | Ejemplo |
+|------|---------|
+| String | `"Hello World"` |
+| Number | `42`, `3.14` |
+| Boolean | `true`, `false` |
+| Null | `null` |
+| Array | `["a", "b", "c"]` |
+| Object | `{"key": "value"}` |
+
+---
+
+## Patrones de Diseño de Claves
+
+### Diseño de Tabla Única
+
+Guarda elementos relacionados con la misma clave de partición:
+```json
+// User profile
+{ "pk": "user#123", "sk": "profile", "data": { "name": "John" } }
+
+// User orders
+{ "pk": "user#123", "sk": "order#001", "data": { "total": 99.99 } }
+{ "pk": "user#123", "sk": "order#002", "data": { "total": 149.99 } }
+```
+
+### Claves Jerárquicas
+
+Usa delimitadores para datos jerárquicos:
+```json
+{ "pk": "org#acme", "sk": "dept#engineering#team#backend" }
+```
+
+---
+
+## Próximos Pasos
+
+- [Query Operations](/reference/api/query-operations/) - Consulta varios elementos
+- [Batch Operations](/reference/api/batch-operations/) - Lectura/escritura masiva
+- [Transactions](/reference/api/transactions/) - Operaciones atómicas

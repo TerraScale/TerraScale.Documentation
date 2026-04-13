@@ -1,0 +1,216 @@
+---
+title: Operaciones de Consulta
+description: Operaciones de Query y Scan para recuperar varios elementos de tu base de datos.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Queries
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Operaciones de Query y Scan para recuperar varios elementos.
+
+---
+
+## Query
+
+### POST /api/v1/databases/\{databaseId\}/items/query
+
+Consulta elementos por clave de partición con condiciones opcionales en la clave de ordenación.
+
+**Request:**
+```json
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#2024",
+  "filterExpression": null,
+  "limit": 20,
+  "cursor": null,
+  "scanForward": true
+}
+```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|----------|-------------|
+| `partitionKey` | string | Sí | Valor de la clave de partición para consultar |
+| `sortKeyCondition` | string | No | Condición de la clave de ordenación (consulta los operadores abajo) |
+| `filterExpression` | object | No | Filtro adicional después de la query |
+| `limit` | integer | No | Máximo de elementos a devolver (predeterminado: 20) |
+| `cursor` | string | No | Cursor de paginación de la respuesta anterior |
+| `scanForward` | boolean | No | Dirección de ordenación, true = ascendente (predeterminado: true) |
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "pk": "user#123",
+      "sk": "order#2024-001",
+      "data": { "total": 99.99 }
+    }
+  ],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "count": 1,
+  "scannedCount": 1
+}
+```
+
+---
+
+## Operadores de Clave de Ordenación
+
+| Operador | Formato | Ejemplo | Descripción |
+|----------|--------|---------|-------------|
+| Igual | `=:value` | `=:profile` | Coincidencia exacta |
+| Menor que | `<:value` | `<:2024-01-01` | Antes del valor |
+| Menor o igual | `<=:value` | `<=:2024-01-01` | En el valor o antes |
+| Mayor que | `>:value` | `>:2024-01-01` | Después del valor |
+| Mayor o igual | `>=:value` | `>=:2024-01-01` | En el valor o después |
+| Empieza con | `begins_with:prefix` | `begins_with:order#` | Coincidencia por prefijo |
+| Entre | `between:low:high` | `between:2024-01-01:2024-12-31` | Rango inclusivo |
+
+### Ejemplos
+```json
+// Get all orders for a user
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#"
+}
+
+// Get orders from 2024
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "between:order#2024-01-01:order#2024-12-31"
+}
+
+// Get the user's profile
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "=:profile"
+}
+```
+
+---
+
+## Scan
+
+### POST /api/v1/databases/\{databaseId\}/items/scan
+
+Hace scan de todos los elementos de la base de datos. Úsalo con cuidado en conjuntos de datos grandes.
+
+**Request:**
+```json
+{
+  "filterExpression": null,
+  "limit": 20,
+  "cursor": null
+}
+```
+
+**Respuesta:** El mismo formato que la respuesta de query.
+
+:::caution[Advertencia de Rendimiento]
+Scan lee todos los elementos de la base de datos. Para conjuntos de datos grandes, usa Query con una clave de partición.
+:::
+
+---
+
+## Paginación
+
+Tanto Query como Scan admiten paginación basada en cursor:
+```json
+// First request
+{
+  "partitionKey": "user#123",
+  "limit": 10
+}
+
+// Response
+{
+  "items": [...],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "count": 10
+}
+
+// Next page
+{
+  "partitionKey": "user#123",
+  "limit": 10,
+  "cursor": "eyJsYXN0S2V5Ijo..."
+}
+```
+
+Cuando `nextCursor` es `null`, ya no hay más elementos.
+
+---
+
+## Dirección de Ordenación
+
+Controla el orden de los resultados con `scanForward`:
+```json
+// Ascending order (oldest first)
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#",
+  "scanForward": true
+}
+
+// Descending order (newest first)
+{
+  "partitionKey": "user#123",
+  "sortKeyCondition": "begins_with:order#",
+  "scanForward": false
+}
+```
+
+---
+
+## Ejemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Query with sort key condition\n    var filter = new QueryFilter\n    {\n        PartitionKey = &quot;user#123&quot;,\n        SortKeyCondition = SortKeyCondition.BeginsWith(&quot;order#&quot;)\n    };\n\n    var options = new QueryOptions\n    {\n        Limit = 50,\n        ScanForward = false // Descending order\n    };\n\n    var result = await client.QueryAsync(filter, options);\n\n    if (result.IsSuccess)\n    {\n        foreach (var item in result.Value.Items)\n        {\n            Console.WriteLine($&quot;Order: {item.SortKey}&quot;);\n        }\n\n        // Handle pagination\n        if (result.Value.HasMore)\n        {\n            var nextPage = await client.QueryAsync(filter, new QueryOptions\n            {\n                NextToken = result.Value.NextToken\n            });\n        }\n    }\n\n    // Scan all items\n    var scanResult = await client.ScanAsync(new PaginationOptions\n    {\n        Limit = 100\n    });\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Query\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/query&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;partitionKey&quot;: &quot;user#123&quot;,\n        &quot;sortKeyCondition&quot;: &quot;begins_with:order#&quot;,\n        &quot;limit&quot;: 20\n      }&#39;\n\n    # Scan\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/scan&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;limit&quot;: 100\n      }&#39;\n</code></pre>"}]} />
+
+---
+
+## Buenas Prácticas
+
+### Usa Query en Lugar de Scan
+
+Las queries son eficientes porque apuntan a una partición específica. Los scans leen toda la base de datos.
+```json
+// Good: Query by partition key
+{ "partitionKey": "user#123" }
+
+// Avoid: Scan the whole database
+{}
+```
+
+### Diseña Claves para los Patrones de Acceso
+
+Estructura tus claves para admitir tus patrones de consulta:
+```json
+// Access pattern: Get all orders for a user
+{ "pk": "user#123", "sk": "order#2024-001" }
+
+// Access pattern: Get orders by date
+{ "pk": "orders#2024-01", "sk": "user#123#order#001" }
+```
+
+### Limita el Tamaño del Resultado
+
+Especifica siempre un límite razonable para evitar recuperar demasiados datos:
+```json
+{
+  "partitionKey": "user#123",
+  "limit": 50
+}
+```
+
+---
+
+## Próximos Pasos
+
+- [Batch Operations](/reference/api/batch-operations/) - Operaciones de lectura masiva
+- [Transactions](/reference/api/transactions/) - Lecturas consistentes
+- [Best Practices](/reference/best-practices/) - Optimización de consultas

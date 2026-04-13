@@ -1,0 +1,5 @@
+Listing tests:
+  [mobile-chromium] › smoke/health.spec.ts:3:1 › homepage title includes TerraScale
+  [tablet-chromium] › smoke/health.spec.ts:3:1 › homepage title includes TerraScale
+  [desktop-chromium] › smoke/health.spec.ts:3:1 › homepage title includes TerraScale
+Total: 3 tests in 1 file

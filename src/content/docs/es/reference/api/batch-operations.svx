@@ -1,0 +1,218 @@
+---
+title: Operaciones por Lote
+description: Operaciones de lectura y escritura por lote para un procesamiento masivo de datos eficiente.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Batch
+sidebar:
+  order: 4
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Las operaciones por lote te permiten leer o escribir varios elementos en una sola solicitud.
+
+---
+
+## Escritura por Lote
+
+### POST /api/v1/databases/\{databaseId\}/items/batch/write
+
+Realiza operaciones por lote de put/delete. Máximo 25 elementos por solicitud.
+
+**Request:**
+```json
+{
+  "items": [
+    {
+      "operation": "Put",
+      "pk": "user#123",
+      "sk": "profile",
+      "data": { "name": "John" }
+    },
+    {
+      "operation": "Put",
+      "pk": "user#456",
+      "sk": "profile",
+      "data": { "name": "Jane" }
+    },
+    {
+      "operation": "Delete",
+      "pk": "user#789",
+      "sk": "profile"
+    }
+  ]
+}
+```
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `operation` | string | `Put` o `Delete` |
+| `pk` | string | Clave de partición |
+| `sk` | string | Clave de ordenación (opcional) |
+| `data` | object | Datos del elemento (obligatorio para Put) |
+
+**Response (200 OK):**
+```json
+{
+  "successCount": 3,
+  "failedCount": 0,
+  "errors": null
+}
+```
+
+### Fallos Parciales
+
+Algunos elementos pueden fallar mientras otros se completan correctamente:
+```json
+{
+  "successCount": 2,
+  "failedCount": 1,
+  "errors": [
+    {
+      "pk": "user#789",
+      "sk": "profile",
+      "error": "Condition check failed"
+    }
+  ]
+}
+```
+
+---
+
+## Lectura por Lote
+
+### POST /api/v1/databases/\{databaseId\}/items/batch/get
+
+Obtiene varios elementos por clave. Máximo 100 claves por solicitud.
+
+**Request:**
+```json
+{
+  "keys": [
+    { "pk": "user#123", "sk": "profile" },
+    { "pk": "user#456", "sk": "profile" },
+    { "pk": "user#789", "sk": "profile" }
+  ]
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "pk": "user#123",
+      "sk": "profile",
+      "data": { "name": "John" },
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "pk": "user#456",
+      "sk": "profile",
+      "data": { "name": "Jane" },
+      "createdAt": "2024-01-15T11:00:00Z",
+      "updatedAt": "2024-01-15T11:30:00Z"
+    }
+  ],
+  "unprocessedKeys": null
+}
+```
+
+### Claves no Procesadas
+
+Si algunas claves no pudieron procesarse (por ejemplo, por límites de throughput), se devuelven para reintentar:
+```json
+{
+  "items": [...],
+  "unprocessedKeys": [
+    { "pk": "user#789", "sk": "profile" }
+  ]
+}
+```
+
+---
+
+## Límites
+
+| Operación | Límite |
+|-----------|-------|
+| Batch Write | 25 elementos por solicitud |
+| Batch Get | 100 claves por solicitud |
+
+---
+
+## Ejemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Batch Write\n    var writeItems = new List&lt;BatchWriteItem&gt;\n    {\n        new BatchWriteItem\n        {\n            Operation = BatchOperation.Put,\n            PartitionKey = &quot;user#123&quot;,\n            SortKey = &quot;profile&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;name&quot;] = &quot;John&quot; }\n        },\n        new BatchWriteItem\n        {\n            Operation = BatchOperation.Put,\n            PartitionKey = &quot;user#456&quot;,\n            SortKey = &quot;profile&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;name&quot;] = &quot;Jane&quot; }\n        },\n        new BatchWriteItem\n        {\n            Operation = BatchOperation.Delete,\n            PartitionKey = &quot;user#789&quot;,\n            SortKey = &quot;profile&quot;\n        }\n    };\n\n    var writeResult = await client.BatchWriteAsync(writeItems);\n    Console.WriteLine($&quot;Success: {writeResult.Value.SuccessCount}&quot;);\n\n    // Batch Get\n    var keys = new List&lt;ItemKey&gt;\n    {\n        new(&quot;user#123&quot;, &quot;profile&quot;),\n        new(&quot;user#456&quot;, &quot;profile&quot;)\n    };\n\n    var getResult = await client.BatchGetAsync(keys);\n    foreach (var item in getResult.Value.Items)\n    {\n        Console.WriteLine($&quot;{item.PartitionKey}: {item.GetAttribute&lt;string&gt;(&quot;name&quot;)}&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Batch Write\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/batch/write&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;items&quot;: [\n          {\n            &quot;operation&quot;: &quot;Put&quot;,\n            &quot;pk&quot;: &quot;user#123&quot;,\n            &quot;sk&quot;: &quot;profile&quot;,\n            &quot;data&quot;: { &quot;name&quot;: &quot;John&quot; }\n          },\n          {\n            &quot;operation&quot;: &quot;Delete&quot;,\n            &quot;pk&quot;: &quot;user#789&quot;,\n            &quot;sk&quot;: &quot;profile&quot;\n          }\n        ]\n      }&#39;\n\n    # Batch Get\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/batch/get&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;keys&quot;: [\n          { &quot;pk&quot;: &quot;user#123&quot;, &quot;sk&quot;: &quot;profile&quot; },\n          { &quot;pk&quot;: &quot;user#456&quot;, &quot;sk&quot;: &quot;profile&quot; }\n        ]\n      }&#39;\n</code></pre>"}]} />
+
+---
+
+## Buenas Prácticas
+
+### Divide los Lotes Grandes
+
+Si tienes más de 25 elementos para escribir, divídelos en bloques:
+```csharp
+var allItems = GetLargeListOfItems(); // 100 items
+var chunks = allItems.Chunk(25);
+
+foreach (var chunk in chunks)
+{
+    await client.BatchWriteAsync(chunk.ToList());
+}
+```
+
+### Gestiona los Fallos Parciales
+
+Revisa siempre los elementos fallidos y vuelve a intentarlo:
+```csharp
+var result = await client.BatchWriteAsync(items);
+
+if (result.Value.FailedCount > 0)
+{
+    foreach (var error in result.Value.Errors)
+    {
+        Console.WriteLine($"Failed: {error.Pk}/{error.Sk}: {error.Error}");
+    }
+}
+```
+
+### Usa Batch Get para Varios Elementos
+
+En lugar de varios Gets individuales:
+```csharp
+// Inefficient: Multiple requests
+var item1 = await client.GetItemAsync("user#1", "profile");
+var item2 = await client.GetItemAsync("user#2", "profile");
+var item3 = await client.GetItemAsync("user#3", "profile");
+
+// Efficient: Single request
+var items = await client.BatchGetAsync(new[]
+{
+    new ItemKey("user#1", "profile"),
+    new ItemKey("user#2", "profile"),
+    new ItemKey("user#3", "profile")
+});
+```
+
+---
+
+## Cuándo Usar Batch vs Transactions
+
+| Caso de uso | Batch | Transaction |
+|----------|-------|-------------|
+| Escrituras independientes | Sí | No |
+| Todo o nada | No | Sí |
+| Throughput máximo | Sí | No |
+| Escrituras condicionales | No | Sí |
+| Máximo de elementos | 25 escritura / 100 lectura | 25 escritura / 100 lectura |
+
+---
+
+## Próximos Pasos
+
+- [Transactions](/reference/api/transactions/) - Para operaciones atómicas
+- [Item Operations](/reference/api/item-operations/) - Operaciones de un solo elemento
+- [Rate Limits](/reference/rate-limits/) - Límites de throughput

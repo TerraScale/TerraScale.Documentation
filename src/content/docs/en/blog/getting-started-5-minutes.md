@@ -23,7 +23,7 @@ I timed myself this morning. From opening my browser to running my first query a
 - How to generate an API key and connect with the C# SDK
 - What to try next once your first read and write work
 
-If you want the fuller version after this quick tour, continue with the [Getting Started guide](/guides/getting-started/) and the [C# SDK guide](/guides/SDKs/csharp/).
+If you want the fuller version after this quick tour, continue with the [Getting Started guide](/guides/getting-started/) and the [C# SDK guide](/guides/sdks/csharp/).
 
 ## Minute 0-1: Sign Up
 

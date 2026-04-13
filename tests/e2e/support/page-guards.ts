@@ -67,6 +67,10 @@ export async function checkControlsActionable(page: Page, selector: string): Pro
 				continue;
 			}
 
+			if (href.startsWith('#')) {
+				continue;
+			}
+
 			const controlOrigin = new URL(href, page.url()).origin;
 			if (controlOrigin !== pageOrigin) {
 				continue;

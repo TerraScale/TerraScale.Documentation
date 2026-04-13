@@ -1,0 +1,152 @@
+---
+title: Visión General de la API
+description: Referencia de la API de TerraScale - URL base, autenticación y patrones comunes.
+openapi:
+  spec: /openapi/terrascale.yaml
+sidebar:
+  order: 1
+---
+
+import { Card, CardGrid } from '$lib/mdx';
+
+Referencia completa de la API para operaciones de base de datos de TerraScale.
+
+---
+
+## URL Base
+```
+https://api.terrascale.io
+```
+
+Todos los endpoints devuelven respuestas JSON y usan códigos de estado HTTP estándar.
+
+---
+
+## Autenticación
+
+Todas las solicitudes de la API requieren autenticación. Usa una de estas opciones:
+
+### API Key (para operaciones de base de datos)
+```http
+Authorization: Bearer ts_live_your_api_key
+```
+
+### JWT Token (para operaciones de administración)
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+Consulta [Authentication](/reference/authentication/) para más detalles.
+
+---
+
+## Secciones de la API
+
+Las páginas de referencia estáticas de esta sección son la experiencia de documentación predeterminada. Si quieres explorar la misma fuente OpenAPI de forma interactiva, abre el [API Explorer](/reference/api/explorer/) opcional.
+
+<CardGrid items={[{"title":"Operaciones de Elementos","icon":"pencil","content":"<p><a href=\"/reference/api/item-operations/\">Operaciones CRUD</a> para elementos individuales de la base de datos.</p>"},{"title":"Operaciones de Consulta","icon":"magnifier","content":"<p><a href=\"/reference/api/query-operations/\">Query y Scan</a> para recuperar varios elementos.</p>"},{"title":"Operaciones por Lote","icon":"list-format","content":"<p><a href=\"/reference/api/batch-operations/\">Lectura/escritura por lote</a> para operaciones masivas.</p>"},{"title":"Transacciones","icon":"approve-check","content":"<p><a href=\"/reference/api/transactions/\">Operaciones transaccionales</a> para actualizaciones atómicas de varios elementos.</p>"},{"title":"Repositorios","icon":"document","content":"<p><a href=\"/reference/api/repositories/\">Operaciones de repositorio</a> para entidades tipadas.</p>"},{"title":"API SQL","icon":"seti:db","content":"<p><a href=\"/reference/api/sql-api/\">Interfaz SQL</a> para consultas de estilo SQL.</p>"},{"title":"Salud","icon":"heart","content":"<p><a href=\"/reference/api/health/\">Endpoints de salud</a> para monitoreo.</p>"}]} />
+
+---
+
+## Patrones Comunes de Respuesta
+
+### Respuesta Correcta
+```json
+{
+  "pk": "user#123",
+  "sk": "profile",
+  "data": {
+    "name": "John Doe"
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+### Respuesta de Error
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Item not found"
+}
+```
+
+---
+
+## Códigos de Estado HTTP
+
+| Estado | Descripción |
+|--------|-------------|
+| 200 | OK - La solicitud se completó correctamente |
+| 201 | Created - Recurso creado |
+| 204 | No Content - Éxito, sin cuerpo |
+| 400 | Bad Request - Parámetros inválidos |
+| 401 | Unauthorized - Autenticación inválida o ausente |
+| 403 | Forbidden - Permisos insuficientes |
+| 404 | Not Found - El recurso no existe |
+| 409 | Conflict - La comprobación de condición falló |
+| 429 | Too Many Requests - Se superó el límite de tasa |
+| 500 | Internal Server Error |
+
+---
+
+## Paginación
+
+Los endpoints paginados usan paginación basada en cursor:
+
+**Request:**
+```json
+{
+  "limit": 20,
+  "cursor": null
+}
+```
+
+**Response:**
+```json
+{
+  "items": [...],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "count": 20
+}
+```
+
+Para obtener la siguiente página, pasa el valor de `nextCursor` como `cursor` en la siguiente solicitud.
+
+---
+
+## Límites de Tasa
+
+Los límites de tasa dependen del nivel de tu plan:
+
+| Plan | Límite |
+|------|-------|
+| Free | 100 solicitudes/segundo |
+| Pro | 1.000 solicitudes/segundo |
+| Enterprise | Personalizado |
+
+Cuando se alcanza el límite de tasa, la API devuelve HTTP 429 con un encabezado `Retry-After`.
+
+Consulta [Rate Limits](/reference/rate-limits/) para más detalles.
+
+---
+
+## Scopes Requeridos
+
+| Operación | Scope requerido |
+|-----------|----------------|
+| Leer elementos | `database:read` o `database:*` |
+| Escribir elementos | `database:write` o `database:*` |
+| Leer repositorios | `repository:read` o `repository:*` |
+| Escribir repositorios | `repository:write` o `repository:*` |
+
+---
+
+## Próximos Pasos
+
+- [Item Operations](/reference/api/item-operations/) - Empieza con el CRUD básico
+- [Query Operations](/reference/api/query-operations/) - Aprende a consultar datos
+- [API Explorer](/reference/api/explorer/) - Navegador OpenAPI interactivo opcional
+- [C# SDK](/guides/sdks/csharp/) - Usa el SDK para un desarrollo más sencillo

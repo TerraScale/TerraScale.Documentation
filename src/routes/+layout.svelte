@@ -124,7 +124,12 @@
 		</div>
 	{/if}
 	<Header openSearch={openSearch} mobileNavOpen={mobileNavOpen} toggleMobileNav={toggleMobileNav} />
-	<MobileNav open={mobileNavOpen} onClose={closeMobileNav} openSearch={openSearch} />
+	<MobileNav
+		open={mobileNavOpen}
+		onClose={closeMobileNav}
+		openSearch={openSearch}
+		sidebar={page.data.sidebar ?? []}
+	/>
 	<main
 		class="relative z-10"
 		data-locale={page.data.localeConfig?.prefix ?? 'en'}

@@ -640,6 +640,10 @@ export function getLocaleEntryByRoute(route: string, locale: string) {
 	return getLocaleContent(locale).routeMap.get(normalizeRoute(route));
 }
 
+export function getLocaleListedEntries(locale: string) {
+	return getLocaleContent(locale).listedEntries;
+}
+
 export function getLocalePrerenderEntries(locale: string) {
 	return getLocaleContent(locale).publicEntries
 		.filter((entry) => entry.route !== '/')

@@ -1,0 +1,309 @@
+---
+title: API SQL
+description: Interfaz similar a SQL para bases de datos TerraScale con una sintaxis de consulta familiar.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: SQL
+sidebar:
+  order: 7
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Una interfaz similar a SQL para desarrolladores que prefieren consultas de estilo relacional.
+
+:::note[Subconjunto Mínimo de SQL]
+La API SQL ofrece un subconjunto mínimo de SQL. Es ideal para exploración y prototipado, pero considera la [TerraScale API](/guides/api-strategy/) para producción.
+:::
+
+---
+
+## Autorización
+
+| Operación | JWT | API Key (read) | API Key (write) | API Key (admin) |
+|-----------|-----|----------------|-----------------|-----------------|
+| SELECT | Sí | Sí | Sí | Sí |
+| INSERT/UPDATE/DELETE | Sí | No | Sí | Sí |
+| CREATE/ALTER/DROP TABLE | Sí | No | No | Sí |
+
+---
+
+## Ejecutar Query
+
+### POST /databases/\{databaseId\}/sql/query
+
+Ejecuta una query SQL (SELECT, INSERT, UPDATE, DELETE).
+
+**Request:**
+```json
+{
+  "sql": "SELECT * FROM users WHERE id = ?",
+  "parameters": {
+    "id": "user_123"
+  },
+  "limit": 100,
+  "pageToken": null
+}
+```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|----------|-------------|
+| `sql` | string | Sí | Instrucción SQL que se ejecutará |
+| `parameters` | object | No | Parámetros con nombre para la query |
+| `limit` | integer | No | Máximo de filas que se devolverán |
+| `pageToken` | string | No | Token de paginación de la respuesta anterior |
+
+**Response (200 OK):**
+```json
+{
+  "rows": [
+    {
+      "id": "user_123",
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  ],
+  "rowCount": 1,
+  "columns": [
+    { "name": "id", "type": "text" },
+    { "name": "name", "type": "text" },
+    { "name": "email", "type": "text" }
+  ],
+  "nextPageToken": null,
+  "executionTimeMs": 15
+}
+```
+
+---
+
+## Ejecutar DDL
+
+### POST /databases/\{databaseId\}/sql/execute
+
+Ejecuta una instrucción DDL (CREATE TABLE, ALTER TABLE, DROP TABLE, CREATE INDEX, DROP INDEX).
+
+**Request:**
+```json
+{
+  "sql": "CREATE TABLE users (id TEXT, name TEXT, email TEXT, PRIMARY KEY (id))"
+}
+```
+
+**Response (200 OK):**
+```json
+{
+  "success": true,
+  "message": "Table 'users' created successfully",
+  "affectedRows": 0
+}
+```
+
+---
+
+## Listar Tablas
+
+### GET /databases/\{databaseId\}/sql/tables
+
+Lista todas las tablas de la base de datos.
+
+**Response (200 OK):**
+```json
+{
+  "tables": [
+    {
+      "name": "users",
+      "rowCount": 1500,
+      "createdAt": "2024-01-15T10:00:00Z"
+    },
+    {
+      "name": "orders",
+      "rowCount": 5200,
+      "createdAt": "2024-01-15T10:05:00Z"
+    }
+  ]
+}
+```
+
+---
+
+## Obtener el Schema de la Tabla
+
+### GET /databases/\{databaseId\}/sql/tables/\{tableName\}/schema
+
+Obtiene el schema de una tabla específica.
+
+**Response (200 OK):**
+```json
+{
+  "tableName": "users",
+  "columns": [
+    {
+      "name": "id",
+      "type": "text",
+      "isPartitionKey": true,
+      "isClusteringKey": false,
+      "isNullable": false,
+      "defaultValue": null
+    },
+    {
+      "name": "name",
+      "type": "text",
+      "isPartitionKey": false,
+      "isClusteringKey": false,
+      "isNullable": true,
+      "defaultValue": null
+    }
+  ],
+  "primaryKey": {
+    "partitionKeys": ["id"],
+    "clusteringKeys": []
+  },
+  "indexes": [
+    {
+      "name": "users_email_idx",
+      "columns": ["email"],
+      "isUnique": false
+    }
+  ]
+}
+```
+
+---
+
+## Tipos de Datos Admitidos
+
+| Tipo SQL | Descripción |
+|----------|-------------|
+| `VARCHAR`, `TEXT`, `STRING` | Cadena UTF-8 |
+| `INT`, `INTEGER` | Entero con signo de 32 bits |
+| `BIGINT`, `LONG` | Entero con signo de 64 bits |
+| `SMALLINT`, `SHORT` | Entero con signo de 16 bits |
+| `TINYINT`, `BYTE` | Entero con signo de 8 bits |
+| `FLOAT`, `REAL` | Coma flotante IEEE-754 de 32 bits |
+| `DOUBLE` | Coma flotante IEEE-754 de 64 bits |
+| `DECIMAL`, `NUMERIC` | Decimal de precisión variable |
+| `BOOLEAN`, `BOOL` | Valor true/false |
+| `DATE` | Fecha sin hora |
+| `TIME` | Hora sin fecha |
+| `TIMESTAMP`, `DATETIME` | Fecha y hora |
+| `BLOB`, `BINARY` | Datos binarios |
+| `UUID`, `GUID` | Valor UUID |
+| `TIMEUUID` | UUID basado en tiempo |
+| `LIST<T>` | Colección ordenada (por ejemplo, `LIST<TEXT>`) |
+| `SET<T>` | Colección única (por ejemplo, `SET<INT>`) |
+| `MAP<K,V>` | Colección clave-valor (por ejemplo, `MAP<TEXT,INT>`) |
+
+---
+
+## Ejemplos de SQL
+
+### Crear Tabla
+```sql
+CREATE TABLE products (
+  category TEXT,
+  product_id TEXT,
+  name TEXT,
+  price DECIMAL,
+  in_stock BOOLEAN,
+  tags SET<TEXT>,
+  PRIMARY KEY (category, product_id)
+)
+```
+
+### Insertar Datos
+```sql
+INSERT INTO products (category, product_id, name, price, in_stock)
+VALUES ('electronics', 'prod_001', 'Wireless Mouse', 29.99, true)
+```
+
+### Query con Condiciones
+```sql
+SELECT name, price FROM products
+WHERE category = 'electronics' AND product_id > 'prod_000'
+ORDER BY product_id
+LIMIT 10
+```
+
+### Actualizar Datos
+```sql
+UPDATE products SET price = 24.99, in_stock = false
+WHERE category = 'electronics' AND product_id = 'prod_001'
+```
+
+### Eliminar Datos
+```sql
+DELETE FROM products
+WHERE category = 'electronics' AND product_id = 'prod_001'
+```
+
+### Crear Índice
+```sql
+CREATE INDEX products_name_idx ON products (name)
+```
+
+---
+
+## Limitaciones
+
+| Función | Estado |
+|---------|--------|
+| Operaciones JOIN | No compatible |
+| Subqueries | No compatible |
+| GROUP BY | No compatible |
+| Funciones agregadas | Solo COUNT |
+| Expresiones complejas en SELECT | No compatible |
+| WHERE en columnas no indexadas | Limitado |
+| ORDER BY | Solo columnas de clustering |
+
+---
+
+## Códigos de Error
+
+| Código | Descripción |
+|------|-------------|
+| `SQL_SYNTAX_ERROR` | La instrucción SQL tiene errores de sintaxis |
+| `SQL_VALIDATION_ERROR` | El SQL es válido, pero viola restricciones |
+| `ACCESS_DENIED` | El usuario no tiene permiso para esta operación |
+| `TABLE_NOT_FOUND` | La tabla referenciada no existe |
+| `DATABASE_NOT_FOUND` | El ID de la base de datos es inválido |
+| `SQL_EXECUTION_ERROR` | Error durante la ejecución de la query |
+
+**Error Response (400 Bad Request):**
+```json
+{
+  "code": "SQL_SYNTAX_ERROR",
+  "message": "Unexpected token at position 15",
+  "details": "Expected FROM keyword"
+}
+```
+
+---
+
+## Ejemplos de Código
+
+<Tabs items={[{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create table\n    curl -X POST &quot;https://api.terrascale.io/databases/my-db/sql/execute&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;sql&quot;: &quot;CREATE TABLE users (id TEXT, name TEXT, PRIMARY KEY (id))&quot;\n      }&#39;\n\n    # Insert data\n    curl -X POST &quot;https://api.terrascale.io/databases/my-db/sql/query&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;sql&quot;: &quot;INSERT INTO users (id, name) VALUES (&#39;\\&#39;&#39;user_1&#39;\\&#39;&#39;, &#39;\\&#39;&#39;John&#39;\\&#39;&#39;)&quot;\n      }&#39;\n\n    # Query data\n    curl -X POST &quot;https://api.terrascale.io/databases/my-db/sql/query&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;sql&quot;: &quot;SELECT * FROM users WHERE id = ?&quot;,\n        &quot;parameters&quot;: { &quot;id&quot;: &quot;user_1&quot; }\n      }&#39;\n</code></pre>"},{"label":"JavaScript","content":"<pre><code class=\"language-javascript\">    async function executeQuery(sql, parameters = {}) {\n      const response = await fetch(\n        `https://api.terrascale.io/databases/$\\{databaseId\\}/sql/query`,\n        {\n          method: &#39;POST&#39;,\n          headers: {\n            &#39;Authorization&#39;: `Bearer ${apiKey}`,\n            &#39;Content-Type&#39;: &#39;application/json&#39;\n          },\n          body: JSON.stringify({ sql, parameters })\n        }\n      );\n\n      return await response.json();\n    }\n\n    // Query users\n    const result = await executeQuery(\n      &#39;SELECT * FROM users WHERE id = ?&#39;,\n      { id: &#39;user_123&#39; }\n    );\n\n    console.log(result.rows);\n</code></pre>"}]} />
+
+---
+
+## Cuándo Usar la API SQL
+
+**Bueno para:**
+- Exploración interactiva de datos
+- Queries ad hoc
+- Herramientas administrativas
+- Desarrolladores con experiencia en SQL
+- Prototipado
+
+**Considera la TerraScale API para:**
+- Aplicaciones en producción
+- Código crítico para el rendimiento
+- Acceso completo a las funciones
+- Seguridad de tipos
+
+---
+
+## Próximos Pasos
+
+- [API Strategy](/guides/api-strategy/) - Compara las opciones de API
+- [Query Operations](/reference/api/query-operations/) - Queries de la TerraScale API
+- [Getting Started](/guides/getting-started/) - Guía de inicio rápido

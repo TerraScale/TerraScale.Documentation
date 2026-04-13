@@ -1,0 +1,6 @@
+{
+  "url": "http://127.0.0.1:4173/pt-br/nonexistent-page/",
+  "title": "Error response",
+  "lang": "en",
+  "bodyText": "Error response\n\nError code: 404\n\nMessage: File not found.\n\nError code explanation: 404 - Nothing matches the given URI."
+}

@@ -1,0 +1,214 @@
+---
+title: Manejo de errores
+description: Gestiona los errores de forma elegante en aplicaciones TerraScale.
+sidebar:
+  order: 9
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Todas las operaciones del cliente devuelven objetos `Result<T>` o `Result` para un manejo seguro de errores.
+
+---
+
+## Códigos de estado HTTP
+
+| Status | Description |
+|--------|-------------|
+| 200 | OK, solicitud correcta |
+| 201 | Created, recurso creado |
+| 204 | No Content, éxito sin cuerpo |
+| 400 | Bad Request, parámetros inválidos |
+| 401 | Unauthorized, autenticación inválida o ausente |
+| 403 | Forbidden, permisos insuficientes |
+| 404 | Not Found, el recurso no existe |
+| 409 | Conflict, falló la verificación de condición |
+| 429 | Too Many Requests, límite de tasa excedido |
+| 500 | Internal Server Error |
+
+---
+
+## Formato de respuesta de error
+```json
+{
+  "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Item not found",
+  "instance": "/api/v1/databases/my-db/items/user%23123"
+}
+```
+
+---
+
+## Patrón Result (C# SDK)
+
+### Comprobar resultados
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsSuccess)
+{
+    var item = result.Value;
+    // Process item
+}
+else if (result.IsFailed)
+{
+    foreach (var error in result.Errors)
+    {
+        Console.WriteLine($"Error: {error.Message}");
+    }
+}
+```
+
+### Patrones comunes
+
+<Tabs items={[{"label":"Try-Get Pattern","content":"<pre><code class=\"language-csharp\">    var result = await client.GetItemAsync(&quot;user#123&quot;);\n\n    if (result.IsFailed)\n    {\n        // Handle error\n        logger.LogError(&quot;Failed to get item: {Error}&quot;, result.Errors.First().Message);\n        return null;\n    }\n\n    return result.Value;\n</code></pre>"},{"label":"Throw on Failure","content":"<pre><code class=\"language-csharp\">    // Throws if result is failed\n    var item = result.ValueOrThrow();\n</code></pre>"},{"label":"Default Value","content":"<pre><code class=\"language-csharp\">    // Returns default if failed\n    var item = result.ValueOr(defaultItem);\n</code></pre>"},{"label":"Match Pattern","content":"<pre><code class=\"language-csharp\">    result.Match(\n        onSuccess: item =&gt; Console.WriteLine($&quot;Found: {item.PartitionKey}&quot;),\n        onFailure: errors =&gt; Console.WriteLine($&quot;Error: {errors.First().Message}&quot;)\n    );\n</code></pre>"}]} />
+
+---
+
+## Escenarios comunes de error
+
+### Elemento no encontrado
+```csharp
+var result = await client.GetItemAsync("nonexistent");
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("not found")))
+{
+    Console.WriteLine("Item does not exist");
+}
+```
+
+### Error de autenticación
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("unauthorized")))
+{
+    // Refresh token or redirect to login
+}
+```
+
+### Rate limiting
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("rate limit")))
+{
+    // Wait and retry
+    await Task.Delay(TimeSpan.FromSeconds(5));
+    result = await client.GetItemAsync("user#123");
+}
+```
+
+### Fallo en la comprobación de condición
+```csharp
+var result = await client.TransactWriteAsync(items);
+
+if (result.IsFailed && result.Errors.Any(e => e.Message.Contains("condition")))
+{
+    // Another process modified the data - refresh and retry
+}
+```
+
+---
+
+## Errores de transacción
+```json
+{
+  "successCount": 0,
+  "errors": [
+    {
+      "itemIndex": 2,
+      "pk": "user#123",
+      "sk": "settings",
+      "error": "Condition check failed",
+      "errorType": "ConditionalCheckFailed"
+    }
+  ]
+}
+```
+
+### Tipos de error de transacción
+
+| Error Type | Description |
+|------------|-------------|
+| `ConditionalCheckFailed` | La expresión de condición dio falso |
+| `ItemCollectionSizeLimitExceeded` | Colección de elementos demasiado grande |
+| `TransactionCanceled` | La transacción fue cancelada |
+| `ValidationError` | Parámetros de solicitud inválidos |
+| `InternalServerError` | Error del servidor |
+
+---
+
+## Estrategia de reintento
+
+El SDK reintenta automáticamente los fallos transitorios:
+
+### Errores reintentables
+
+- 429 (Rate Limited)
+- 500, 502, 503, 504 (Server Errors)
+- timeouts de red
+
+### Errores no reintentables
+
+- 400 (Bad Request)
+- 401 (Unauthorized)
+- 403 (Forbidden)
+- 404 (Not Found)
+- 409 (Conflict)
+
+### Configurar política de reintento
+```csharp
+var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions
+{
+    ApiKey = "ts_live_your_api_key",
+    Endpoint = "https://api.terrascale.io",
+    Retry = new RetryPolicyOptions
+    {
+        MaxRetries = 3,
+        BaseDelay = TimeSpan.FromMilliseconds(500),
+        MaxDelay = TimeSpan.FromSeconds(10),
+        UseJitter = true
+    }
+});
+```
+
+---
+
+## Registro de errores
+```csharp
+var result = await client.GetItemAsync("user#123");
+
+if (result.IsFailed)
+{
+    foreach (var error in result.Errors)
+    {
+        logger.LogError(
+            "Operation failed: {ErrorType} - {Message}",
+            error.GetType().Name,
+            error.Message
+        );
+    }
+}
+```
+
+---
+
+## Buenas prácticas
+
+1. **Comprueba siempre los resultados** - nunca asumas éxito
+2. **Registra con contexto** - incluye detalles de la operación en los logs
+3. **Usa manejo específico de errores** - trata los errores conocidos de forma diferente
+4. **Implementa lógica de reintento** - para fallos transitorios
+5. **Falla de forma elegante** - muestra mensajes amigables para el usuario
+
+---
+
+## Próximos pasos
+
+- [Rate Limits](/reference/rate-limits/) - Gestiona el rate limiting
+- [Transactions](/reference/api/transactions/) - Manejo de errores en transacciones
+- [Best Practices](/reference/best-practices/) - Prevención de errores
+

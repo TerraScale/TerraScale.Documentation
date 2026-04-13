@@ -1,0 +1,198 @@
+---
+title: Operaciones de Repositorio
+description: API de repositorio para almacenamiento de entidades tipadas con validación de schema.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Repositories
+sidebar:
+  order: 6
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Los repositorios ofrecen almacenamiento de entidades tipadas con validación de schema.
+
+---
+
+## Crear Entidad
+
+### POST /api/v1/repositories/\{repositoryId\}
+
+Crea una nueva entidad en el repositorio.
+
+**Request:**
+```json
+{
+  "data": {
+    "name": "Acme Corp",
+    "industry": "Technology",
+    "employeeCount": 500
+  }
+}
+```
+
+**Response (201 Created):**
+```json
+{
+  "id": "ent_abc123",
+  "data": {
+    "name": "Acme Corp",
+    "industry": "Technology",
+    "employeeCount": 500
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:00:00Z"
+}
+```
+
+---
+
+## Listar Entidades
+
+### GET /api/v1/repositories/\{repositoryId\}
+
+Lista todas las entidades con paginación.
+
+**Parámetros de Query:**
+
+| Parámetro | Tipo | Predeterminado | Descripción |
+|-----------|------|---------|-------------|
+| `limit` | integer | 20 | Máximo de elementos a devolver |
+| `cursor` | string | null | Cursor de paginación |
+
+**Response (200 OK):**
+```json
+{
+  "entities": [
+    {
+      "id": "ent_abc123",
+      "data": { "name": "Acme Corp" },
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:00:00Z"
+    }
+  ],
+  "nextCursor": "eyJsYXN0S2V5Ijo...",
+  "totalCount": 150
+}
+```
+
+---
+
+## Obtener Entidad
+
+### GET /api/v1/repositories/\{repositoryId\}/\{entityId\}
+
+Obtiene una entidad por ID.
+
+**Response (200 OK):**
+```json
+{
+  "id": "ent_abc123",
+  "data": {
+    "name": "Acme Corp",
+    "industry": "Technology"
+  },
+  "createdAt": "2024-01-15T10:00:00Z",
+  "updatedAt": "2024-01-15T10:30:00Z"
+}
+```
+
+---
+
+## Actualizar Entidad
+
+### PUT /api/v1/repositories/\{repositoryId\}/\{entityId\}
+
+Actualiza una entidad existente.
+
+**Request:**
+```json
+{
+  "data": {
+    "name": "Acme Corporation",
+    "industry": "Technology",
+    "employeeCount": 600
+  }
+}
+```
+
+**Response (200 OK):** Devuelve la entidad actualizada.
+
+---
+
+## Eliminar Entidad
+
+### DELETE /api/v1/repositories/\{repositoryId\}/\{entityId\}
+
+Elimina una entidad.
+
+**Response (204 No Content):** Cuerpo vacío en caso de éxito.
+
+---
+
+## Consultar Entidades
+
+### POST /api/v1/repositories/\{repositoryId\}/query
+
+Consulta entidades con filtrado opcional.
+
+**Request:**
+```json
+{
+  "filter": "industry = :industry",
+  "filterValues": {
+    ":industry": "Technology"
+  },
+  "limit": 20,
+  "cursor": null,
+  "sortBy": "createdAt",
+  "sortOrder": "desc"
+}
+```
+
+**Response (200 OK):** El mismo formato que la respuesta de listado de entidades.
+
+---
+
+## Ejemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Define entity\n    public record Customer : EntityBase\n    {\n        public required string Name { get; init; }\n        public required string Email { get; init; }\n        public string? Phone { get; init; }\n        public CustomerTier Tier { get; init; } = CustomerTier.Standard;\n    }\n\n    public enum CustomerTier\n    {\n        Standard,\n        Premium,\n        Enterprise\n    }\n\n    // Get repository reference\n    var customers = client.GetRepository&lt;Customer&gt;(&quot;repo_customers&quot;);\n\n    // Create entity\n    var customer = new Customer\n    {\n        Id = Guid.NewGuid().ToString(),\n        Name = &quot;Acme Corp&quot;,\n        Email = &quot;contact@acme.com&quot;,\n        Tier = CustomerTier.Premium\n    };\n\n    var createResult = await customers.CreateAsync(customer);\n\n    // Get entity\n    var getResult = await customers.GetAsync(customer.Id);\n\n    // Update entity\n    var updatedCustomer = customer with { Tier = CustomerTier.Enterprise };\n    var updateResult = await customers.UpdateAsync(updatedCustomer);\n\n    // Delete entity\n    var deleteResult = await customers.DeleteAsync(customer.Id);\n\n    // List entities\n    var listResult = await customers.ListAsync(new PaginationOptions { Limit = 50 });\n\n    // Query entities\n    var filter = new QueryFilter { PartitionKey = customer.Id };\n    var queryResult = await customers.QueryAsync(filter);\n\n    // Check existence\n    var existsResult = await customers.ExistsAsync(customer.Id);\n    if (existsResult.IsSuccess &amp;&amp; existsResult.Value)\n    {\n        Console.WriteLine(&quot;Customer exists&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create entity\n    curl -X POST &quot;https://api.terrascale.io/api/v1/repositories/repo_customers&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;Acme Corp&quot;,\n          &quot;email&quot;: &quot;contact@acme.com&quot;,\n          &quot;tier&quot;: &quot;Premium&quot;\n        }\n      }&#39;\n\n    # Get entity\n    curl &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n\n    # Update entity\n    curl -X PUT &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;data&quot;: {\n          &quot;name&quot;: &quot;Acme Corporation&quot;,\n          &quot;email&quot;: &quot;contact@acme.com&quot;,\n          &quot;tier&quot;: &quot;Enterprise&quot;\n        }\n      }&#39;\n\n    # Delete entity\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/ent_abc123&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n\n    # Query entities\n    curl -X POST &quot;https://api.terrascale.io/api/v1/repositories/repo_customers/query&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;filter&quot;: &quot;tier = :tier&quot;,\n        &quot;filterValues&quot;: { &quot;:tier&quot;: &quot;Enterprise&quot; }\n      }&#39;\n</code></pre>"}]} />
+
+---
+
+## Clase Base de la Entidad
+
+Al usar el SDK de C#, las entidades deben extender `EntityBase`:
+```csharp
+public abstract record EntityBase : IEntity
+{
+    public required string Id { get; init; }
+    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
+    public DateTimeOffset? UpdatedAt { get; init; }
+    public long Version { get; init; } = 1;
+
+    public virtual string GetPartitionKey() => Id;
+    public virtual string? GetSortKey() => null;
+}
+```
+
+---
+
+## Repositorio vs Elementos sin Procesar
+
+| Característica | Repositorio | Elementos sin procesar |
+|---------|------------|-----------|
+| Seguridad de tipos | Sí | No |
+| Validación de schema | Sí | No |
+| IDs generados automáticamente | Sí | No |
+| Timestamps | Automático | Manual |
+| Versionado | Integrado | Manual |
+| Mejor para | Entidades de dominio | Datos flexibles |
+
+---
+
+## Próximos Pasos
+
+- [Repository Management](/reference/management/repositories/) - Crea y configura repositorios
+- [Data Models](/reference/data-models/) - Interfaces y tipos de entidad
+- [C# SDK](/guides/sdks/csharp/) - Documentación completa del SDK

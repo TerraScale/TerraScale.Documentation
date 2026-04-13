@@ -52,7 +52,7 @@ The common thread is simple. These teams wanted something that would just work. 
 
 Today marks our public launch. You can sign up at [dashboard.terrascale.io](https://dashboard.terrascale.io) and start building right away. The free tier gives you enough room to build something real, not just a toy.
 
-Over the coming months, we'll be shipping more SDKs, more regions, and some features I'm genuinely excited about but can't talk about yet. If you want a preview of where things are headed, keep an eye on the [Public Alpha roadmap](/roadmap/public-alpha/).
+Over the coming months, we'll be shipping more SDKs, more regions, and some features I'm genuinely excited about but can't talk about yet. If you want a preview of where things are headed, keep an eye on the [Public Alpha roadmap](/roadmap/).
 
 If you try TerraScale and love it, tell your friends. If you try it and something doesn't work right, tell us. We're a small team and we read every piece of feedback.
 

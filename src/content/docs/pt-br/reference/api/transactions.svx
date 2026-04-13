@@ -1,0 +1,239 @@
+---
+title: Transações
+description: Operações transacionais compatíveis com ACID para atualizações atômicas de vários itens.
+openapi:
+  spec: /openapi/terrascale.yaml
+  tag: Transactions
+sidebar:
+  order: 5
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+As operações transacionais fornecem leituras e escritas atômicas compatíveis com ACID em vários itens.
+
+---
+
+## Transactional Get
+
+### POST /api/v1/databases/\{databaseId\}/items/transact/get
+
+Lê vários itens de forma atômica em um ponto consistente no tempo. Máximo de 100 itens.
+
+**Request:**
+```json
+{
+  "items": [
+    { "pk": "user#123", "sk": "profile" },
+    { "pk": "user#123", "sk": "settings", "projectionExpression": ["theme", "locale"] }
+  ],
+  "clientRequestToken": "unique-request-id"
+}
+```
+
+| Campo | Tipo | Descrição |
+|-------|------|-------------|
+| `pk` | string | Chave de partição |
+| `sk` | string | Chave de ordenação (opcional) |
+| `projectionExpression` | array | Atributos específicos a retornar (opcional) |
+| `clientRequestToken` | string | Token de idempotência (opcional) |
+
+**Response (200 OK):**
+```json
+{
+  "items": [
+    {
+      "pk": "user#123",
+      "sk": "profile",
+      "item": { "name": "John" },
+      "itemExists": true
+    },
+    {
+      "pk": "user#123",
+      "sk": "settings",
+      "item": null,
+      "itemExists": false
+    }
+  ]
+}
+```
+
+---
+
+## Transactional Write
+
+### POST /api/v1/databases/\{databaseId\}/items/transact/write
+
+Grava, atualiza ou exclui vários itens de forma atômica. Todas as operações são concluídas com sucesso ou todas falham. Máximo de 25 itens.
+
+**Request:**
+```json
+{
+  "items": [
+    {
+      "action": "Put",
+      "pk": "user#123",
+      "sk": "profile",
+      "data": { "name": "John" }
+    },
+    {
+      "action": "Update",
+      "pk": "user#123",
+      "sk": "stats",
+      "data": { "loginCount": 5 }
+    },
+    {
+      "action": "Delete",
+      "pk": "user#123",
+      "sk": "temp"
+    },
+    {
+      "action": "ConditionCheck",
+      "pk": "user#123",
+      "sk": "settings",
+      "conditionExpression": "attribute_exists(pk)"
+    }
+  ],
+  "clientRequestToken": "unique-request-id"
+}
+```
+
+### Ações de Transação
+
+| Ação | Descrição |
+|--------|-------------|
+| `Put` | Insere ou substitui um item |
+| `Update` | Atualiza atributos de um item existente |
+| `Delete` | Remove um item |
+| `ConditionCheck` | Verifica uma condição sem modificação |
+
+**Response (200 OK):**
+```json
+{
+  "successCount": 4,
+  "errors": null
+}
+```
+
+### Falha de Transação
+
+Se qualquer operação falhar, toda a transação é revertida:
+```json
+{
+  "successCount": 0,
+  "errors": [
+    {
+      "itemIndex": 3,
+      "pk": "user#123",
+      "sk": "settings",
+      "error": "Condition check failed",
+      "errorType": "ConditionalCheckFailed"
+    }
+  ]
+}
+```
+
+---
+
+## Tipos de Erro
+
+| Tipo de Erro | Descrição |
+|------------|-------------|
+| `ConditionalCheckFailed` | A expressão de condição foi avaliada como falsa |
+| `ItemCollectionSizeLimitExceeded` | A coleção de itens é grande demais |
+| `TransactionCanceled` | A transação foi cancelada |
+| `ValidationError` | Parâmetros de solicitação inválidos |
+| `InternalServerError` | Erro do servidor |
+
+---
+
+## Idempotência
+
+Use `clientRequestToken` para tornar as transações idempotentes:
+```json
+{
+  "items": [...],
+  "clientRequestToken": "order-12345-payment"
+}
+```
+
+Se você tentar novamente com o mesmo token em até 10 minutos, a TerraScale retornará o resultado original sem reexecutar a transação.
+
+---
+
+## Exemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Transactional Get\n    var getItems = new List&lt;TransactGetItem&gt;\n    {\n        new() { PartitionKey = &quot;user#123&quot;, SortKey = &quot;profile&quot; },\n        new() { PartitionKey = &quot;user#123&quot;, SortKey = &quot;settings&quot; }\n    };\n\n    var getResult = await client.TransactGetAsync(getItems);\n\n    foreach (var item in getResult.Value.Items)\n    {\n        if (item.ItemExists)\n        {\n            Console.WriteLine($&quot;{item.PartitionKey}/{item.SortKey}: {item.Item}&quot;);\n        }\n    }\n\n    // Transactional Write - Transfer money between accounts\n    var writeItems = new List&lt;TransactWriteItem&gt;\n    {\n        new()\n        {\n            Action = TransactAction.Update,\n            PartitionKey = &quot;account#source&quot;,\n            SortKey = &quot;balance&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;amount&quot;] = 900 },\n            ConditionExpression = &quot;amount &gt;= :minAmount&quot;\n        },\n        new()\n        {\n            Action = TransactAction.Update,\n            PartitionKey = &quot;account#dest&quot;,\n            SortKey = &quot;balance&quot;,\n            Data = new Dictionary&lt;string, object?&gt; { [&quot;amount&quot;] = 1100 }\n        },\n        new()\n        {\n            Action = TransactAction.Put,\n            PartitionKey = &quot;transfer#12345&quot;,\n            SortKey = &quot;record&quot;,\n            Data = new Dictionary&lt;string, object?&gt;\n            {\n                [&quot;from&quot;] = &quot;account#source&quot;,\n                [&quot;to&quot;] = &quot;account#dest&quot;,\n                [&quot;amount&quot;] = 100,\n                [&quot;timestamp&quot;] = DateTime.UtcNow\n            }\n        }\n    };\n\n    var writeResult = await client.TransactWriteAsync(writeItems, &quot;transfer-12345&quot;);\n\n    if (writeResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;Transfer completed!&quot;);\n    }\n    else\n    {\n        Console.WriteLine(&quot;Transfer failed - rolled back&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Transactional Get\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/transact/get&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;items&quot;: [\n          { &quot;pk&quot;: &quot;user#123&quot;, &quot;sk&quot;: &quot;profile&quot; },\n          { &quot;pk&quot;: &quot;user#123&quot;, &quot;sk&quot;: &quot;settings&quot; }\n        ]\n      }&#39;\n\n    # Transactional Write\n    curl -X POST &quot;https://api.terrascale.io/api/v1/databases/my-db/items/transact/write&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;items&quot;: [\n          {\n            &quot;action&quot;: &quot;Put&quot;,\n            &quot;pk&quot;: &quot;user#123&quot;,\n            &quot;sk&quot;: &quot;profile&quot;,\n            &quot;data&quot;: { &quot;name&quot;: &quot;John&quot; }\n          },\n          {\n            &quot;action&quot;: &quot;ConditionCheck&quot;,\n            &quot;pk&quot;: &quot;user#123&quot;,\n            &quot;sk&quot;: &quot;settings&quot;,\n            &quot;conditionExpression&quot;: &quot;attribute_exists(pk)&quot;\n          }\n        ],\n        &quot;clientRequestToken&quot;: &quot;unique-request-id&quot;\n      }&#39;\n</code></pre>"}]} />
+
+---
+
+## Casos de Uso
+
+### Transferência de Dinheiro
+
+Garanta que débito e crédito aconteçam de forma atômica:
+```json
+{
+  "items": [
+    { "action": "Update", "pk": "account#A", "sk": "balance", "data": {"amount": 900} },
+    { "action": "Update", "pk": "account#B", "sk": "balance", "data": {"amount": 1100} },
+    { "action": "Put", "pk": "transfer#123", "sk": "log", "data": {...} }
+  ]
+}
+```
+
+### Gerenciamento de Estoque
+
+Reserve estoque apenas se estiver disponível:
+```json
+{
+  "items": [
+    {
+      "action": "ConditionCheck",
+      "pk": "product#ABC",
+      "sk": "inventory",
+      "conditionExpression": "quantity >= :required"
+    },
+    {
+      "action": "Update",
+      "pk": "product#ABC",
+      "sk": "inventory",
+      "data": { "quantity": 45 }
+    },
+    {
+      "action": "Put",
+      "pk": "order#12345",
+      "sk": "item#ABC",
+      "data": { "quantity": 5 }
+    }
+  ]
+}
+```
+
+---
+
+## Limites
+
+| Limite | Valor |
+|-------|-------|
+| Itens de Transact Get | 100 |
+| Itens de Transact Write | 25 |
+| Tamanho total da solicitação | 4 MB |
+| Tamanho do item | 400 KB |
+
+---
+
+## Boas Práticas
+
+1. **Use transações apenas quando necessário**: elas têm latência maior que operações em lote
+2. **Mantenha as transações pequenas**: menos itens significam execução mais rápida
+3. **Use tokens de idempotência**: isso evita operações duplicadas em novas tentativas
+4. **Trate falhas com cuidado**: toda a transação é revertida em qualquer falha
+
+---
+
+## Próximos Passos
+
+- [Batch Operations](/reference/api/batch-operations/) - Para operações em massa não atômicas
+- [Item Operations](/reference/api/item-operations/) - Operações de item único
+- [Error Handling](/reference/error-handling/) - Trate erros de transação

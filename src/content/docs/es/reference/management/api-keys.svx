@@ -1,0 +1,185 @@
+---
+title: Gestión de API Keys
+description: Referencia de la API para crear, listar y revocar API keys.
+sidebar:
+  order: 3
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Gestiona API keys a través de la Management API. Requiere autenticación JWT.
+
+---
+
+## Crear API Key
+
+### POST /api/v1/management/apikeys
+
+Crea una nueva API key.
+
+:::caution[Guarda Tu Clave]
+La API key solo se devuelve una vez. Guárdala de forma segura de inmediato.
+:::
+
+**Request:**
+```json
+{
+  "name": "Production API Key",
+  "scopes": ["database:read", "database:write"],
+  "expiresAt": "2025-01-15T00:00:00Z"
+}
+```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|----------|-------------|
+| `name` | string | Sí | Nombre descriptivo de la clave |
+| `scopes` | array | Sí | Scopes de permiso |
+| `expiresAt` | datetime | No | Fecha de expiración (opcional) |
+
+**Response (201 Created):**
+```json
+{
+  "keyId": "key_abc123",
+  "apiKey": "ts_live_abc123xyz789...",
+  "name": "Production API Key",
+  "scopes": ["database:read", "database:write"],
+  "createdAt": "2024-01-15T10:00:00Z",
+  "expiresAt": "2025-01-15T00:00:00Z"
+}
+```
+
+---
+
+## Listar API Keys
+
+### GET /api/v1/management/apikeys
+
+Lista todas las API keys (sin los valores reales de las claves).
+
+**Response (200 OK):**
+```json
+{
+  "keys": [
+    {
+      "keyId": "key_abc123",
+      "keyPrefix": "ts_live_abc...",
+      "name": "Production API Key",
+      "scopes": ["database:read", "database:write"],
+      "createdAt": "2024-01-15T10:00:00Z",
+      "expiresAt": "2025-01-15T00:00:00Z",
+      "lastUsedAt": "2024-01-15T12:00:00Z",
+      "revoked": false
+    }
+  ],
+  "nextCursor": null
+}
+```
+
+---
+
+## Revocar API Key
+
+### DELETE /api/v1/management/apikeys/\{keyId\}
+
+Revoca una API key. La clave dejará de funcionar de inmediato.
+
+**Response (204 No Content):** Cuerpo vacío en caso de éxito.
+
+---
+
+## Scopes Disponibles
+
+| Scope | Descripción |
+|-------|-------------|
+| `database:read` | Leer elementos de las bases de datos |
+| `database:write` | Escribir/eliminar elementos en las bases de datos |
+| `database:*` | Acceso completo a la base de datos |
+| `repository:read` | Leer entidades de los repositorios |
+| `repository:write` | Escribir/eliminar entidades en los repositorios |
+| `repository:*` | Acceso completo al repositorio |
+| `*` | Acceso completo a todas las operaciones |
+
+### Combinaciones de Scopes
+```json
+// Read-only access
+{ "scopes": ["database:read", "repository:read"] }
+
+// Full database access
+{ "scopes": ["database:*"] }
+
+// Full access
+{ "scopes": ["*"] }
+```
+
+---
+
+## Prefijos de API Key
+
+| Prefijo | Entorno |
+|--------|-------------|
+| `ts_live_` | Producción |
+| `ts_test_` | Pruebas/Desarrollo |
+
+---
+
+## Ejemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Create API key\n    var createResult = await client.ApiKeys.CreateAsync(new CreateApiKeyRequest(\n        Name: &quot;Production API Key&quot;,\n        Scopes: new[] { &quot;database:read&quot;, &quot;database:write&quot; },\n        ExpiresAt: DateTime.UtcNow.AddYears(1)\n    ));\n\n    if (createResult.IsSuccess)\n    {\n        // Important: Save this key - it&#39;s only shown once!\n        Console.WriteLine($&quot;API Key: {createResult.Value.ApiKey}&quot;);\n        Console.WriteLine($&quot;Key ID: {createResult.Value.KeyId}&quot;);\n    }\n\n    // List API keys\n    var listResult = await client.ApiKeys.ListAsync();\n\n    foreach (var key in listResult.Value.Keys)\n    {\n        var status = key.Revoked ? &quot;Revoked&quot; :\n                     key.ExpiresAt &lt; DateTime.UtcNow ? &quot;Expired&quot; : &quot;Active&quot;;\n        Console.WriteLine($&quot;{key.Name} ({key.KeyPrefix}...) - \\{status\\}&quot;);\n    }\n\n    // Revoke API key\n    var revokeResult = await client.ApiKeys.RevokeAsync(&quot;key_abc123&quot;);\n\n    if (revokeResult.IsSuccess)\n    {\n        Console.WriteLine(&quot;API key revoked&quot;);\n    }\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create API key\n    curl -X POST &quot;https://api.terrascale.io/api/v1/management/apikeys&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;name&quot;: &quot;Production API Key&quot;,\n        &quot;scopes&quot;: [&quot;database:read&quot;, &quot;database:write&quot;],\n        &quot;expiresAt&quot;: &quot;2025-01-15T00:00:00Z&quot;\n      }&#39;\n\n    # List API keys\n    curl &quot;https://api.terrascale.io/api/v1/management/apikeys&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Revoke API key\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/management/apikeys/key_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
+
+---
+
+## Buenas Prácticas
+
+### Usa Scopes Específicos
+
+Concede solo los permisos que tu aplicación necesita:
+```json
+// Good: Specific scopes
+{ "scopes": ["database:read"] }
+
+// Avoid: Overly broad access
+{ "scopes": ["*"] }
+```
+
+### Define Fechas de Expiración
+
+Define una expiración razonable por seguridad:
+```json
+{
+  "name": "Temporary Key",
+  "scopes": ["database:read"],
+  "expiresAt": "2024-03-01T00:00:00Z"
+}
+```
+
+### Separa Claves por Entorno
+
+Usa claves diferentes para desarrollo y producción:
+
+- `dev-backend-key` - Development access
+- `staging-backend-key` - Staging access
+- `prod-backend-key` - Production access
+
+### Rota las Claves con Regularidad
+
+- Crea una clave nueva antes de que expire la anterior
+- Actualiza tu aplicación con la nueva clave
+- Revoca la clave anterior
+
+---
+
+## Estado de la Clave
+
+| Estado | Descripción |
+|--------|-------------|
+| Active | La clave es válida y funciona |
+| Expired | La clave ya superó su fecha de expiración |
+| Revoked | La clave fue revocada manualmente |
+
+---
+
+## Próximos Pasos
+
+- [Authentication](/reference/authentication/) - Uso de API keys
+- [Database Management](/reference/management/databases/) - Gestiona bases de datos
+- [Dashboard API Keys](/dashboard/api-keys/) - Gestión desde la interfaz

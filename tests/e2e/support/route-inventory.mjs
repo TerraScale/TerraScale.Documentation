@@ -2,10 +2,19 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+/** @typedef {'default' | 'en' | 'es' | 'pt-br'} LocaleKey */
+/** @typedef {{ locale: LocaleKey, route: string }} NormalizedRoute */
+/** @typedef {Record<LocaleKey, string[]>} RouteGroups */
+
 const BUILD_DIR = path.resolve(process.cwd(), 'build');
-const LOCALE_PREFIXES = new Set(['en', 'es', 'pt-br']);
+const LOCALE_PREFIXES = new Set(/** @type {LocaleKey[]} */ (['en', 'es', 'pt-br']));
 const EXCLUDED_DIRECTORIES = new Set(['pagefind']);
 
+/**
+ * @param {string} directory
+ * @param {string} [relativeDirectory]
+ * @returns {string[]}
+ */
 function walkForIndexHtml(directory, relativeDirectory = '') {
 	const entries = fs.readdirSync(directory, { withFileTypes: true });
 	const files = [];
@@ -31,6 +40,10 @@ function walkForIndexHtml(directory, relativeDirectory = '') {
 	return files;
 }
 
+/**
+ * @param {string} indexFilePath
+ * @returns {NormalizedRoute}
+ */
 function normalizeRoute(indexFilePath) {
 	const segments = indexFilePath.split('/').filter(Boolean);
 	const directorySegments = segments.slice(0, -1);
@@ -41,10 +54,10 @@ function normalizeRoute(indexFilePath) {
 
 	const [firstSegment, ...rest] = directorySegments;
 
-	if (LOCALE_PREFIXES.has(firstSegment)) {
+	if (LOCALE_PREFIXES.has(/** @type {LocaleKey} */ (firstSegment))) {
 		const routeSegments = [firstSegment, ...rest];
 		return {
-			locale: firstSegment,
+			locale: /** @type {LocaleKey} */ (firstSegment),
 			route: `/${routeSegments.join('/')}/`
 		};
 	}
@@ -60,6 +73,7 @@ export function getRoutes(buildDir = BUILD_DIR) {
 		throw new Error(`Build directory not found: ${buildDir}`);
 	}
 
+	/** @type {RouteGroups} */
 	const groupedRoutes = {
 		default: [],
 		en: [],
@@ -75,7 +89,7 @@ export function getRoutes(buildDir = BUILD_DIR) {
 		groupedRoutes[locale] = localeRoutes;
 	}
 
-	for (const locale of Object.keys(groupedRoutes)) {
+	for (const locale of /** @type {LocaleKey[]} */ (Object.keys(groupedRoutes))) {
 		groupedRoutes[locale] = [...new Set(groupedRoutes[locale])].sort((left, right) =>
 			left.localeCompare(right)
 		);

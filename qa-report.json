@@ -1,0 +1,96 @@
+{
+  "report": [
+    {
+      "name": "1. Root redirect",
+      "status": "PASS",
+      "details": "Final URL: http://127.0.0.1:4173/en/",
+      "artifacts": [
+        "qa-01-root-redirect.json"
+      ]
+    },
+    {
+      "name": "2. English homepage",
+      "status": "PASS",
+      "details": "lang=en; languageSwitcherVisible=true; newErrors=0",
+      "artifacts": [
+        "qa-02-en-homepage.png"
+      ]
+    },
+    {
+      "name": "3. Language switcher open/close",
+      "status": "PASS",
+      "details": "menuOpen=true; menuClosed=true",
+      "artifacts": [
+        "qa-03-language-switcher-open.json"
+      ]
+    },
+    {
+      "name": "4. Switch to Portuguese",
+      "status": "FAIL",
+      "details": "url=/pt-br/; lang=en; portugueseNav=true; portugueseFooter=true",
+      "artifacts": [
+        "qa-04-pt-homepage.png"
+      ]
+    },
+    {
+      "name": "5. Switch to Spanish",
+      "status": "FAIL",
+      "details": "url=/es/; lang=en; spanishNav=true",
+      "artifacts": [
+        "qa-05-es-homepage.png"
+      ]
+    },
+    {
+      "name": "6. Deep page navigation",
+      "status": "FAIL",
+      "details": "spanishContent=true; spanishSidebar=true; spanishBreadcrumb=false (page contains section label \"GUIDES\")",
+      "artifacts": [
+        "qa-06-es-getting-started.png"
+      ]
+    },
+    {
+      "name": "7. 404 on non-existent page",
+      "status": "FAIL",
+      "details": "Body starts with: \"Error response\\n\\nError code: 404\\n\\nMessage: File not found.\\n\\nError code explanation: 404 - Nothing matches the given URI.\"",
+      "artifacts": [
+        "qa-07-pt-404.json"
+      ]
+    },
+    {
+      "name": "8. Blog listing",
+      "status": "PASS",
+      "details": "blogListingVisible=true",
+      "artifacts": [
+        "qa-08-en-blog.json"
+      ]
+    },
+    {
+      "name": "9. API Explorer",
+      "status": "FAIL",
+      "details": "lang=en; bodyStart=\"Directory listing for /pt-br/reference/api/explorer/\\n__data.json\"",
+      "artifacts": [
+        "qa-09-pt-api-explorer.json"
+      ]
+    },
+    {
+      "name": "10. Search functionality",
+      "status": "FAIL",
+      "details": "searchAvailable=true; ptResultLinks=8; foreignLocaleLinks=0; hasPortugueseResult=false",
+      "artifacts": [
+        "qa-10-pt-search.png"
+      ]
+    }
+  ],
+  "consoleErrors": [
+    "[console:error] Failed to load resource: the server responded with a status of 404 (File not found)",
+    "[console:error] Failed to load resource: the server responded with a status of 404 (File not found)",
+    "[console:error] Failed to load resource: the server responded with a status of 404 (File not found)",
+    "[console:error] Pagefind search failed TypeError: Failed to fetch dynamically imported module: http://127.0.0.1:4173/pagefind/pagefind.js"
+  ],
+  "pageErrors": [
+    "[pageerror] Failed to fetch dynamically imported module: http://127.0.0.1:4173/pagefind/pagefind.js"
+  ],
+  "requestFailures": [
+    "[requestfailed] GET http://127.0.0.1:4173/pagefind/pagefind.js :: net::ERR_ABORTED"
+  ]
+}

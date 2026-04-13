@@ -1,0 +1,129 @@
+---
+title: Regiones
+description: TerraScale está disponible en 19 regiones de todo el mundo para acceso global a datos con baja latencia.
+sidebar:
+  order: 4
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+TerraScale está disponible en 19 regiones de todo el mundo, lo que te permite desplegar bases de datos cerca de tus usuarios para lograr el mejor rendimiento.
+
+---
+
+## Norteamérica
+
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `ord` | us-ord | Chicago, IL, USA |
+| `ewr` | us-east | Newark, NJ, USA |
+| `sfo` | us-west | Fremont, CA, USA |
+| `lax` | us-lax | Los Angeles, CA, USA |
+| `sea` | us-sea | Seattle, WA, USA |
+| `mia` | us-mia | Miami, FL, USA |
+
+---
+
+## Sudamérica
+
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `gru` | br-gru | Sao Paulo, Brazil |
+
+---
+
+## Europa
+
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `lhr` | eu-west | London, UK |
+| `fra` | eu-central | Frankfurt, Germany |
+| `cdg` | fr-par | Paris, France |
+| `ams` | nl-ams | Amsterdam, Netherlands |
+| `mil` | it-mil | Milan, Italy |
+| `mad` | es-mad | Madrid, Spain |
+| `sto` | se-sto | Stockholm, Sweden |
+
+---
+
+## Asia-Pacífico
+
+| Code | Region ID | Location |
+|------|-----------|----------|
+| `sin` | ap-south | Singapore |
+| `syd` | ap-southeast | Sydney, Australia |
+| `nrt` | ap-northeast | Tokyo, Japan |
+| `maa` | in-maa | Chennai, India |
+| `cgk` | id-cgk | Jakarta, Indonesia |
+
+---
+
+## Elegir una región
+
+Al seleccionar una región para tu base de datos, considera:
+
+### Latencia
+Elige la región más cercana a tus usuarios para obtener la menor latencia. Si tus usuarios están repartidos globalmente, considera [multi-region replication](/reference/replication/).
+
+### Residencia de datos
+Algunas normativas exigen que los datos se almacenen en ubicaciones geográficas específicas. Elige una región que cumpla tus requisitos de compliance.
+
+### Recuperación ante desastres
+Para alta disponibilidad, despliega en varias regiones y usa failover automático.
+
+---
+
+## Configurar la región predeterminada
+
+<Tabs items={[{"label":"Dashboard","content":"<ol>\n<li><p>Ve a <strong>Settings &gt; Preferences</strong></p>\n<ol start=\"2\">\n<li>Selecciona tu <strong>Default Region</strong> en el desplegable</li>\n<li>Haz clic en <strong>Save</strong></li>\n</ol>\n<p> New databases will use this region by default.</p>\n</li>\n</ol>"},{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions\n    {\n        ApiKey = &quot;ts_live_your_api_key&quot;,\n        Endpoint = &quot;https://api.terrascale.io&quot;,\n        Region = &quot;us-east&quot;,  // Default region\n        DefaultDatabase = &quot;my-database&quot;\n    });\n</code></pre>"},{"label":"API","content":"<p>Al crear una base de datos, especifica la región:</p>\n<pre><code class=\"language-json\">    POST /api/v1/management/databases\n    {\n      &quot;name&quot;: &quot;my-production-db&quot;,\n      &quot;region&quot;: &quot;eu-west&quot;\n    }\n</code></pre>"}]} />
+
+---
+
+## Endpoints regionales
+
+TerraScale usa enrutamiento inteligente para dirigir automáticamente las solicitudes a la región óptima. Puedes usar el endpoint global:
+```
+https://api.terrascale.io
+```
+
+Las solicitudes se enrutan automáticamente según:
+- La región primaria de la base de datos
+- La configuración de replicación multi-región
+- La salud y disponibilidad actuales de las regiones
+
+---
+
+## ¿Por qué códigos de aeropuerto?
+
+TerraScale usa códigos de aeropuerto (códigos IATA) como identificadores de región porque:
+- son un estándar reconocido globalmente
+- indican claramente la ubicación geográfica
+- son concisos y fáciles de recordar
+- siguen convenciones de la industria usadas por otros proveedores cloud
+
+---
+
+## Pricing uniforme
+
+Todas las regiones tienen el mismo pricing. Calculamos el costo mediano entre todas las regiones, de modo que las regiones menos costosas compensen a las más caras. Esto simplifica la facturación y hace que los costos sean previsibles para despliegues multi-región.
+
+---
+
+## Despliegue multi-región
+
+Para aplicaciones globales, TerraScale admite replicación multi-región:
+
+- **Sincronización automática** entre regiones
+- **Enrutamiento inteligente** según la ubicación del usuario
+- **Protección de failover** para alta disponibilidad
+
+Consulta [Multi-Region Replication](/reference/replication/) para detalles de configuración.
+
+---
+
+## Próximos pasos
+
+- [Multi-Region Replication](/reference/replication/) - Configura la sincronización entre regiones
+- [Getting Started](/guides/getting-started/) - Crea tu primera base de datos
+- [Best Practices](/reference/best-practices/) - Consejos de optimización
+

@@ -1,0 +1,161 @@
+---
+title: Autenticação
+description: Conheça os métodos de autenticação da TerraScale, API Keys para acesso programático e tokens JWT para sessões de usuário.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+A TerraScale oferece dois métodos de autenticação para diferentes casos de uso.
+
+---
+
+## Autenticação com API Key
+
+Usada para acesso programático a operações de banco de dados. As API keys são geradas no [dashboard](https://dashboard.terrascale.io) e fornecem acesso com escopo aos seus recursos.
+
+### Formato do cabeçalho
+```http
+Authorization: Bearer ts_live_your_api_key
+```
+
+### Escopos de API Key
+
+| Scope | Description |
+|-------|-------------|
+| `database:read` | Ler itens de bancos de dados |
+| `database:write` | Escrever ou excluir itens em bancos de dados |
+| `database:*` | Acesso total ao banco de dados |
+| `repository:read` | Ler entidades de repositórios |
+| `repository:write` | Escrever ou excluir entidades em repositórios |
+| `repository:*` | Acesso total ao repositório |
+| `*` | Acesso total a todas as operações |
+
+### Exemplo de uso
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    var client = new TerraScaleDatabase(new TerraScaleDatabaseOptions\n    {\n        ApiKey = &quot;ts_live_your_api_key&quot;,\n        Endpoint = &quot;https://api.terrascale.io&quot;,\n        DefaultDatabase = &quot;my-database&quot;\n    });\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    curl &quot;https://api.terrascale.io/api/v1/databases/my-database/items/pk/sk&quot; \\\n      -H &quot;Authorization: Bearer ts_live_your_api_key&quot;\n</code></pre>"}]} />
+
+### Boas práticas
+
+- **Use escopos específicos**: conceda apenas as permissões de que sua aplicação precisa
+- **Defina datas de expiração**: faça a rotação das chaves regularmente por segurança
+- **Separe chaves por ambiente**: use chaves diferentes para desenvolvimento e produção
+- **Nunca faça commit das chaves no controle de versão**: use variáveis de ambiente ou gerenciadores de segredos
+
+---
+
+## Autenticação JWT
+
+Usada para acesso ao dashboard e sessões de usuário. Os tokens JWT são obtidos pelo fluxo de login.
+
+### Formato do cabeçalho
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### Ciclo de vida do token
+
+| Token | Lifetime | Usage |
+|-------|----------|-------|
+| Access Token | 1 hour | Autenticar requisições da API |
+| Refresh Token | 7 days | Obter novos access tokens |
+
+### Fluxo de login
+
+#### POST /auth/password
+
+Faz login com email e senha.
+
+**Request:**
+```json
+{
+  "email": "john@example.com",
+  "password": "SecurePassword123!"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "status": "Success",
+  "authResponse": {
+    "accessToken": "eyJhbGci...",
+    "refreshToken": "rt_abc123...",
+    "expiresIn": 3600,
+    "userId": "usr_abc123",
+    "email": "john@example.com",
+    "name": "John Doe",
+    "avatarUrl": null,
+    "personalOrgId": "org_abc123",
+    "permissions": ["database:read", "database:write"],
+    "roles": ["member"]
+  }
+}
+```
+
+### Valores de status de login
+
+| Status | Description |
+|--------|-------------|
+| `Success` | Login bem-sucedido, tokens retornados |
+| `InvalidCredentials` | Email ou senha incorretos |
+| `EmailVerificationRequired` | É preciso verificar o email primeiro |
+| `MfaRequired` | É preciso concluir o desafio de MFA |
+| `Error` | Ocorreu um erro |
+
+---
+
+## Renovação de token
+
+Quando seu access token expirar, use o refresh token para obter um novo:
+
+#### POST /auth/refresh
+
+**Request:**
+```json
+{
+  "refreshToken": "rt_abc123..."
+}
+```
+
+**Response:**
+```json
+{
+  "accessToken": "eyJhbGci...",
+  "refreshToken": "rt_def456...",
+  "expiresIn": 3600
+}
+```
+
+### Como lidar com a expiração do token
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // The Management Client handles token refresh automatically\n    var client = new ManagementClient(new ManagementClientOptions\n    {\n        ApiBaseUrl = &quot;https://api.terrascale.io&quot;\n    });\n\n    // After login\n    client.SetAccessToken(authResponse.AccessToken);\n\n    // When token expires, refresh it\n    var refreshResult = await client.Auth.RefreshTokenAsync(\n        new RefreshTokenRequest(RefreshToken: currentRefreshToken)\n    );\n\n    if (refreshResult.IsSuccess)\n    {\n        client.SetAccessToken(refreshResult.Value.AccessToken);\n    }\n</code></pre>"},{"label":"Manual Flow","content":"<pre><code class=\"language-javascript\">    async function refreshToken(refreshToken) {\n      const response = await fetch(&#39;https://api.terrascale.io/auth/refresh&#39;, {\n        method: &#39;POST&#39;,\n        headers: { &#39;Content-Type&#39;: &#39;application/json&#39; },\n        body: JSON.stringify({ refreshToken })\n      });\n\n      if (response.ok) {\n        const data = await response.json();\n        // Store new tokens\n        localStorage.setItem(&#39;accessToken&#39;, data.accessToken);\n        localStorage.setItem(&#39;refreshToken&#39;, data.refreshToken);\n        return data.accessToken;\n      }\n\n      // Refresh failed, redirect to login\n      window.location.href = &#39;/login&#39;;\n    }\n</code></pre>"}]} />
+
+---
+
+## Campos de resposta de autenticação
+
+A resposta de autenticação inclui informações do usuário e permissões:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `accessToken` | string | JWT para autenticar requisições |
+| `refreshToken` | string | Token para obter novos access tokens |
+| `expiresIn` | integer | Tempo de vida do access token em segundos |
+| `userId` | string | Identificador único do usuário |
+| `email` | string | Endereço de email do usuário |
+| `name` | string | Nome de exibição do usuário |
+| `avatarUrl` | string | URL da imagem de avatar do usuário |
+| `personalOrgId` | string | ID da organização pessoal do usuário |
+| `permissions` | array | Lista de permissões concedidas |
+| `roles` | array | Lista de papéis atribuídos |
+
+---
+
+## Próximos passos
+
+- [Multi-Factor Authentication](/reference/mfa/) - Adicione uma camada extra de segurança com MFA
+- [Account Registration](/account/registration/) - Crie uma nova conta
+- [Organizations](/reference/organizations/) - Gerencie o acesso da equipe
+

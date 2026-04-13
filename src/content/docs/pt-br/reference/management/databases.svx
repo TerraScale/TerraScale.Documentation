@@ -1,0 +1,171 @@
+---
+title: API de Gerenciamento de Bancos de Dados
+description: Referência da API para criar, listar e gerenciar bancos de dados TerraScale.
+sidebar:
+  order: 1
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Gerencie bancos de dados pela Management API. Requer autenticação JWT (acesso ao dashboard).
+
+---
+
+## Criar Banco de Dados
+
+### POST /api/v1/management/databases
+
+Cria um novo banco de dados.
+
+**Request:**
+```json
+{
+  "name": "my-production-db",
+  "region": "us-east-1",
+  "settings": null
+}
+```
+
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|----------|-------------|
+| `name` | string | Sim | Nome do banco de dados (minúsculas, números, hífens) |
+| `region` | string | Sim | Código da região (por exemplo, `us-east-1`) |
+| `settings` | object | Não | Configuração opcional |
+
+**Response (201 Created):**
+```json
+{
+  "databaseId": "db_abc123",
+  "name": "my-production-db",
+  "region": "us-east-1",
+  "status": "Creating",
+  "createdAt": "2024-01-15T10:00:00Z"
+}
+```
+
+---
+
+## Listar Bancos de Dados
+
+### GET /api/v1/management/databases
+
+Lista todos os bancos de dados da organização autenticada.
+
+**Parâmetros de Query:**
+
+| Parâmetro | Tipo | Padrão | Descrição |
+|-----------|------|---------|-------------|
+| `limit` | integer | 20 | Máximo de itens a retornar |
+| `cursor` | string | null | Cursor de paginação |
+
+**Response (200 OK):**
+```json
+{
+  "databases": [
+    {
+      "databaseId": "db_abc123",
+      "name": "my-production-db",
+      "region": "us-east-1",
+      "status": "Active",
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:05:00Z",
+      "settings": null,
+      "usage": {
+        "itemCount": 15000,
+        "storageBytes": 52428800,
+        "readUnitsConsumed": 1500,
+        "writeUnitsConsumed": 300,
+        "lastUpdated": "2024-01-15T11:00:00Z"
+      }
+    }
+  ],
+  "nextCursor": null
+}
+```
+
+---
+
+## Obter Banco de Dados
+
+### GET /api/v1/management/databases/\{databaseId\}
+
+Obtém um banco de dados específico por ID.
+
+**Response (200 OK):** Mesmo formato do banco de dados individual na resposta de listagem.
+
+---
+
+## Excluir Banco de Dados
+
+### DELETE /api/v1/management/databases/\{databaseId\}
+
+Exclui um banco de dados.
+
+:::caution[Aviso]
+Isso exclui permanentemente o banco de dados e todos os seus dados. Esta ação não pode ser desfeita.
+:::
+
+**Response (204 No Content):** Corpo vazio em caso de sucesso.
+
+---
+
+## Valores de Status do Banco de Dados
+
+| Status | Descrição |
+|--------|-------------|
+| `Creating` | O banco de dados está sendo provisionado |
+| `Active` | O banco de dados está pronto para uso |
+| `Inactive` | O banco de dados está pausado |
+| `Maintenance` | O banco de dados está em manutenção |
+| `Deleting` | O banco de dados está sendo excluído |
+| `Error` | O banco de dados encontrou um erro |
+| `BackingUp` | Backup do banco de dados em andamento |
+| `Restoring` | Restauração do banco de dados em andamento |
+
+---
+
+## Métricas de Uso
+
+Cada banco de dados inclui estatísticas de uso:
+
+| Campo | Tipo | Descrição |
+|-------|------|-------------|
+| `itemCount` | integer | Número de itens armazenados |
+| `storageBytes` | long | Armazenamento total usado em bytes |
+| `readUnitsConsumed` | long | Capacidade de leitura consumida |
+| `writeUnitsConsumed` | long | Capacidade de escrita consumida |
+| `lastUpdated` | datetime | Quando as métricas foram atualizadas pela última vez |
+
+---
+
+## Exemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Create database\n    var createResult = await client.Databases.CreateAsync(new CreateDatabaseRequest(\n        Name: &quot;my-production-db&quot;,\n        Region: &quot;us-east-1&quot;\n    ));\n\n    if (createResult.IsSuccess)\n    {\n        Console.WriteLine($&quot;Database created: {createResult.Value.DatabaseId}&quot;);\n    }\n\n    // List databases\n    var listResult = await client.Databases.ListAsync();\n\n    foreach (var db in listResult.Value.Databases)\n    {\n        Console.WriteLine($&quot;{db.Name} - {db.Status}&quot;);\n        Console.WriteLine($&quot;  Items: {db.Usage?.ItemCount}&quot;);\n        Console.WriteLine($&quot;  Storage: {db.Usage?.StorageBytes / 1024 / 1024} MB&quot;);\n    }\n\n    // Get database\n    var dbResult = await client.Databases.GetAsync(&quot;db_abc123&quot;);\n\n    // Delete database\n    var deleteResult = await client.Databases.DeleteAsync(&quot;db_abc123&quot;);\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create database\n    curl -X POST &quot;https://api.terrascale.io/api/v1/management/databases&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;name&quot;: &quot;my-production-db&quot;,\n        &quot;region&quot;: &quot;us-east-1&quot;\n      }&#39;\n\n    # List databases\n    curl &quot;https://api.terrascale.io/api/v1/management/databases&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Get database\n    curl &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Delete database\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
+
+---
+
+## Regras para Nome de Banco de Dados
+
+- Apenas letras minúsculas (a-z)
+- Números (0-9)
+- Hífens (-)
+- Deve começar com uma letra
+- Deve ter entre 3 e 63 caracteres
+
+**Nomes válidos:**
+- `my-app-prod`
+- `users-db`
+- `project123`
+
+**Nomes inválidos:**
+- `My-App` (uppercase)
+- `123-db` (starts with number)
+- `my_app` (underscore)
+
+---
+
+## Próximos Passos
+
+- [Repository Management](/reference/management/repositories/) - Crie repositórios
+- [API Key Management](/reference/management/api-keys/) - Gere API keys
+- [Regions](/reference/regions/) - Regiões disponíveis

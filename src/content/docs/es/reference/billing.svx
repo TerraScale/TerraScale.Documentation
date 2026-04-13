@@ -1,0 +1,193 @@
+---
+title: Billing
+description: Administra suscripciones, checkout e información de pago en TerraScale.
+sidebar:
+  order: 7
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Administra tu suscripción y tu billing en TerraScale.
+
+---
+
+## Obtener información de pago
+
+### GET /api/v1/payment
+
+Obtiene la información actual de pago y suscripción. **Requiere autenticación JWT.**
+
+**Response (200 OK):**
+```json
+{
+  "organizationId": "org_abc123",
+  "subscriptionId": "sub_xyz789",
+  "status": "active",
+  "planName": "Pro",
+  "amount": 2900,
+  "currency": "USD",
+  "currentPeriodStart": "2024-01-01T00:00:00Z",
+  "currentPeriodEnd": "2024-02-01T00:00:00Z",
+  "trialStart": null,
+  "trialEnd": null,
+  "cancelAtPeriodEnd": false,
+  "product": {
+    "id": "prod_abc123",
+    "name": "TerraScale Pro",
+    "description": "For growing teams and projects",
+    "recurringInterval": "month",
+    "prices": [
+      {
+        "id": "price_monthly",
+        "amount": 2900,
+        "currency": "USD",
+        "type": "recurring",
+        "recurringInterval": "month"
+      }
+    ],
+    "benefits": [
+      { "id": "ben_1", "type": "feature", "description": "10 Databases" },
+      { "id": "ben_2", "type": "feature", "description": "10GB Storage" }
+    ]
+  },
+  "latestOrder": {
+    "id": "ord_abc123",
+    "status": "completed",
+    "paid": true,
+    "amount": 2900,
+    "currency": "USD",
+    "invoiceNumber": "INV-2024-001",
+    "invoicePdfUrl": "https://...",
+    "createdAt": "2024-01-01T00:00:00Z"
+  }
+}
+```
+
+---
+
+## Estado de la suscripción
+
+| Status | Description |
+|--------|-------------|
+| `active` | La suscripción está activa y pagada |
+| `trialing` | En período de prueba gratis |
+| `past_due` | El pago falló, período de gracia |
+| `canceled` | Suscripción cancelada |
+| `incomplete` | Configuración incompleta |
+
+---
+
+## Crear checkout
+
+### POST /api/v1/payment/checkout
+
+Crea una sesión de checkout para actualizar o suscribirse.
+
+**Request:**
+```json
+{
+  "planType": "pro"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `planType` | string | Yes | Tipo de plan: `pro`, `enterprise` |
+
+**Response (200 OK):**
+```json
+{
+  "checkoutId": "chk_abc123",
+  "checkoutUrl": "https://checkout.polar.sh/...",
+  "productId": "prod_abc123",
+  "productName": "TerraScale Pro"
+}
+```
+
+Redirige al usuario a `checkoutUrl` para completar el pago.
+
+---
+
+## Portal de billing
+
+### GET /api/v1/payment/portal
+
+Obtiene un enlace al portal de billing del cliente para administrar métodos de pago y facturas.
+
+**Response (200 OK):**
+```json
+{
+  "portalUrl": "https://polar.sh/portal/...",
+  "expiresAt": "2024-01-15T11:00:00Z"
+}
+```
+
+:::note
+Los enlaces del portal expiran después de 1 hora. Genera un enlace nuevo si hace falta.
+:::
+
+---
+
+## Verificación del estado de la suscripción
+
+### GET /api/v1/payment/status
+
+Comprobación rápida del estado de la suscripción.
+
+**Response (200 OK):**
+```json
+{
+  "status": "active",
+  "isActive": true,
+  "isTrial": false,
+  "planType": "pro",
+  "expiresAt": "2024-02-01T00:00:00Z"
+}
+```
+
+---
+
+## Seguimiento de uso
+
+### GET /api/v1/payment/usage
+
+Obtiene las estadísticas actuales de uso del período de facturación.
+
+**Response (200 OK):**
+```json
+{
+  "databaseCount": 5,
+  "totalStorageGb": 2.5,
+  "totalRequests": 450000,
+  "totalCost": 29.00,
+  "billingPeriodStart": "2024-01-01T00:00:00Z",
+  "billingPeriodEnd": "2024-02-01T00:00:00Z",
+  "periodStart": "2024-01-01T00:00:00Z",
+  "periodEnd": "2024-01-31T23:59:59Z",
+  "generatedAt": "2024-01-25T12:00:00Z"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `databaseCount` | integer | Número de bases de datos activas |
+| `totalStorageGb` | decimal | Total de storage usado en GB |
+| `totalRequests` | long | Total de solicitudes de API en este período |
+| `totalCost` | decimal | Cargos actuales en USD |
+| `billingPeriodStart` | datetime | Inicio del ciclo de facturación |
+| `billingPeriodEnd` | datetime | Fin del ciclo de facturación |
+
+---
+
+## Ejemplos de código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Get subscription info\n    var paymentInfo = await client.Payment.GetPaymentInfoAsync();\n\n    if (paymentInfo.IsSuccess)\n    {\n        Console.WriteLine($&quot;Plan: {paymentInfo.Value.PlanName}&quot;);\n        Console.WriteLine($&quot;Status: {paymentInfo.Value.Status}&quot;);\n    }\n\n    // Get usage\n    var usageResult = await client.Payment.GetUsageAsync();\n\n    if (usageResult.IsSuccess)\n    {\n        Console.WriteLine($&quot;Databases: {usageResult.Value.DatabaseCount}&quot;);\n        Console.WriteLine($&quot;Storage: {usageResult.Value.TotalStorageGb} GB&quot;);\n        Console.WriteLine($&quot;Requests: {usageResult.Value.TotalRequests}&quot;);\n    }\n\n    // Create checkout for upgrade\n    var checkoutResult = await client.Payment.CreateCheckoutAsync(\n        new CreateCheckoutRequest(&quot;pro&quot;)\n    );\n\n    if (checkoutResult.IsSuccess)\n    {\n        Console.WriteLine($&quot;Checkout: {checkoutResult.Value.CheckoutUrl}&quot;);\n    }\n\n    // Get billing portal\n    var portalResult = await client.Payment.GetPortalUrlAsync();\n\n    // Check status\n    var statusResult = await client.Payment.GetSubscriptionStatusAsync();\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Get payment info\n    curl &quot;https://api.terrascale.io/api/v1/payment&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Get usage\n    curl &quot;https://api.terrascale.io/api/v1/payment/usage&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Create checkout\n    curl -X POST &quot;https://api.terrascale.io/api/v1/payment/checkout&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{&quot;planType&quot;: &quot;pro&quot;}&#39;\n\n    # Get billing portal\n    curl &quot;https://api.terrascale.io/api/v1/payment/portal&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
+
+---
+
+## Próximos pasos
+
+- [Plans](/reference/plans/) - Planes de suscripción disponibles
+- [Dashboard Billing](/dashboard/billing/) - Adminístralo desde la interfaz
+- [Rate Limits](/reference/rate-limits/) - Límites del plan
+

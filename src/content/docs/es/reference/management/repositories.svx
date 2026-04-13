@@ -1,0 +1,177 @@
+---
+title: API de Gestión de Repositorios
+description: Referencia de la API para crear y gestionar repositorios tipados en bases de datos TerraScale.
+sidebar:
+  order: 2
+---
+
+import { Tabs, TabItem } from '$lib/mdx';
+
+Gestiona repositorios a través de la Management API. Requiere autenticación JWT.
+
+---
+
+## Crear Repositorio
+
+### POST /api/v1/management/databases/\{databaseId\}/repositories
+
+Crea un nuevo repositorio en una base de datos.
+
+**Request:**
+```json
+{
+  "name": "companies",
+  "entityName": "Company",
+  "schema": {
+    "name": { "type": "string", "required": true },
+    "industry": { "type": "string", "required": false },
+    "employeeCount": { "type": "number", "required": false }
+  }
+}
+```
+
+| Campo | Tipo | Obligatorio | Descripción |
+|-------|------|----------|-------------|
+| `name` | string | Sí | Nombre del repositorio |
+| `entityName` | string | Sí | Nombre del tipo de entidad |
+| `schema` | object | No | Definición de schema para validación |
+
+**Response (201 Created):**
+```json
+{
+  "repositoryId": "repo_abc123",
+  "databaseId": "db_abc123",
+  "name": "companies",
+  "entityName": "Company",
+  "createdAt": "2024-01-15T10:00:00Z"
+}
+```
+
+---
+
+## Listar Repositorios
+
+### GET /api/v1/management/databases/\{databaseId\}/repositories
+
+Lista todos los repositorios de una base de datos.
+
+**Response (200 OK):**
+```json
+{
+  "repositories": [
+    {
+      "repositoryId": "repo_abc123",
+      "databaseId": "db_abc123",
+      "name": "companies",
+      "entityName": "Company",
+      "status": "Active",
+      "schema": {
+        "name": { "type": "string", "required": true }
+      },
+      "itemCount": 500,
+      "createdAt": "2024-01-15T10:00:00Z",
+      "updatedAt": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "nextCursor": null
+}
+```
+
+---
+
+## Obtener Repositorio
+
+### GET /api/v1/management/databases/\{databaseId\}/repositories/\{repositoryId\}
+
+Obtiene un repositorio específico por ID.
+
+**Response (200 OK):** El mismo formato que el repositorio individual en la respuesta de listado.
+
+---
+
+## Eliminar Repositorio
+
+### DELETE /api/v1/management/databases/\{databaseId\}/repositories/\{repositoryId\}
+
+Elimina un repositorio y todas sus entidades.
+
+:::caution[Advertencia]
+Esto elimina permanentemente el repositorio y todos sus datos.
+:::
+
+**Response (204 No Content):** Cuerpo vacío en caso de éxito.
+
+---
+
+## Definición de Schema
+
+Define schemas para la validación de entidades:
+```json
+{
+  "schema": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "string",
+      "required": true,
+      "pattern": "^[^@]+@[^@]+\\.[^@]+$"
+    },
+    "age": {
+      "type": "number",
+      "required": false,
+      "min": 0,
+      "max": 150
+    },
+    "isActive": {
+      "type": "boolean",
+      "required": false,
+      "default": true
+    },
+    "tags": {
+      "type": "array",
+      "required": false,
+      "items": { "type": "string" }
+    }
+  }
+}
+```
+
+### Tipos de Campo del Schema
+
+| Tipo | Descripción | Opciones de Validación |
+|------|-------------|-------------------|
+| `string` | Valor de texto | `minLength`, `maxLength`, `pattern` |
+| `number` | Valor numérico | `min`, `max` |
+| `boolean` | True/false | - |
+| `array` | Lista de valores | `items`, `minItems`, `maxItems` |
+| `object` | Objeto anidado | `properties` |
+
+---
+
+## Ejemplos de Código
+
+<Tabs items={[{"label":"C# SDK","content":"<pre><code class=\"language-csharp\">    // Create repository\n    var createResult = await client.Repositories.CreateAsync(\n        &quot;db_abc123&quot;,\n        new CreateRepositoryRequest(\n            Name: &quot;customers&quot;,\n            EntityName: &quot;Customer&quot;,\n            Schema: new Dictionary&lt;string, SchemaField&gt;\n            {\n                [&quot;name&quot;] = new() { Type = &quot;string&quot;, Required = true },\n                [&quot;email&quot;] = new() { Type = &quot;string&quot;, Required = true },\n                [&quot;tier&quot;] = new() { Type = &quot;string&quot;, Required = false }\n            }\n        )\n    );\n\n    // List repositories\n    var listResult = await client.Repositories.ListAsync(&quot;db_abc123&quot;);\n\n    foreach (var repo in listResult.Value.Repositories)\n    {\n        Console.WriteLine($&quot;{repo.Name} ({repo.EntityName}): {repo.ItemCount} items&quot;);\n    }\n\n    // Get repository\n    var repoResult = await client.Repositories.GetAsync(&quot;db_abc123&quot;, &quot;repo_abc123&quot;);\n\n    // Delete repository\n    var deleteResult = await client.Repositories.DeleteAsync(&quot;db_abc123&quot;, &quot;repo_abc123&quot;);\n</code></pre>"},{"label":"cURL","content":"<pre><code class=\"language-bash\">    # Create repository\n    curl -X POST &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot; \\\n      -H &quot;Content-Type: application/json&quot; \\\n      -d &#39;{\n        &quot;name&quot;: &quot;customers&quot;,\n        &quot;entityName&quot;: &quot;Customer&quot;,\n        &quot;schema&quot;: {\n          &quot;name&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;required&quot;: true },\n          &quot;email&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;required&quot;: true }\n        }\n      }&#39;\n\n    # List repositories\n    curl &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n\n    # Delete repository\n    curl -X DELETE &quot;https://api.terrascale.io/api/v1/management/databases/db_abc123/repositories/repo_abc123&quot; \\\n      -H &quot;Authorization: Bearer eyJhbGci...&quot;\n</code></pre>"}]} />
+
+---
+
+## Repositorio vs Elementos sin Procesar
+
+| Característica | Repositorio | Elementos sin procesar |
+|---------|------------|-----------|
+| Validación de schema | Sí | No |
+| IDs generados automáticamente | Sí | No |
+| Timestamps | Automático | Manual |
+| Seguridad de tipos (SDK) | Sí | No |
+| Flexibilidad | Estructurado | Libre |
+
+---
+
+## Próximos Pasos
+
+- [Repository Operations](/reference/api/repositories/) - Usa la API de repositorio
+- [Database Management](/reference/management/databases/) - Gestiona bases de datos
+- [Repository Guide](/guides/repository/) - Guía del patrón de repositorio
